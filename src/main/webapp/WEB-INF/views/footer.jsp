@@ -1,0 +1,1 @@
+<p class="text-muted">Some awesome footer text. (c)</p>
