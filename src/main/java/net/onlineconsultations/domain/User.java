@@ -1,6 +1,6 @@
 package net.onlineconsultations.domain;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -46,15 +46,14 @@ public class User {
 
     @ManyToMany
     @JoinTable(name = "user_sub_subjects", joinColumns = { @JoinColumn(name = "user_id", nullable = false) }, inverseJoinColumns = { @JoinColumn(name = "sub_subject_id", nullable = false) })
-    private Set<SubSubject> subSubjects;
+    private List<SubSubject> subSubjects;
 
     public User() {
     }
 
     public User(Long id, String username, String password, UserRole userRole,
-            String firstName,
-            String middleName, String lastName, String qualification,
-            Set<SubSubject> userSubSubjects) {
+            String firstName, String middleName, String lastName,
+            String qualification, List<SubSubject> userSubSubjects) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -122,11 +121,11 @@ public class User {
         this.qualification = qualification;
     }
 
-    public Set<SubSubject> getUserSubSubjects() {
+    public List<SubSubject> getUserSubSubjects() {
         return subSubjects;
     }
 
-    public void setUserSubSubjects(Set<SubSubject> userSubSubjects) {
+    public void setUserSubSubjects(List<SubSubject> userSubSubjects) {
         this.subSubjects = userSubSubjects;
     }
 

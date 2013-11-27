@@ -1,6 +1,6 @@
 package net.onlineconsultations.domain;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,13 +31,13 @@ public class SubSubject {
     private Subject parentSubject;
 
     @ManyToMany(mappedBy = "subSubjects")
-    private Set<User> subSubjectUsers;
+    private List<User> subSubjectUsers;
 
     public SubSubject() {
     }
 
     public SubSubject(String name, String description, Subject parentSubject,
-            Set<User> subSubjectUsers) {
+            List<User> subSubjectUsers) {
         this.name = name;
         this.description = description;
         this.parentSubject = parentSubject;
@@ -76,11 +76,11 @@ public class SubSubject {
         this.parentSubject = parentSubject;
     }
 
-    public Set<User> getSubSubjectUsers() {
+    public List<User> getSubSubjectUsers() {
         return subSubjectUsers;
     }
 
-    public void setSubSubjectUsers(Set<User> subSubjectUsers) {
+    public void setSubSubjectUsers(List<User> subSubjectUsers) {
         this.subSubjectUsers = subSubjectUsers;
     }
 
