@@ -2,21 +2,44 @@ package net.onlineconsultations.domain;
 
 import java.util.Calendar;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+@Entity
+@Table(name = "chat_message")
 public class ChatMessage {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "chat_message_id", unique = true, nullable = false)
     private Long id;
 
+    @Column(name = "body")
     private String body;
 
-    private Calendar sendTimestamp;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "timestamp")
+    private Calendar timestamp;
 
+    @ManyToOne
+    @JoinColumn(name = "chat_id", nullable = false)
     private Chat chat;
 
+    @ManyToOne
+    @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
     public ChatMessage(String body, Calendar sendTimestamp, Chat chat,
             User author) {
         this.body = body;
-        this.sendTimestamp = sendTimestamp;
+        this.timestamp = sendTimestamp;
         this.chat = chat;
         this.author = author;
     }
@@ -37,12 +60,12 @@ public class ChatMessage {
         this.body = body;
     }
 
-    public Calendar getSendTimestamp() {
-        return sendTimestamp;
+    public Calendar getTimestamp() {
+        return timestamp;
     }
 
-    public void setSendTimestamp(Calendar sendTimestamp) {
-        this.sendTimestamp = sendTimestamp;
+    public void setTimestamp(Calendar sendTimestamp) {
+        this.timestamp = sendTimestamp;
     }
 
     public Chat getChat() {

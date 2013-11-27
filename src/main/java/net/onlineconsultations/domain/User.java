@@ -2,23 +2,50 @@ package net.onlineconsultations.domain;
 
 import java.util.Set;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "user")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id", unique = true, nullable = true)
     private Long id;
 
+    @Column(name = "username", length = 20, unique = true, nullable = false)
     private String username;
 
+    @Column(name = "password", length = 32, nullable = false)
     private String password;
 
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "user_role")
     private UserRole role;
 
+    @Column(name = "firstname")
     private String firstName;
 
+    @Column(name = "middlename")
     private String middleName;
 
+    @Column(name = "lastname")
     private String lastName;
 
+    @Column(name = "qualification")
     private String qualification;
 
+    @ManyToMany
+    @JoinTable(name = "user_sub_subjects", joinColumns = { @JoinColumn(name = "user_id", nullable = false) }, inverseJoinColumns = { @JoinColumn(name = "sub_subject_id", nullable = false) })
     private Set<SubSubject> subSubjects;
 
     public User(Long id, String username, String password, UserRole userRole,

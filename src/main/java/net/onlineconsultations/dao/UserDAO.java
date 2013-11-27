@@ -4,14 +4,12 @@ import java.util.List;
 
 import net.onlineconsultations.domain.User;
 
-import org.springframework.dao.DataAccessException;
-
 public interface UserDAO {
-    List<User> getAll() throws DataAccessException;
+    List<User> getAll();
 
-    User getById(Long id) throws DataAccessException;
+    User getById(Long id);
 
-    User getByUsername(String username) throws DataAccessException;
+    User getByUsername(String username);
 
-    void save(User subject) throws DataAccessException;
+    void save(User user);
 }

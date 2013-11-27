@@ -4,13 +4,10 @@ import java.util.List;
 
 import net.onlineconsultations.domain.ChatMessage;
 
-import org.springframework.dao.DataAccessException;
-
 public interface ChatMessageDAO {
-    List<ChatMessage> getAll() throws DataAccessException;
+    List<ChatMessage> getAll();
 
-    ChatMessage get(Long id) throws DataAccessException;
+    ChatMessage getById(Long id);
 
-    void save(ChatMessage subject)
-            throws DataAccessException;
+    void save(ChatMessage chatMessage);
 }

@@ -2,15 +2,35 @@ package net.onlineconsultations.domain;
 
 import java.util.Set;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "sub_subject")
 public class SubSubject {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "sub_subject_id")
     private Long id;
 
+    @Column(name = "name")
     private String name;
 
+    @Column(name = "description")
     private String description;
 
+    @ManyToOne
+    @JoinColumn(name = "subject_id", nullable = false)
     private Subject parentSubject;
 
+    @ManyToMany(mappedBy = "subSubjects")
     private Set<User> subSubjectUsers;
 
     public SubSubject(String name, String description, Subject parentSubject,
