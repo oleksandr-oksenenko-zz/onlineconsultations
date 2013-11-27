@@ -27,6 +27,9 @@ public class Subject {
     @OneToMany(mappedBy = "parentSubject")
     private Set<SubSubject> subSubjects;
 
+    public Subject() {
+    }
+
     public Subject(String name, String description, Set<SubSubject> subSubjects) {
         this.name = name;
         this.description = description;

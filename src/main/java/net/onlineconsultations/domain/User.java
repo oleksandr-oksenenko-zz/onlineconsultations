@@ -48,6 +48,9 @@ public class User {
     @JoinTable(name = "user_sub_subjects", joinColumns = { @JoinColumn(name = "user_id", nullable = false) }, inverseJoinColumns = { @JoinColumn(name = "sub_subject_id", nullable = false) })
     private Set<SubSubject> subSubjects;
 
+    public User() {
+    }
+
     public User(Long id, String username, String password, UserRole userRole,
             String firstName,
             String middleName, String lastName, String qualification,

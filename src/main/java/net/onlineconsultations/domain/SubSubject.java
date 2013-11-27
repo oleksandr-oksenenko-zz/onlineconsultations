@@ -33,6 +33,9 @@ public class SubSubject {
     @ManyToMany(mappedBy = "subSubjects")
     private Set<User> subSubjectUsers;
 
+    public SubSubject() {
+    }
+
     public SubSubject(String name, String description, Subject parentSubject,
             Set<User> subSubjectUsers) {
         this.name = name;

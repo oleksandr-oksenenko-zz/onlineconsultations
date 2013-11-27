@@ -36,6 +36,9 @@ public class ChatMessage {
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
+    public ChatMessage() {
+    }
+
     public ChatMessage(String body, Calendar sendTimestamp, Chat chat,
             User author) {
         this.body = body;
