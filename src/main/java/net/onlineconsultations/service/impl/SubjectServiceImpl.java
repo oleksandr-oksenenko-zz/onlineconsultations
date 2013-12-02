@@ -11,19 +11,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class SubjectServiceImpl implements SubjectService {
     @Autowired
     private SubjectDAO subjectDAO;
 
     @Override
-    @Transactional
     public List<Subject> getAllSubjects() {
-        return subjectDAO.getAll();
+	return subjectDAO.getAll();
     }
 
     @Override
-    @Transactional
     public Subject getSubjectById(Long id) {
-        return subjectDAO.getById(id);
+	return subjectDAO.getById(id);
     }
 }

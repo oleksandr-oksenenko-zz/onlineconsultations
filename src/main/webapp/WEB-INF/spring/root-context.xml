@@ -10,6 +10,6 @@
        
        <import resource="dao-context.xml"/>
        <import resource="service-context.xml"/>
-       <import resource="controller-context.xml"/>
+       <import resource="security-context.xml"/>
        
 </beans>

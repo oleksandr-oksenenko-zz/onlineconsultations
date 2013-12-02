@@ -4,14 +4,13 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -28,9 +27,9 @@ public class User {
     @Column(name = "password", length = 32, nullable = false)
     private String password;
 
-    @Enumerated(EnumType.ORDINAL)
-    @Column(name = "user_role")
-    private UserRole role;
+    @ManyToOne
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
 
     @Column(name = "firstname")
     private String firstName;
@@ -51,90 +50,90 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String username, String password, UserRole userRole,
-            String firstName, String middleName, String lastName,
-            String qualification, List<SubSubject> userSubSubjects) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.role = userRole;
-        this.firstName = firstName;
-        this.middleName = middleName;
-        this.lastName = lastName;
-        this.qualification = qualification;
-        this.subSubjects = userSubSubjects;
+    public User(Long id, String username, String password, Role role,
+	    String firstName, String middleName, String lastName,
+	    String qualification, List<SubSubject> userSubSubjects) {
+	this.id = id;
+	this.username = username;
+	this.password = password;
+	this.role = role;
+	this.firstName = firstName;
+	this.middleName = middleName;
+	this.lastName = lastName;
+	this.qualification = qualification;
+	this.subSubjects = userSubSubjects;
     }
 
     public Long getId() {
-        return id;
+	return id;
     }
 
     public void setId(Long id) {
-        this.id = id;
+	this.id = id;
     }
 
     public String getUsername() {
-        return username;
+	return username;
     }
 
     public void setUsername(String username) {
-        this.username = username;
+	this.username = username;
     }
 
     public String getPassword() {
-        return password;
+	return password;
     }
 
     public void setPassword(String password) {
-        this.password = password;
+	this.password = password;
     }
 
     public String getFirstName() {
-        return firstName;
+	return firstName;
     }
 
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
+	this.firstName = firstName;
     }
 
     public String getMiddleName() {
-        return middleName;
+	return middleName;
     }
 
     public void setMiddleName(String middleName) {
-        this.middleName = middleName;
+	this.middleName = middleName;
     }
 
     public String getLastName() {
-        return lastName;
+	return lastName;
     }
 
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+	this.lastName = lastName;
     }
 
     public String getQualification() {
-        return qualification;
+	return qualification;
     }
 
     public void setQualification(String qualification) {
-        this.qualification = qualification;
+	this.qualification = qualification;
     }
 
     public List<SubSubject> getUserSubSubjects() {
-        return subSubjects;
+	return subSubjects;
     }
 
     public void setUserSubSubjects(List<SubSubject> userSubSubjects) {
-        this.subSubjects = userSubSubjects;
+	this.subSubjects = userSubSubjects;
     }
 
-    public UserRole getUserRole() {
-        return role;
+    public Role getRole() {
+	return role;
     }
 
-    public void setUserRole(UserRole userRole) {
-        this.role = userRole;
+    public void setRole(Role userRole) {
+	this.role = userRole;
     }
 
 }

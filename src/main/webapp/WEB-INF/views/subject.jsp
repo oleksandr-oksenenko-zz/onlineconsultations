@@ -12,6 +12,11 @@
     </table>
     <c:forEach var="subSubject" items="${ subject.subSubjects }">
         <p>${ subSubject.name }</p>
+        <c:forEach var="subSubjectUser" items="${ subSubject.subSubjectUsers }">
+            <a href="<c:url value='/chat?action=start&sub_subject=${ subSubject.id }&consultant=${ subSubjectUser.id }' />">
+                Start a consultation with ${ subSubjectUser.username }
+            </a>
+        </c:forEach>
     </c:forEach>
 </body>
 

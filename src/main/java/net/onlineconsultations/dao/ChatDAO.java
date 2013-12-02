@@ -10,4 +10,8 @@ public interface ChatDAO {
     Chat getById(Long id);
 
     void save(Chat chat);
+
+    void update(Chat chat);
+
+    Chat getActiveChatWithConsultant(Long consultantId);
 }

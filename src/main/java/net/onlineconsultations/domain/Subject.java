@@ -31,40 +31,40 @@ public class Subject {
     }
 
     public Subject(String name, String description, List<SubSubject> subSubjects) {
-        this.name = name;
-        this.description = description;
-        this.subSubjects = subSubjects;
+	this.name = name;
+	this.description = description;
+	this.subSubjects = subSubjects;
     }
 
     public Long getId() {
-        return id;
+	return id;
     }
 
     public void setId(Long id) {
-        this.id = id;
+	this.id = id;
     }
 
     public String getName() {
-        return name;
+	return name;
     }
 
     public void setName(String name) {
-        this.name = name;
+	this.name = name;
     }
 
     public String getDescription() {
-        return description;
+	return description;
     }
 
     public void setDescription(String description) {
-        this.description = description;
+	this.description = description;
     }
 
     public List<SubSubject> getSubSubjects() {
-        return subSubjects;
+	return subSubjects;
     }
 
     public void setSubSubjects(List<SubSubject> subSubjects) {
-        this.subSubjects = subSubjects;
+	this.subSubjects = subSubjects;
     }
 }

@@ -9,5 +9,7 @@ public interface ChatMessageDAO {
 
     ChatMessage getById(Long id);
 
+    List<ChatMessage> getMessages(ChatMessage lastMessage);
+
     void save(ChatMessage chatMessage);
 }

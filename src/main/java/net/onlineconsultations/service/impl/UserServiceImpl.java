@@ -9,24 +9,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserDAO userDAO;
 
     @Override
-    @Transactional
     public User getById(Long id) {
 	return userDAO.getById(id);
     }
 
     @Override
-    @Transactional
     public User getByUsername(String username) {
 	return userDAO.getByUsername(username);
     }
 
     @Override
-    @Transactional
     public boolean checkUserPassword(String username, String password) {
 	User user = this.getByUsername(username);
 	if (user == null) {
@@ -40,7 +38,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public void save(User user) {
 	userDAO.save(user);
     }

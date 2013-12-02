@@ -33,57 +33,57 @@ public class ChatMessage {
     private Chat chat;
 
     @ManyToOne
-    @JoinColumn(name = "author_id", nullable = false)
+    @JoinColumn(name = "author_id", nullable = true)
     private User author;
 
     public ChatMessage() {
     }
 
     public ChatMessage(String body, Calendar sendTimestamp, Chat chat,
-            User author) {
-        this.body = body;
-        this.timestamp = sendTimestamp;
-        this.chat = chat;
-        this.author = author;
+	    User author) {
+	this.body = body;
+	this.timestamp = sendTimestamp;
+	this.chat = chat;
+	this.author = author;
     }
 
     public Long getId() {
-        return id;
+	return id;
     }
 
     public void setId(Long id) {
-        this.id = id;
+	this.id = id;
     }
 
     public String getBody() {
-        return body;
+	return body;
     }
 
     public void setBody(String body) {
-        this.body = body;
+	this.body = body;
     }
 
     public Calendar getTimestamp() {
-        return timestamp;
+	return timestamp;
     }
 
     public void setTimestamp(Calendar sendTimestamp) {
-        this.timestamp = sendTimestamp;
+	this.timestamp = sendTimestamp;
     }
 
     public Chat getChat() {
-        return chat;
+	return chat;
     }
 
     public void setChat(Chat chat) {
-        this.chat = chat;
+	this.chat = chat;
     }
 
     public User getAuthor() {
-        return author;
+	return author;
     }
 
     public void setAuthor(User author) {
-        this.author = author;
+	this.author = author;
     }
 }
