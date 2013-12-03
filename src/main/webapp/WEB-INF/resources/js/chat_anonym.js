@@ -37,3 +37,5 @@ function endChat() {
 window.onload = function() {
 	pollForConsultant();
 }
+
+window.onbeforeunload = endChat;

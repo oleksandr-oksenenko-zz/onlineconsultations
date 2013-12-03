@@ -30,7 +30,7 @@
                         <c:when test="${ not empty users }">
                             <c:forEach var="user" items="${ users }">
                                 <li class="list-group-item">
-                                    <a href="/chat?action=start&consultant=${ user.id }">
+                                    <a href="/chat?action=startChat&consultant=${ user.id }">
                                         Start a consultation with ${ user.firstName } ${ user.lastName } 
                                     </a>
                                 </li>

@@ -3,7 +3,7 @@ function endChat() {
 		url: "/chat",
 		type: "post",
 		data: {
-			action: "endChat"
+			endChat: ""
 		},
 		dataType: "json",
 		success: function (data) {
@@ -19,3 +19,8 @@ window.onload = function() {
 	enableControls();
 	pollForMessages();
 }
+
+window.onbeforeunload = function() {
+	endChat();
+	endSession();
+};

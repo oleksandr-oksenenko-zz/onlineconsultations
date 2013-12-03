@@ -32,8 +32,8 @@
         
         <form role="form">
             <div class="form-group">
-                <label for="message">New message</label>
-                <textarea rows="3" class="form-control" id="message" disabled="disabled"></textarea>
+                <label for="message">New message (<small>you can send messages using ctrl+enter</small>)</label>
+                <textarea rows="3" class="form-control" id="message" disabled="disabled" onkeypress="javascript:onEnterPress(event);"></textarea>
             </div>
             <button 
                 type="button"

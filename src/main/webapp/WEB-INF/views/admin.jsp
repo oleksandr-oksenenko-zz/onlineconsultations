@@ -6,7 +6,9 @@
 <head></head>
 
 <body>
-    <p>You are logined now.</p>
+    <form action="">
+    
+    </form>
 </body>
 
 </html>

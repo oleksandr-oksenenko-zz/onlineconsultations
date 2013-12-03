@@ -5,7 +5,7 @@ function postMessage() {
 			url: "/chat",
 			type: "post",
 			data: {
-				action: "postMessage",
+				postMessage: "",
 				message: messageBody
 			},
 			dataType: "json",
@@ -24,7 +24,7 @@ function pollForMessages() {
 			url: "/chat",
 			type: "post",
 			data: {
-				action: "pollForMessages",
+				pollForMessages: "",
 				lastMessage: lastMessageId
 			},
 			dataType: "json",
@@ -41,6 +41,13 @@ function pollForMessages() {
 				alert(errorText);
 			}
 		});
+}
+
+function onEnterPress(event) {
+	console.log(event);
+	if (event.ctrlKey && (event.keyCode == 13 || event.keyCode == 10)) {
+		postMessage();
+	}
 }
 
 function addMessageToPage(message) {

@@ -20,7 +20,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -30,11 +29,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Scope("session")
 @RequestMapping(value = "/chat")
 public class ChatController {
-    private ObjectMapper objectMapper = new ObjectMapper();
-
-    private Chat chat;
-
-    private User consultant;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     private ChatService chatService;
@@ -42,131 +38,128 @@ public class ChatController {
     @Autowired
     private UserService userService;
 
+    /* session scoped objects */
+    private Chat chat;
+
+    private User consultant;
+
     @RequestMapping(method = RequestMethod.GET)
     public String chatPage() {
-        if (chat == null) {
-            throw new RuntimeException("You should start a chat first");
-        }
-        return "chat";
+	if (chat == null) {
+	    throw new RuntimeException("You should start a chat first");
+	}
+	return "chat";
     }
 
     @RequestMapping(method = RequestMethod.GET, params = { "action" })
-    public String chatPage(@RequestParam("action") String action,
-            @RequestParam(value = "consultant", required = false) Long consultantId,
-            Principal principal,
-            RedirectAttributes redirectAttributes) {
-        if (action.equals("start")) {
-            if (this.chat == null) {
-                this.chat = this.chatService.startNewChat(this.userService
-                        .getById(consultantId));
-            } else {
-                throw new RuntimeException("Chat has been already started");
-            }
-        }
+    public String chatPage(
+	    @RequestParam("action") String action,
+	    @RequestParam(value = "consultant", required = false) Long consultantId,
+	    Principal principal, RedirectAttributes redirectAttributes) {
 
-        if (principal != null) {
-            redirectAttributes.addFlashAttribute("consultant", principal);
-        }
+	if (!action.equals("startChat")) {
+	    throw new RuntimeException("Unsupported action");
+	}
+	if (chat != null) {
+	    throw new RuntimeException("Chat has been already started");
+	}
 
-        return "redirect:/chat";
+	if (principal != null) {
+
+	    consultant = userService.getByUsername(principal.getName());
+	    chat = chatService.getActiveChatWithConsultant(consultant);
+	    redirectAttributes.addFlashAttribute("consultant", principal);
+
+	} else {
+
+	    chat = chatService.startNewChat(userService.getById(consultantId));
+	    consultant = userService.getById(consultantId);
+
+	}
+
+	return "redirect:/chat";
     }
 
-    @RequestMapping(method = RequestMethod.GET, params = { "chat" })
-    public String chatPage(@RequestParam("chat") Long chatId,
-            Principal principal, RedirectAttributes redirectAttributes) {
-        chat = this.chatService.getChatById(chatId);
-        consultant = chat.getConsultantInChat();
-
-        if (principal != null) {
-            redirectAttributes.addFlashAttribute("consultant", principal);
-        }
-
-        return "redirect:/chat";
-    }
-
-    @RequestMapping(method = RequestMethod.POST, params = { "action", "message" })
-    public ResponseEntity<String> ajaxPostMessage(
-            @RequestParam("action") String action,
-            @RequestParam("message") String message, Principal principal)
-                    throws JsonProcessingException {
-
-        ChatMessage chatMessage = null;
-        if (principal != null) {
-            chatMessage = new ChatMessage(message, Calendar.getInstance(),
-                    this.chat, this.userService.getByUsername(principal
-                            .getName()));
-        } else {
-            chatMessage = new ChatMessage(message, Calendar.getInstance(),
-                    this.chat, null);
-        }
-
-        this.chatService.postNewMessage(chatMessage);
-
-        return new ResponseEntity<>("[]", HttpStatus.OK);
-    }
-
-    @RequestMapping(method = RequestMethod.POST, params = "action")
-    public ResponseEntity<String> ajaxPollForConsultant(
-            @RequestParam("action") String action,
-            Principal principal)
-                    throws JsonProcessingException {
-
-        if (action.equals("pollForConsultant")) {
-            chat = chatService.getChatById(chat.getId());
-
-            return new ResponseEntity<String>(
-                    objectMapper.writeValueAsString(chat.isConsultantInChat()),
-                    HttpStatus.OK);
-        } else if (action.equals("endChat")) {
-            if (this.chat != null) {
-                chat = chatService.getChatById(chat.getId());
-
-                if (principal != null) {
-                    chat.setConsultantInChat(false);
-                } else {
-                    chat.setAnonymInChat(false);
-                }
-                this.chatService.endChat(chat);
-
-                chat = null;
-                consultant = null;
-
-                return new ResponseEntity<>("[]", HttpStatus.OK);
-            } else {
-                throw new RuntimeException("Chat has not been started yet");
-            }
-        } else {
-            return new ResponseEntity<>("[]", HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @RequestMapping(method = RequestMethod.POST, params = { "action",
-    "lastMessage" })
-    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, params = { "pollForMessages",
+	    "lastMessage" })
     public ResponseEntity<String> ajaxPollForMessages(
-            @RequestParam("action") String action,
-            @RequestParam(value = "lastMessage") Long lastMessageId)
-                    throws JsonProcessingException {
-        if (action.equals("pollForMessages")) {
-            List<ChatMessage> lastMessages = null;
-            if (lastMessageId != -1) {
-                lastMessages = this.chatService.getMessages(chat,
-                        this.chatService.getChatMessageById(lastMessageId));
-            } else {
-                lastMessages = this.chatService.getMessages(chat, null);
-            }
+	    @RequestParam("lastMessage") Long lastMessageId)
+	    throws JsonProcessingException {
 
-            List<ChatMessageDTO> dtos = new ArrayList<>(lastMessages.size());
-            for (ChatMessage chatMessage : lastMessages) {
-                dtos.add(new ChatMessageDTO(chatMessage));
-            }
+	List<ChatMessage> lastMessages = null;
+	if (lastMessageId != -1) {
 
-            return new ResponseEntity<String>(
-                    objectMapper.writeValueAsString(dtos),
-                    HttpStatus.OK);
-        } else {
-            return new ResponseEntity<String>("Wrong action",
-                    HttpStatus.BAD_REQUEST);
-        }
+	    lastMessages = this.chatService.getMessages(chat,
+		    this.chatService.getChatMessageById(lastMessageId));
+
+	} else {
+
+	    lastMessages = this.chatService.getMessages(chat, null);
+
+	}
+
+	List<ChatMessageDTO> dtos = new ArrayList<>(lastMessages.size());
+	for (ChatMessage chatMessage : lastMessages) {
+	    dtos.add(new ChatMessageDTO(chatMessage));
+	}
+
+	return new ResponseEntity<String>(
+		objectMapper.writeValueAsString(dtos), HttpStatus.OK);
+
+    }
+
+    @RequestMapping(method = RequestMethod.POST, params = { "pollForConsultant" })
+    public ResponseEntity<String> ajaxPollForConsultant()
+	    throws JsonProcessingException {
+
+	chat = chatService.getChatById(chat.getId());
+
+	return new ResponseEntity<String>(objectMapper.writeValueAsString(chat
+		.isConsultantInChat()), HttpStatus.OK);
+
+    }
+
+    @RequestMapping(method = RequestMethod.POST, params = { "postMessage",
+	    "message" })
+    public ResponseEntity<String> ajaxPostMessage(
+	    @RequestParam("message") String message, Principal principal) {
+
+	ChatMessage chatMessage = null;
+	if (principal != null) {
+	    chatMessage = new ChatMessage(message, Calendar.getInstance(),
+		    this.chat, this.userService.getByUsername(principal
+			    .getName()));
+	} else {
+	    chatMessage = new ChatMessage(message, Calendar.getInstance(),
+		    this.chat, null);
+	}
+
+	this.chatService.postNewMessage(chatMessage);
+
+	return new ResponseEntity<>("[]", HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, params = { "endChat" })
+    public ResponseEntity<String> ajaxEndChat(Principal principal) {
+	if (chat == null) {
+	    throw new RuntimeException("Chat has not been started yet");
+	}
+
+	chat = chatService.getChatById(chat.getId());
+
+	if (principal != null) {
+	    chat.setConsultantInChat(false);
+	} else {
+	    chat.setAnonymInChat(false);
+	}
+
+	if (!chat.isAnonymInChat() && !chat.isConsultantInChat()) {
+	    chatService.endChat(chat);
+	}
+
+	chat = null;
+	consultant = null;
+
+	return new ResponseEntity<>("[]", HttpStatus.OK);
     }
 }
