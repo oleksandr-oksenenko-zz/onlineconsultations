@@ -3,12 +3,28 @@
 <!DOCTYPE html>
 <html>
 
-<head></head>
+<head>
+    <link rel="stylesheet" type="text/css"
+        href="/resources/bootstrap/3.0.0/css/bootstrap.min.css">
+</head>
 
 <body>
-    <c:forEach var="subject" items="${subjects}">
-        <a href="<c:url value='/subjects/${subject.id}' />">${subject.name}</a>
-    </c:forEach>
+    <div class="container">
+        <c:import url="header.jsp" />
+
+        <c:forEach var="subject" items="${subjects}">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <a href="<c:url value='/subjects/${subject.id}'/>">${subject.name}</a>
+                </div>
+                <div class="panel-body">
+                    <c:out value="${ subject.description }"></c:out>
+                </div>
+            </div>
+        </c:forEach>
+
+        <c:import url="footer.jsp" />
+    </div>
 </body>
 
 </html>

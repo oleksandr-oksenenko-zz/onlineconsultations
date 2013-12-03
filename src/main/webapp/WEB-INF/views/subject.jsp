@@ -1,23 +1,53 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 
-<head></head>
+<head>
+<link rel="stylesheet" type="text/css"
+    href="/resources/bootstrap/3.0.0/css/bootstrap.min.css">
+</head>
 
 <body>
-    <table>
-        <tr><td>Name: </td><td>${subject.name}</td></tr>
-        <tr><td>Description: </td><td>${subject.description}</td></tr>
-    </table>
-    <c:forEach var="subSubject" items="${ subject.subSubjects }">
-        <p>${ subSubject.name }</p>
-        <c:forEach var="subSubjectUser" items="${ subSubject.subSubjectUsers }">
-            <a href="<c:url value='/chat?action=start&sub_subject=${ subSubject.id }&consultant=${ subSubjectUser.id }' />">
-                Start a consultation with ${ subSubjectUser.username }
-            </a>
+    <div class="container">
+        <c:import url="header.jsp" />
+
+        <c:forEach var="subSubject" items="${ subject.subSubjects }">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <c:out value="${ subSubject.name }" />
+                </div>
+                <div class="panel-body">
+                    <c:out value="${ subject.description }"></c:out>
+                </div>
+
+                <c:set var="users" value="${ subSubject.subSubjectUsers }" />
+                <c:set var="isChanges" value="${ users.retainAll(onlineConsultants) }"/>
+                
+                <ul class="list-group">
+                    <c:choose>
+                        <c:when test="${ not empty users }">
+                            <c:forEach var="user" items="${ users }">
+                                <li class="list-group-item">
+                                    <a href="/chat?action=start&consultant=${ user.id }">
+                                        Start a consultation with ${ user.firstName } ${ user.lastName } 
+                                    </a>
+                                </li>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <li class="list-group-item">
+                                <p class="text-warning">There are no avaiable consultants at the moment.</p>
+                            </li>
+                        </c:otherwise>
+                    </c:choose>
+                </ul>
+            </div>
         </c:forEach>
-    </c:forEach>
+
+        <c:import url="footer.jsp" />
+    </div>
 </body>
 
 </html>

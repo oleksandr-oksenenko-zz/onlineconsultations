@@ -13,6 +13,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+
 @Entity
 @Table(name = "user")
 public class User {
@@ -44,96 +46,114 @@ public class User {
     private String qualification;
 
     @ManyToMany
-    @JoinTable(name = "user_sub_subjects", joinColumns = { @JoinColumn(name = "user_id", nullable = false) }, inverseJoinColumns = { @JoinColumn(name = "sub_subject_id", nullable = false) })
+    @JoinTable(name = "user_sub_subject", joinColumns = { @JoinColumn(name = "user_id", nullable = false) }, inverseJoinColumns = { @JoinColumn(name = "sub_subject_id", nullable = false) })
     private List<SubSubject> subSubjects;
 
     public User() {
     }
 
     public User(Long id, String username, String password, Role role,
-	    String firstName, String middleName, String lastName,
-	    String qualification, List<SubSubject> userSubSubjects) {
-	this.id = id;
-	this.username = username;
-	this.password = password;
-	this.role = role;
-	this.firstName = firstName;
-	this.middleName = middleName;
-	this.lastName = lastName;
-	this.qualification = qualification;
-	this.subSubjects = userSubSubjects;
+            String firstName, String middleName, String lastName,
+            String qualification, List<SubSubject> userSubSubjects) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.lastName = lastName;
+        this.qualification = qualification;
+        this.subSubjects = userSubSubjects;
     }
 
     public Long getId() {
-	return id;
+        return id;
     }
 
     public void setId(Long id) {
-	this.id = id;
+        this.id = id;
     }
 
     public String getUsername() {
-	return username;
+        return username;
     }
 
     public void setUsername(String username) {
-	this.username = username;
+        this.username = username;
     }
 
     public String getPassword() {
-	return password;
+        return password;
     }
 
     public void setPassword(String password) {
-	this.password = password;
+        this.password = password;
     }
 
     public String getFirstName() {
-	return firstName;
+        return firstName;
     }
 
     public void setFirstName(String firstName) {
-	this.firstName = firstName;
+        this.firstName = firstName;
     }
 
     public String getMiddleName() {
-	return middleName;
+        return middleName;
     }
 
     public void setMiddleName(String middleName) {
-	this.middleName = middleName;
+        this.middleName = middleName;
     }
 
     public String getLastName() {
-	return lastName;
+        return lastName;
     }
 
     public void setLastName(String lastName) {
-	this.lastName = lastName;
+        this.lastName = lastName;
     }
 
     public String getQualification() {
-	return qualification;
+        return qualification;
     }
 
     public void setQualification(String qualification) {
-	this.qualification = qualification;
+        this.qualification = qualification;
     }
 
     public List<SubSubject> getUserSubSubjects() {
-	return subSubjects;
+        return subSubjects;
     }
 
     public void setUserSubSubjects(List<SubSubject> userSubSubjects) {
-	this.subSubjects = userSubSubjects;
+        this.subSubjects = userSubSubjects;
     }
 
     public Role getRole() {
-	return role;
+        return role;
     }
 
     public void setRole(Role userRole) {
-	this.role = userRole;
+        this.role = userRole;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof User)) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        User rhs = (User) obj;
+        return new EqualsBuilder().append(id, rhs.getId())
+                .append(username, rhs.getUsername())
+                .append(password, rhs.getPassword())
+                .append(firstName, rhs.getFirstName())
+                .append(middleName, rhs.getMiddleName())
+                .append(lastName, rhs.getLastName())
+                .append(role, rhs.getRole()).isEquals();
     }
 
 }

@@ -6,16 +6,26 @@
     http://www.springframework.org/schema/security/spring-security-3.2.xsd"
 >
 
+    <http pattern="/resources/**" security="none"/>
+    <http pattern="/js/**" security="none"/>
+    <http pattern="/css/**" security="none"/>
+    <http pattern="/img/**" security="none"/>
+
     <http>
+        <anonymous granted-authority="ROLE_ANONYMOUS"/>
+        
         <intercept-url pattern="/admin" access="ROLE_ADMIN" />
         <intercept-url pattern="/consultant" access="ROLE_CONSULTANT" />
+        <intercept-url pattern="/logout" access="ROLE_ADMIN, ROLE_CONSULTANT"/>
+        <intercept-url pattern="/chat" access="ROLE_ANONYMOUS, ROLE_CONSULTANT"/>
+        <intercept-url pattern="/**" access="ROLE_ANONYMOUS" />
         
-        <form-login login-page="/login" default-target-url="/" 
+        <form-login login-page="/login" default-target-url="/consultant" 
             authentication-failure-url="/login?error=true" 
             username-parameter="username" 
             password-parameter="password"
             login-processing-url="/login-check"/>
-        <logout logout-success-url="/logout" delete-cookies="JSESSIONID" />
+        <logout logout-url="/logout" logout-success-url="/" delete-cookies="JSESSIONID" />
         <session-management>
             <concurrency-control max-sessions="1" session-registry-alias="sessionRegistry"/>
         </session-management>

@@ -30,23 +30,23 @@ public class ConsultantController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String consultantPage() {
-	return "consultant";
+        return "consultant";
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody
     String ajaxGetChatWithConsultant(Principal principal, HttpStatus status)
-	    throws JsonProcessingException {
-	User consultant = this.userService.getByUsername(principal.getName());
+            throws JsonProcessingException {
+        User consultant = this.userService.getByUsername(principal.getName());
 
-	Chat chat = this.chatService.getActiveChatWithConsultant(consultant);
+        Chat chat = this.chatService.getActiveChatWithConsultant(consultant);
 
-	if (chat != null) {
-	    chat.setConsultantInChat(true);
-	    this.chatService.update(chat);
-	    return objectMapper.writeValueAsString(chat.getId());
-	} else {
-	    return objectMapper.writeValueAsString(null);
-	}
+        if (chat != null) {
+            chat.setConsultantInChat(true);
+            this.chatService.update(chat);
+            return objectMapper.writeValueAsString(chat.getId());
+        } else {
+            return objectMapper.writeValueAsString(null);
+        }
     }
 }

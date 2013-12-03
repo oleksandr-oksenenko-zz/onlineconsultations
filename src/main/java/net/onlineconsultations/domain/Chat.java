@@ -2,6 +2,7 @@ package net.onlineconsultations.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,7 +24,7 @@ public class Chat {
     @JoinColumn(name = "user_id", nullable = false)
     private User consultantInChat;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(name = "chat_status", nullable = false)
     private ChatStatus status = ChatStatus.ACTIVE;
 
@@ -37,46 +38,46 @@ public class Chat {
     }
 
     public Chat(User consultantInChat) {
-	this.consultantInChat = consultantInChat;
+        this.consultantInChat = consultantInChat;
     }
 
     public Long getId() {
-	return id;
+        return id;
     }
 
     public void setId(Long id) {
-	this.id = id;
+        this.id = id;
     }
 
     public User getConsultantInChat() {
-	return consultantInChat;
+        return consultantInChat;
     }
 
     public void setConsultantInChat(User consultantInChat) {
-	this.consultantInChat = consultantInChat;
+        this.consultantInChat = consultantInChat;
     }
 
     public ChatStatus getStatus() {
-	return status;
+        return status;
     }
 
     public void setStatus(ChatStatus chatStatus) {
-	this.status = chatStatus;
+        this.status = chatStatus;
     }
 
     public boolean isConsultantInChat() {
-	return isConsultantInChat;
+        return isConsultantInChat;
     }
 
     public void setConsultantInChat(boolean isConsultantInChat) {
-	this.isConsultantInChat = isConsultantInChat;
+        this.isConsultantInChat = isConsultantInChat;
     }
 
     public boolean isAnonymInChat() {
-	return isAnonymInChat;
+        return isAnonymInChat;
     }
 
     public void setAnonymInChat(boolean isAnonymInChat) {
-	this.isAnonymInChat = isAnonymInChat;
+        this.isAnonymInChat = isAnonymInChat;
     }
 }

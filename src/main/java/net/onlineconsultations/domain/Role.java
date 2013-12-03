@@ -13,6 +13,7 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 @Table(name = "role")
 public class Role {
     public static final Role ROLE_ADMIN = new Role("ROLE_ADMIN");
+
     public static final Role ROLE_CONSULTANT = new Role("ROLE_CONSULTANT");
 
     @Id
@@ -23,38 +24,37 @@ public class Role {
     @Column(name = "role", nullable = false, unique = true)
     private String role;
 
-    public Role() {
-    }
+    public Role() {}
 
     public Role(String role) {
-	this.role = role;
+        this.role = role;
     }
 
     public Long getId() {
-	return id;
+        return id;
     }
 
     public void setId(Long id) {
-	this.id = id;
+        this.id = id;
     }
 
     public String getRole() {
-	return role;
+        return role;
     }
 
     public void setRole(String role) {
-	this.role = role;
+        this.role = role;
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (obj == null || !(obj instanceof Role)) {
-	    return false;
-	}
-	if (obj == this) {
-	    return true;
-	}
-	Role rhs = (Role) obj;
-	return new EqualsBuilder().append(role, rhs.getRole()).isEquals();
+        if (obj == null || !(obj instanceof Role)) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        Role rhs = (Role) obj;
+        return new EqualsBuilder().append(role, rhs.getRole()).isEquals();
     }
 }

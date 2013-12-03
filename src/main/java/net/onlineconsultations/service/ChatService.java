@@ -13,7 +13,7 @@ public interface ChatService {
 
     void postNewMessage(ChatMessage chatMessage);
 
-    List<ChatMessage> getMessages(ChatMessage lastMessage);
+    List<ChatMessage> getMessages(Chat chat, ChatMessage lastMessage);
 
     Chat getActiveChatWithConsultant(User consultant);
 

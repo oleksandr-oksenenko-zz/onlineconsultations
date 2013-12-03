@@ -8,9 +8,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "sub_subject")
@@ -24,6 +27,7 @@ public class SubSubject {
     private String name;
 
     @Column(name = "description")
+    @Lob
     private String description;
 
     @ManyToOne
@@ -31,57 +35,58 @@ public class SubSubject {
     private Subject parentSubject;
 
     @ManyToMany(mappedBy = "subSubjects")
+    @JsonIgnore
     private List<User> subSubjectUsers;
 
     public SubSubject() {
     }
 
     public SubSubject(String name, String description, Subject parentSubject,
-	    List<User> subSubjectUsers) {
-	this.name = name;
-	this.description = description;
-	this.parentSubject = parentSubject;
-	this.subSubjectUsers = subSubjectUsers;
+            List<User> subSubjectUsers) {
+        this.name = name;
+        this.description = description;
+        this.parentSubject = parentSubject;
+        this.subSubjectUsers = subSubjectUsers;
     }
 
     public Long getId() {
-	return id;
+        return id;
     }
 
     public void setId(Long id) {
-	this.id = id;
+        this.id = id;
     }
 
     public String getName() {
-	return name;
+        return name;
     }
 
     public void setName(String name) {
-	this.name = name;
+        this.name = name;
     }
 
     public String getDescription() {
-	return description;
+        return description;
     }
 
     public void setDescription(String description) {
-	this.description = description;
+        this.description = description;
     }
 
     public Subject getParentSubject() {
-	return parentSubject;
+        return parentSubject;
     }
 
     public void setParentSubject(Subject parentSubject) {
-	this.parentSubject = parentSubject;
+        this.parentSubject = parentSubject;
     }
 
     public List<User> getSubSubjectUsers() {
-	return subSubjectUsers;
+        return subSubjectUsers;
     }
 
     public void setSubSubjectUsers(List<User> subSubjectUsers) {
-	this.subSubjectUsers = subSubjectUsers;
+        this.subSubjectUsers = subSubjectUsers;
     }
 
 }

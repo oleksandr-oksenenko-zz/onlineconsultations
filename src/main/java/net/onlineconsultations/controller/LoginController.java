@@ -12,11 +12,11 @@ public class LoginController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String loginPage(
-	    @RequestParam(value = "error", required = false) Boolean isError,
-	    Model model) {
-	if (isError != null) {
-	    model.addAttribute("error", isError);
-	}
-	return "login";
+            @RequestParam(value = "error", required = false) Boolean isError,
+            Model model) {
+        if (isError != null) {
+            model.addAttribute("error", isError);
+        }
+        return "login";
     }
 }
