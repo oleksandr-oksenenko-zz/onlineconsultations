@@ -2,7 +2,7 @@ function postMessage() {
 	var messageBody = $("#message").val();
 	$("#message").val("");
 	$.ajax({
-			url: "/chat",
+			url: baseUrl + "/chat",
 			type: "post",
 			data: {
 				postMessage: "",
@@ -21,7 +21,7 @@ function postMessage() {
 var lastMessageId = -1;
 function pollForMessages() {
 	$.ajax({
-			url: "/chat",
+			url: baseUrl + "/chat",
 			type: "post",
 			data: {
 				pollForMessages: "",

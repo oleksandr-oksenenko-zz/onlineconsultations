@@ -1,13 +1,13 @@
 function endChat() {
 	$.ajax({
-		url: "/chat",
+		url: baseUrl + "/chat",
 		type: "post",
 		data: {
 			endChat: ""
 		},
 		dataType: "json",
 		success: function (data) {
-			window.location.replace("/consultant");
+			window.location.replace(baseUrl + "/consultant");
 		},
 		error: function (jqXHR, errorStatus, errorText) {
 			console.log("error: " + errorStatus + " " + errorText);

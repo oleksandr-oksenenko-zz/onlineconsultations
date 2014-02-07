@@ -1,26 +1,16 @@
 package net.onlineconsultations.domain;
 
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
 import org.apache.commons.lang.builder.EqualsBuilder;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "user_id", unique = true, nullable = true)
+    @Column(name = "id", unique = true, nullable = true)
     private Long id;
 
     @Column(name = "username", length = 20, unique = true, nullable = false)
@@ -28,10 +18,6 @@ public class User {
 
     @Column(name = "password", length = 32, nullable = false)
     private String password;
-
-    @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
 
     @Column(name = "firstname")
     private String firstName;
@@ -45,10 +31,17 @@ public class User {
     @Column(name = "qualification")
     private String qualification;
 
+    @ManyToOne
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
+
     @ManyToMany
-    @JoinTable(name = "user_sub_subject", joinColumns = { @JoinColumn(name = "user_id", nullable = false) }, inverseJoinColumns = { @JoinColumn(name = "sub_subject_id", nullable = false) })
+    @JoinTable(name = "user_sub_subject",
+            joinColumns = { @JoinColumn(name = "user_id", nullable = false) },
+            inverseJoinColumns = { @JoinColumn(name = "sub_subject_id", nullable = false) })
     private List<SubSubject> subSubjects;
 
+    @Deprecated
     public User() {
     }
 

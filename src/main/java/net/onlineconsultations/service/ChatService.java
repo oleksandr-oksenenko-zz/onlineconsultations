@@ -1,13 +1,13 @@
 package net.onlineconsultations.service;
 
-import java.util.List;
-
 import net.onlineconsultations.domain.Chat;
 import net.onlineconsultations.domain.ChatMessage;
 import net.onlineconsultations.domain.User;
 
+import java.util.List;
+
 public interface ChatService {
-    Chat startNewChat(User consultantInChat);
+    Chat startChat(User consultantInChat);
 
     void endChat(Chat chat);
 

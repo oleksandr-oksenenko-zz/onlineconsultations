@@ -6,12 +6,12 @@
 
 <head>
 <link rel="stylesheet" type="text/css"
-    href="/resources/bootstrap/3.0.0/css/bootstrap.min.css">
+    href="<c:url value='/resources/bootstrap/3.0.0/css/bootstrap.min.css'/>">
 </head>
 
 <body>
     <div class="container">
-        <c:import url="header.jsp" />
+        <c:import url="common/header.jsp" />
 
         <c:forEach var="subSubject" items="${ subject.subSubjects }">
             <div class="panel panel-default">
@@ -30,7 +30,7 @@
                         <c:when test="${ not empty users }">
                             <c:forEach var="user" items="${ users }">
                                 <li class="list-group-item">
-                                    <a href="/chat?action=startChat&consultant=${ user.id }">
+                                    <a href="<c:url value='/chat?action=startChat&consultant=${ user.id }'/>">
                                         Start a consultation with ${ user.firstName } ${ user.lastName } 
                                     </a>
                                 </li>
@@ -46,7 +46,7 @@
             </div>
         </c:forEach>
 
-        <c:import url="footer.jsp" />
+        <c:import url="common/footer.jsp" />
     </div>
 </body>
 

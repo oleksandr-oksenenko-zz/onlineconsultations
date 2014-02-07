@@ -1,6 +1,6 @@
 function pollForConsultant() {
 	$.ajax({
-			url: "/chat",
+			url: baseUrl + "/chat",
 			type: "post",
 			data: {
 				action: "pollForConsultant"
@@ -19,14 +19,14 @@ function pollForConsultant() {
 
 function endChat() {
 	$.ajax({
-		url: "/chat",
+		url: baseUrl + "/chat",
 		type: "post",
 		data: {
 			action: "endChat"
 		},
 		dataType: "json",
 		success: function (data) {
-			window.location.replace("/");
+			window.location.replace(baseUrl + "/");
 		},
 		error: function (jqXHR, errorStatus, errorText) {
 			console.log("error: " + errorStatus + " " + errorText);

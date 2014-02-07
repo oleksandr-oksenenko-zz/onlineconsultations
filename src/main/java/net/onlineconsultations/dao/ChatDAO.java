@@ -5,7 +5,7 @@ import java.util.List;
 import net.onlineconsultations.domain.Chat;
 
 public interface ChatDAO {
-    List<Chat> getAll();
+    List getAll();
 
     Chat getById(Long id);
 

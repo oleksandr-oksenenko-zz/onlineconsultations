@@ -1,8 +1,8 @@
 package net.onlineconsultations.service;
 
-import java.util.List;
-
 import net.onlineconsultations.domain.Subject;
+
+import java.util.List;
 
 public interface SubjectService {
 

@@ -17,7 +17,7 @@
         <intercept-url pattern="/admin*" access="ROLE_ADMIN" />
         <intercept-url pattern="/consultant*" access="ROLE_CONSULTANT" />
         <intercept-url pattern="/logout*" access="ROLE_ADMIN,ROLE_CONSULTANT"/>
-        <intercept-url pattern="/chat*" access="ROLE_CONSULTANT,ROLE_ANONYMOUS"/>
+        <!--<intercept-url pattern="/chat*" access="ROLE_CONSULTANT,ROLE_ANONYMOUS"/>-->
         <intercept-url pattern="/*" access="ROLE_ANONYMOUS" />
         
         <form-login login-page="/login" default-target-url="/consultant" 

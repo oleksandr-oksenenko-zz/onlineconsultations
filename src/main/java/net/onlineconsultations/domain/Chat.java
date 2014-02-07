@@ -16,8 +16,8 @@ import javax.persistence.Table;
 public class Chat {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "chat_id", unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
     @ManyToOne
@@ -28,10 +28,10 @@ public class Chat {
     @Column(name = "chat_status", nullable = false)
     private ChatStatus status = ChatStatus.ACTIVE;
 
-    @Column(name = "is_consultant_in_chat")
+    @Column(name = "is_consultant_in_chat", columnDefinition = "tinyint")
     private boolean isConsultantInChat = false;
 
-    @Column(name = "is_anonym_in_chat")
+    @Column(name = "is_anonym_in_chat", columnDefinition = "tinyint")
     private boolean isAnonymInChat = false;
 
     public Chat() {

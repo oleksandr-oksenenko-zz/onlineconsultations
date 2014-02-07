@@ -1,47 +1,39 @@
 package net.onlineconsultations.domain;
 
-import java.util.Calendar;
+import org.hibernate.annotations.Type;
+import org.joda.time.LocalDateTime;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "chat_message")
 public class ChatMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "chat_message_id", unique = true, nullable = false)
+    @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
     @Column(name = "body")
     @Lob
     private String body;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "timestamp")
-    private Calendar timestamp;
+    @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
+    private LocalDateTime timestamp;
 
     @ManyToOne
     @JoinColumn(name = "chat_id", nullable = false)
     private Chat chat;
 
     @ManyToOne
-    @JoinColumn(name = "author_id", nullable = true)
+    @JoinColumn(name = "user_id", nullable = true)
     private User author;
 
+    @Deprecated
     public ChatMessage() {}
 
-    public ChatMessage(String body, Calendar sendTimestamp, Chat chat,
-            User author) {
+    public ChatMessage(String body, LocalDateTime sendTimestamp,
+                       Chat chat, User author) {
         this.body = body;
         this.timestamp = sendTimestamp;
         this.chat = chat;
@@ -64,11 +56,11 @@ public class ChatMessage {
         this.body = body;
     }
 
-    public Calendar getTimestamp() {
+    public LocalDateTime getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Calendar sendTimestamp) {
+    public void setTimestamp(LocalDateTime sendTimestamp) {
         this.timestamp = sendTimestamp;
     }
 

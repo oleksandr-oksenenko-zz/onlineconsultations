@@ -1,13 +1,8 @@
 package net.onlineconsultations.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import org.apache.commons.lang.builder.EqualsBuilder;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "role")
@@ -18,12 +13,13 @@ public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "role_id")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "role", nullable = false, unique = true)
     private String role;
 
+    @Deprecated
     public Role() {}
 
     public Role(String role) {

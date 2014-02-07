@@ -1,22 +1,14 @@
 package net.onlineconsultations.domain;
 
+import javax.persistence.*;
 import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 @Entity
 @Table(name = "subject")
 public class Subject {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "subject_id")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "name")
@@ -29,6 +21,10 @@ public class Subject {
     @OneToMany(mappedBy = "parentSubject")
     private List<SubSubject> subSubjects;
 
+    /**
+     * Only for Hibernate use.
+     * */
+    @Deprecated
     public Subject() {
     }
 

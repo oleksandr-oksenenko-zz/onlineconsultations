@@ -7,7 +7,5 @@ public interface UserService {
 
     User getByUsername(String username);
 
-    boolean checkUserPassword(String username, String password);
-
     void save(User user);
 }

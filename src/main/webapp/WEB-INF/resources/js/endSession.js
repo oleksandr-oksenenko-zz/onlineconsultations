@@ -1,6 +1,6 @@
 function endSession() {
 	$.ajax({
-		url: "/logout",
+		url: baseUrl + "/logout",
 		type: "get",
 		data: {},
 		dataType : "json",

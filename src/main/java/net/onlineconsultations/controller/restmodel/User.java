@@ -1,8 +1,6 @@
-package net.onlineconsultations.controller.dto;
+package net.onlineconsultations.controller.restmodel;
 
-import net.onlineconsultations.domain.User;
-
-public class UserDTO {
+public class User {
     private Long id;
 
     private String firstname;
@@ -13,8 +11,8 @@ public class UserDTO {
 
     private String qualification;
 
-    public UserDTO(Long id, String firstname, String middlename,
-            String lastname, String qualification) {
+    public User(Long id, String firstname, String middlename,
+                String lastname, String qualification) {
         this.id = id;
         this.firstname = firstname;
         this.middlename = middlename;
@@ -22,7 +20,7 @@ public class UserDTO {
         this.qualification = qualification;
     }
 
-    public UserDTO(User user) {
+    public User(net.onlineconsultations.domain.User user) {
         if (user != null) {
             this.id = user.getId();
             this.firstname = user.getFirstName();

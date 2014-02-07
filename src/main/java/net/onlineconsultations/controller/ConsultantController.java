@@ -1,28 +1,20 @@
 package net.onlineconsultations.controller;
 
-import java.security.Principal;
-
 import net.onlineconsultations.domain.Chat;
 import net.onlineconsultations.domain.User;
 import net.onlineconsultations.service.ChatService;
 import net.onlineconsultations.service.UserService;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.security.Principal;
 
 @Controller
 @RequestMapping("/consultant")
 public class ConsultantController {
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @Autowired
     private ChatService chatService;
 
@@ -31,23 +23,21 @@ public class ConsultantController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String consultantPage() {
-	return "consultant";
+        return "consultant";
     }
 
     @RequestMapping(method = RequestMethod.POST, params = { "pollForChat" })
-    public @ResponseBody
-    String ajaxPollForChat(Principal principal, HttpStatus status)
-	    throws JsonProcessingException {
-	User consultant = this.userService.getByUsername(principal.getName());
+    public @ResponseBody Long pollForChat(Principal principal) {
+        User consultant = userService.getByUsername(principal.getName());
 
-	Chat chat = this.chatService.getActiveChatWithConsultant(consultant);
+        Chat chat = chatService.getActiveChatWithConsultant(consultant);
 
-	if (chat != null) {
-	    chat.setConsultantInChat(true);
-	    chatService.update(chat);
-	    return objectMapper.writeValueAsString(chat.getId());
-	} else {
-	    return objectMapper.writeValueAsString(null);
-	}
+        if (chat != null) {
+            chat.setConsultantInChat(true);
+            chatService.update(chat);
+            return chat.getId();
+        } else {
+            return null;
+        }
     }
 }

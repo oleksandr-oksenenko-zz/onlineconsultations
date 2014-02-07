@@ -1,26 +1,14 @@
 package net.onlineconsultations.domain;
 
+import javax.persistence.*;
 import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "sub_subject")
 public class SubSubject {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "sub_subject_id")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "name")
@@ -31,13 +19,16 @@ public class SubSubject {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "subject_id", nullable = false)
+    @JoinColumn(name = "parent_subject_id", nullable = false)
     private Subject parentSubject;
 
     @ManyToMany(mappedBy = "subSubjects")
-    @JsonIgnore
     private List<User> subSubjectUsers;
 
+    /**
+     * Only for Hibernate use
+     * */
+    @Deprecated
     public SubSubject() {
     }
 

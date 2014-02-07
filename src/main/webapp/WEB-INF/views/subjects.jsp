@@ -5,12 +5,12 @@
 
 <head>
     <link rel="stylesheet" type="text/css"
-        href="/resources/bootstrap/3.0.0/css/bootstrap.min.css">
+        href="<c:url value='/resources/bootstrap/3.0.0/css/bootstrap.min.css'/>">
 </head>
 
 <body>
     <div class="container">
-        <c:import url="header.jsp" />
+        <c:import url="common/header.jsp" />
 
         <c:forEach var="subject" items="${subjects}">
             <div class="panel panel-default">
@@ -23,7 +23,7 @@
             </div>
         </c:forEach>
 
-        <c:import url="footer.jsp" />
+        <c:import url="common/footer.jsp" />
     </div>
 </body>
 

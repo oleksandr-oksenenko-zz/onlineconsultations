@@ -1,6 +1,6 @@
 function pollForChat() {
 	$.ajax({
-			url: "/consultant",
+			url: baseUrl + "/consultant",
 			type: "post",
 			data: {
 				pollForChat: ""
@@ -10,7 +10,7 @@ function pollForChat() {
 				if (data == null) {
 					setTimeout(pollForChat, 1000);
 				} else {
-					window.location.replace("/chat?action=startChat");
+					window.location.replace(baseUrl + "/chat?action=startChat");
 				}
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
