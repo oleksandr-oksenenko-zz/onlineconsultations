@@ -11,14 +11,14 @@
     <http pattern="/css/**" security="none"/>
     <http pattern="/img/**" security="none"/>
 
-    <http request-matcher="regex">
+    <http request-matcher="regex" use-expressions="true">
         <anonymous granted-authority="ROLE_ANONYMOUS"/>
         
-        <intercept-url pattern="/admin*" access="ROLE_ADMIN" />
-        <intercept-url pattern="/consultant*" access="ROLE_CONSULTANT" />
-        <intercept-url pattern="/logout*" access="ROLE_ADMIN,ROLE_CONSULTANT"/>
-        <!--<intercept-url pattern="/chat*" access="ROLE_CONSULTANT,ROLE_ANONYMOUS"/>-->
-        <intercept-url pattern="/*" access="ROLE_ANONYMOUS" />
+        <intercept-url pattern="/admin*" access="hasRole('ROLE_ADMIN')" />
+        <intercept-url pattern="/consultant*" access="hasRole('ROLE_CONSULTANT')" />
+        <intercept-url pattern="/logout*" access="isAuthenticated()"/>
+        <intercept-url pattern="/chat*" access="hasAnyRole('ROLE_CONSULTANT','ROLE_ANONYMOUS')"/>
+        <intercept-url pattern="/*" access="hasRole('ROLE_ANONYMOUS')" />
         
         <form-login login-page="/login" default-target-url="/consultant" 
             authentication-failure-url="/login?error=true" 
