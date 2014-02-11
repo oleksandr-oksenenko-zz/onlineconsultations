@@ -1,4 +1,4 @@
-package net.onlineconsultations.controller;
+package net.onlineconsultations.controller.page;
 
 import net.onlineconsultations.domain.Subject;
 import net.onlineconsultations.domain.User;
@@ -55,7 +55,7 @@ public class SubjectController {
                 UserDetails userDetails = (UserDetails) principal;
 
                 User user = userService
-                        .getByUsername(userDetails.getUsername());
+                        .findByUsername(userDetails.getUsername());
 
                 if (user.getRole().equals(UserRole.ROLE_CONSULTANT)) {
                     onlineConsultants.add(user);

@@ -1,6 +1,6 @@
-package net.onlineconsultations.controller;
+package net.onlineconsultations.controller.page;
 
-import net.onlineconsultations.controller.restmodel.ChatMessage;
+import net.onlineconsultations.controller.rest.model.ChatMessageInfo;
 import net.onlineconsultations.domain.Chat;
 import net.onlineconsultations.domain.User;
 import net.onlineconsultations.service.ChatService;
@@ -21,6 +21,8 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
+/* DEPRECATED. Should be reworked fully.*/
+@Deprecated
 @Controller
 @Scope("session")
 @RequestMapping(value = "/chat")
@@ -59,7 +61,7 @@ public class ChatController {
 
         if (principal != null) {
 
-            consultant = userService.getByUsername(principal.getName());
+            consultant = userService.findByUsername(principal.getName());
             chat = chatService.getActiveChatWithConsultant(consultant);
             redirectAttributes.addFlashAttribute("consultant", principal);
 
@@ -75,22 +77,22 @@ public class ChatController {
 
     @RequestMapping(method = RequestMethod.POST, params = { "pollForMessages", "lastMessage" })
     @ResponseBody
-    public List<ChatMessage> pollForMessages(@RequestParam("lastMessage") Long lastMessageId) {
+    public List<ChatMessageInfo> pollForMessages(@RequestParam("lastMessage") Long lastMessageId) {
 
         List<net.onlineconsultations.domain.ChatMessage> lastMessages;
         if (lastMessageId != -1) {
 
-            lastMessages = chatService.getMessages(chat, chatService.getChatMessageById(lastMessageId));
+            lastMessages = chatService.getLastMessagesByChat(chat, chatService.getChatMessageById(lastMessageId));
 
         } else {
 
-            lastMessages = this.chatService.getMessages(chat, null);
+            lastMessages = this.chatService.getLastMessagesByChat(chat, null);
 
         }
 
-        List<ChatMessage> response = new ArrayList<>(lastMessages.size());
+        List<ChatMessageInfo> response = new ArrayList<>(lastMessages.size());
         for (net.onlineconsultations.domain.ChatMessage chatMessage : lastMessages) {
-            response.add(new ChatMessage(chatMessage));
+            response.add(new ChatMessageInfo(chatMessage));
         }
 
         return response;
@@ -113,7 +115,7 @@ public class ChatController {
             chatMessage = new net.onlineconsultations.domain.ChatMessage(message,
                     LocalDateTime.now(DateTimeZone.UTC),
                     chat,
-                    userService.getByUsername(principal.getName()));
+                    userService.findByUsername(principal.getName()));
         } else {
             chatMessage = new net.onlineconsultations.domain.ChatMessage(message,
                     LocalDateTime.now(DateTimeZone.UTC),

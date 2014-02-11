@@ -7,18 +7,18 @@ import net.onlineconsultations.domain.ChatMessage;
 import net.onlineconsultations.domain.ChatStatus;
 import net.onlineconsultations.domain.User;
 import net.onlineconsultations.service.ChatService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.inject.Inject;
 import java.util.List;
 
 @Service
 public class ChatServiceImpl implements ChatService {
-    @Autowired
+    @Inject
     private ChatDAO chatDAO;
 
-    @Autowired
+    @Inject
     private ChatMessageDAO chatMessageDAO;
 
     @Override
@@ -34,7 +34,7 @@ public class ChatServiceImpl implements ChatService {
     @Transactional
     public void endChat(Chat chat) {
         chat.setStatus(ChatStatus.CLOSED);
-        chatDAO.update(chat);
+        chatDAO.merge(chat);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public List<ChatMessage> getMessages(Chat chat, ChatMessage lastMessage) {
+    public List<ChatMessage> getLastMessagesByChat(Chat chat, ChatMessage lastMessage) {
         return chatMessageDAO.getLastMessagesByChat(chat, lastMessage);
     }
 
@@ -67,7 +67,7 @@ public class ChatServiceImpl implements ChatService {
     @Override
     @Transactional
     public void update(Chat chat) {
-        chatDAO.update(chat);
+        chatDAO.merge(chat);
     }
 
     @Override

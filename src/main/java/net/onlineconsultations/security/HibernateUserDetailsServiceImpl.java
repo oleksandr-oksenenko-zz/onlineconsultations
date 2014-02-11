@@ -21,7 +21,7 @@ public class HibernateUserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
-        User user = userService.getByUsername(username);
+        User user = userService.findByUsername(username);
 
         if (user == null) {
             throw new UsernameNotFoundException("No such user with username = "

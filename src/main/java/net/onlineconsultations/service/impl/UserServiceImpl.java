@@ -3,13 +3,14 @@ package net.onlineconsultations.service.impl;
 import net.onlineconsultations.dao.UserDAO;
 import net.onlineconsultations.domain.User;
 import net.onlineconsultations.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.inject.Inject;
+
 @Service
 public class UserServiceImpl implements UserService {
-    @Autowired
+    @Inject
     private UserDAO userDAO;
 
     @Override
@@ -18,7 +19,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getByUsername(String username) {
+    public User findByUsername(String username) {
         return userDAO.findByUsername(username);
     }
 

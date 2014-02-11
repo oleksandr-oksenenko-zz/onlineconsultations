@@ -1,9 +1,8 @@
 function pollForChat() {
 	$.ajax({
-			url: baseUrl + "/consultant",
+			url: baseUrl + "/chat/poll_for_chat",
 			type: "post",
 			data: {
-				pollForChat: ""
 			},
 			dataType : "json",
 			success: function (data) {
