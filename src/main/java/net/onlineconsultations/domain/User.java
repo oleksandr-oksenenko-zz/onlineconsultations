@@ -1,8 +1,11 @@
 package net.onlineconsultations.domain;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
@@ -10,13 +13,17 @@ import java.util.List;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", unique = true, nullable = true)
+    @Column(name = "id", unique = true)
     private Long id;
 
-    @Column(name = "username", length = 20, unique = true, nullable = false)
+    @Column(name = "username", unique = true)
+    @NotNull
+    @Size(max = 20)
     private String username;
 
-    @Column(name = "password", length = 32, nullable = false)
+    @Column(name = "password")
+    @Size(max = 32)
+    @NotNull
     private String password;
 
     @Column(name = "firstname")
@@ -31,9 +38,9 @@ public class User {
     @Column(name = "qualification")
     private String qualification;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private UserRole role;
 
     @ManyToMany
     @JoinTable(name = "user_sub_subject",
@@ -45,9 +52,9 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String username, String password, Role role,
-            String firstName, String middleName, String lastName,
-            String qualification, List<SubSubject> userSubSubjects) {
+    public User(Long id, String username, String password, UserRole role,
+                String firstName, String middleName, String lastName,
+                String qualification, List<SubSubject> userSubSubjects) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -123,11 +130,11 @@ public class User {
         this.subSubjects = userSubSubjects;
     }
 
-    public Role getRole() {
+    public UserRole getRole() {
         return role;
     }
 
-    public void setRole(Role userRole) {
+    public void setRole(UserRole userRole) {
         this.role = userRole;
     }
 
@@ -149,4 +156,15 @@ public class User {
                 .append(role, rhs.getRole()).isEquals();
     }
 
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(username)
+                .append(password)
+                .append(firstName)
+                .append(middleName)
+                .append(lastName)
+                .append(role)
+                .toHashCode();
+    }
 }

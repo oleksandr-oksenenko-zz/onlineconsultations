@@ -1,14 +1,10 @@
 package net.onlineconsultations.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.onlineconsultations.domain.Role;
 import net.onlineconsultations.domain.Subject;
 import net.onlineconsultations.domain.User;
+import net.onlineconsultations.domain.UserRole;
 import net.onlineconsultations.service.SubjectService;
 import net.onlineconsultations.service.UserService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,8 +14,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
-@RequestMapping({ "/subjects", "/" })
+@RequestMapping({"/subjects", "/"})
 public class SubjectController {
     @Autowired
     private SubjectService subjectService;
@@ -38,7 +37,7 @@ public class SubjectController {
 
     @RequestMapping(value = "/{subject_id}", method = RequestMethod.GET)
     public String subject(@PathVariable("subject_id") Long subjectId,
-            Model model) {
+                          Model model) {
 
         Subject subject = this.subjectService.getSubjectById(subjectId);
 
@@ -58,7 +57,7 @@ public class SubjectController {
                 User user = userService
                         .getByUsername(userDetails.getUsername());
 
-                if (user.getRole().equals(Role.ROLE_CONSULTANT)) {
+                if (user.getRole().equals(UserRole.ROLE_CONSULTANT)) {
                     onlineConsultants.add(user);
                 }
             } else {
