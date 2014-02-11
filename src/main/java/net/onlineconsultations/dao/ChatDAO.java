@@ -1,17 +1,7 @@
 package net.onlineconsultations.dao;
 
-import java.util.List;
-
 import net.onlineconsultations.domain.Chat;
 
-public interface ChatDAO {
-    List getAll();
-
-    Chat getById(Long id);
-
-    void save(Chat chat);
-
-    void update(Chat chat);
-
+public interface ChatDAO extends GenericDao<Chat> {
     Chat getActiveChatWithConsultant(Long consultantId);
 }

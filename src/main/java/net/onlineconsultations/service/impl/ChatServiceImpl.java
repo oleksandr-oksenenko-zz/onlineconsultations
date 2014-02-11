@@ -51,7 +51,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public List<ChatMessage> getMessages(Chat chat, ChatMessage lastMessage) {
-        return chatMessageDAO.getMessages(chat, lastMessage);
+        return chatMessageDAO.getLastMessagesByChat(chat, lastMessage);
     }
 
     @Override

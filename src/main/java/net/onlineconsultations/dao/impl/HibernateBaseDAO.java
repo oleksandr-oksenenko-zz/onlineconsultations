@@ -1,38 +1,41 @@
 package net.onlineconsultations.dao.impl;
 
-import org.hibernate.Session;
+import net.onlineconsultations.dao.GenericDao;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.inject.Inject;
 import java.util.List;
 
 @Repository
-public abstract class HibernateBaseDAO {
-    @Autowired
-    private SessionFactory sessionFactory;
+public abstract class HibernateBaseDAO<T> implements GenericDao<T> {
+    @Inject
+    protected SessionFactory sessionFactory;
 
-    protected Session getSession() {
-        return sessionFactory.openSession();
+    private final Class<T> entityClass;
+
+    protected HibernateBaseDAO(Class<T> entityClass) {
+        this.entityClass = entityClass;
     }
 
-    public <T> void save(T entity) {
-        getSession().save(entity);
+    @Override
+    public List<T> getAll() {
+        return (List<T>) sessionFactory.openSession()
+                .createCriteria(entityClass).list();
     }
 
-    public <T> void merge(T entity) {
-        getSession().merge(entity);
+    @Override
+    public T getById(Long id) {
+        return (T) sessionFactory.openSession().get(entityClass, id);
     }
 
-    public <T> T getById(Long id, Class<T> entityClass) {
-        return (T) getSession()
-                .createCriteria(entityClass)
-                .add(Restrictions.eq("id", id))
-                .uniqueResult();
+    @Override
+    public void save(T entity) {
+        sessionFactory.openSession().save(entity);
     }
 
-    public <T> List<T> getAll(Class<T> entityClass) {
-        return (List<T>) getSession().createCriteria(entityClass).list();
+    @Override
+    public void merge(T entity) {
+        sessionFactory.openSession().merge(entity);
     }
 }
