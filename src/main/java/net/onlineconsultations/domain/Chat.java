@@ -10,22 +10,25 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "chat")
 public class Chat {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
+    @NotNull
     private User consultantInChat;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "chat_status", nullable = false)
+    @Column(name = "chat_status")
+    @NotNull
     private ChatStatus status = ChatStatus.ACTIVE;
 
     @Column(name = "is_consultant_in_chat", columnDefinition = "tinyint")
@@ -34,8 +37,7 @@ public class Chat {
     @Column(name = "is_anonym_in_chat", columnDefinition = "tinyint")
     private boolean isAnonymInChat = false;
 
-    public Chat() {
-    }
+    public Chat() { }
 
     public Chat(User consultantInChat) {
         this.consultantInChat = consultantInChat;

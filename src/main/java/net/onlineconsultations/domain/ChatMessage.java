@@ -4,13 +4,14 @@ import org.hibernate.annotations.Type;
 import org.joda.time.LocalDateTime;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "chat_message")
 public class ChatMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", unique = true, nullable = false)
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "body")
@@ -22,15 +23,16 @@ public class ChatMessage {
     private LocalDateTime timestamp;
 
     @ManyToOne
-    @JoinColumn(name = "chat_id", nullable = false)
+    @JoinColumn(name = "chat_id")
+    @NotNull
     private Chat chat;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = true)
+    @JoinColumn(name = "user_id")
+    @NotNull
     private User author;
 
-    @Deprecated
-    public ChatMessage() {}
+    public ChatMessage() { }
 
     public ChatMessage(String body, LocalDateTime sendTimestamp,
                        Chat chat, User author) {

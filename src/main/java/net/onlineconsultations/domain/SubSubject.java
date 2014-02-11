@@ -1,6 +1,7 @@
 package net.onlineconsultations.domain;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -12,6 +13,7 @@ public class SubSubject {
     private Long id;
 
     @Column(name = "name")
+    @NotNull
     private String name;
 
     @Column(name = "description")
@@ -19,18 +21,14 @@ public class SubSubject {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "parent_subject_id", nullable = false)
+    @JoinColumn(name = "parent_subject_id")
+    @NotNull
     private Subject parentSubject;
 
     @ManyToMany(mappedBy = "subSubjects")
     private List<User> subSubjectUsers;
 
-    /**
-     * Only for Hibernate use
-     * */
-    @Deprecated
-    public SubSubject() {
-    }
+    public SubSubject() { }
 
     public SubSubject(String name, String description, Subject parentSubject,
             List<User> subSubjectUsers) {

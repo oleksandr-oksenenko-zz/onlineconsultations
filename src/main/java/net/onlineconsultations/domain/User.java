@@ -48,9 +48,7 @@ public class User {
             inverseJoinColumns = { @JoinColumn(name = "sub_subject_id", nullable = false) })
     private List<SubSubject> subSubjects;
 
-    @Deprecated
-    public User() {
-    }
+    public User() { }
 
     public User(Long id, String username, String password, UserRole role,
                 String firstName, String middleName, String lastName,

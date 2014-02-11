@@ -21,12 +21,7 @@ public class Subject {
     @OneToMany(mappedBy = "parentSubject")
     private List<SubSubject> subSubjects;
 
-    /**
-     * Only for Hibernate use.
-     * */
-    @Deprecated
-    public Subject() {
-    }
+    public Subject() { }
 
     public Subject(String name, String description, List<SubSubject> subSubjects) {
         this.name = name;
