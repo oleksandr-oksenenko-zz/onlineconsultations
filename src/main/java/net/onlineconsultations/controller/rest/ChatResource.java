@@ -6,12 +6,12 @@ import net.onlineconsultations.domain.ChatMessage;
 import net.onlineconsultations.domain.User;
 import net.onlineconsultations.service.ChatService;
 import net.onlineconsultations.service.UserService;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class ChatResource {
     @Inject
     private UserService userService;
 
-    @PreAuthorize("ROLE_CONSULTANT")
+    @RolesAllowed("ROLE_CONSULTANT")
     @RequestMapping(value = "/poll_for_chat", method = RequestMethod.POST)
     @ResponseBody
     public Long consultantPollForChat(Principal principal) {
@@ -43,7 +43,7 @@ public class ChatResource {
         }
     }
 
-    @PreAuthorize("ROLE_CONSULTANT")
+    @RolesAllowed("ROLE_CONSULTANT")
     @RequestMapping(value = "/poll_for_messages", method = RequestMethod.POST)
     @ResponseBody
     public List<ChatMessageInfo> getLastMessages(Principal principal) {
