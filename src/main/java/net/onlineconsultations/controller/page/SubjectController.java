@@ -5,7 +5,6 @@ import net.onlineconsultations.domain.User;
 import net.onlineconsultations.domain.UserRole;
 import net.onlineconsultations.service.SubjectService;
 import net.onlineconsultations.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -14,19 +13,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @RequestMapping({"/subjects", "/"})
 public class SubjectController {
-    @Autowired
+    @Inject
     private SubjectService subjectService;
 
-    @Autowired
+    @Inject
     private UserService userService;
 
-    @Autowired
+    @Inject
     private SessionRegistry sessionRegistry;
 
     @RequestMapping(method = RequestMethod.GET)

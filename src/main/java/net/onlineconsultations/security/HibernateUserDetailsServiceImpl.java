@@ -2,25 +2,22 @@ package net.onlineconsultations.security;
 
 import net.onlineconsultations.domain.User;
 import net.onlineconsultations.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.inject.Inject;
 import java.util.Collections;
 
 @Service
-@Transactional
 public class HibernateUserDetailsServiceImpl implements UserDetailsService {
-    @Autowired
+    @Inject
     private UserService userService;
 
     @Override
-    public UserDetails loadUserByUsername(String username)
-            throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userService.findByUsername(username);
 
         if (user == null) {
@@ -30,9 +27,7 @@ public class HibernateUserDetailsServiceImpl implements UserDetailsService {
 
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(), user.getPassword(),
-                Collections.singletonList(
-                        new SimpleGrantedAuthority(user.getRole().getRole())
-                ));
+                Collections.singletonList(new SimpleGrantedAuthority(user.getRole().toString())));
     }
 
 }
