@@ -1,6 +1,7 @@
 package net.onlineconsultations.dao.impl;
 
 import net.onlineconsultations.dao.GenericDao;
+import net.onlineconsultations.dao.exception.NoSuchRecordException;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
@@ -26,7 +27,11 @@ public abstract class HibernateBaseDAO<T> implements GenericDao<T> {
 
     @Override
     public T getById(Long id) {
-        return (T) sessionFactory.openSession().get(entityClass, id);
+        T result = (T) sessionFactory.openSession().get(entityClass, id);
+        if (result == null) {
+            throw new NoSuchRecordException("Entity " + entityClass.toString() + " with id " + id + " is not found");
+        }
+        return result;
     }
 
     @Override
