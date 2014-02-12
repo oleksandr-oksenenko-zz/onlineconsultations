@@ -2,16 +2,17 @@ package net.onlineconsultations.dao.impl;
 
 import net.onlineconsultations.dao.GenericDao;
 import net.onlineconsultations.dao.exception.NoSuchRecordException;
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
-import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 
 @Repository
 public abstract class HibernateBaseDAO<T> implements GenericDao<T> {
-    @Inject
-    protected SessionFactory sessionFactory;
+    @PersistenceContext
+    private EntityManager em;
 
     private final Class<T> entityClass;
 
@@ -21,13 +22,13 @@ public abstract class HibernateBaseDAO<T> implements GenericDao<T> {
 
     @Override
     public List<T> getAll() {
-        return (List<T>) sessionFactory.openSession()
-                .createCriteria(entityClass).list();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        return em.createQuery(cb.createQuery(entityClass)).getResultList();
     }
 
     @Override
     public T getById(Long id) {
-        T result = (T) sessionFactory.openSession().get(entityClass, id);
+        T result = em.find(entityClass, id);
         if (result == null) {
             throw new NoSuchRecordException("Entity " + entityClass.toString() + " with id " + id + " is not found");
         }
@@ -36,11 +37,11 @@ public abstract class HibernateBaseDAO<T> implements GenericDao<T> {
 
     @Override
     public void save(T entity) {
-        sessionFactory.openSession().save(entity);
+        em.persist(entity);
     }
 
     @Override
     public void merge(T entity) {
-        sessionFactory.openSession().merge(entity);
+        em.merge(entity);
     }
 }

@@ -12,19 +12,19 @@
        http://www.springframework.org/schema/jee/spring-jee-3.2.xsd">
 
     <context:component-scan base-package="net.onlineconsultations.dao"/>
-    
-    <jee:jndi-lookup id="dataSource"
-            jndi-name="jdbc/onlineConsultationsDS"
-            expected-type="javax.sql.DataSource"/>
 
-    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+    <jee:jndi-lookup id="dataSource"
+                     jndi-name="jdbc/onlineConsultationsDS"
+                     expected-type="javax.sql.DataSource"/>
+
+    <bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+        <property name="database" value="MYSQL"/>
+        <property name="generatedDdl" value="false"/>
+        <property name="databasePlatform" value="org.hibernate.dialect.MySQL5Dialect"/>
+    </bean>
+
+    <bean id="emf" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="dataSource"/>
-        <property name="hibernateProperties">
-            <props>
-                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
-                <prop key="hibernate.hbm2ddl.auto">validate</prop>
-            </props>
-        </property>
-        <property name="packagesToScan" value="net.onlineconsultations.domain"/>
-    </bean> 
+        <property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
+    </bean>
 </beans>
