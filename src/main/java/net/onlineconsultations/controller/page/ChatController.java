@@ -24,6 +24,12 @@ public class ChatController {
     @Inject
     private UserService userService;
 
+    @RolesAllowed({"ROLE_ANONYMOUS", "ROLE_CONSULTANT"})
+    @RequestMapping(method = RequestMethod.GET)
+    public String chatPage() {
+        return "chat";
+    }
+
     /**
      * Handler for start chat action for anonymous users.
      * */
