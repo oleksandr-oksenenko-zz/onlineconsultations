@@ -7,6 +7,7 @@ import net.onlineconsultations.domain.ChatStatus;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -30,7 +31,11 @@ public class HibernateChatDAOImpl extends HibernateBaseDAO<Chat> implements Chat
                 cb.equal(root.get("sessionId"), sessionId)
         );
 
-        return em.createQuery(cq).getSingleResult();
+        try {
+            return em.createQuery(cq).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     @Override
@@ -40,15 +45,14 @@ public class HibernateChatDAOImpl extends HibernateBaseDAO<Chat> implements Chat
         Root<Chat> root = cq.from(Chat.class);
         cq.where(cb.and(
                 cb.equal(root.get("status"), ChatStatus.ACTIVE),
-                cb.equal(root.get("consultantInChat.id"), consultantId)
+                cb.equal(root.get("consultantInChat").get("id"), consultantId)
             )
         );
 
-        Chat result = em.createQuery(cq).getSingleResult();
-
-        if (result == null) {
+        try {
+            return em.createQuery(cq).getSingleResult();
+        } catch (NoResultException e) {
             throw new NoSuchRecordException("Chat with id " + consultantId + " is not found");
         }
-        return result;
     }
 }

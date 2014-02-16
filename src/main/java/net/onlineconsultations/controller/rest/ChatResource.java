@@ -1,6 +1,7 @@
 package net.onlineconsultations.controller.rest;
 
 import net.onlineconsultations.controller.rest.model.ChatMessageInfo;
+import net.onlineconsultations.dao.exception.NoSuchRecordException;
 import net.onlineconsultations.domain.Chat;
 import net.onlineconsultations.domain.ChatMessage;
 import net.onlineconsultations.domain.User;
@@ -37,12 +38,13 @@ public class ChatResource {
     public Long consultantPollForChat(Principal principal) {
         User consultant = userService.findByUsername(principal.getName());
 
-        Chat activeChat = chatService.getActiveChatWithConsultant(consultant);
-        if (activeChat != null) {
+        Chat activeChat;
+        try {
+            activeChat = chatService.getActiveChatWithConsultant(consultant);
             chatService.setConsultantInChat(activeChat);
 
             return activeChat.getId();
-        } else {
+        } catch (NoSuchRecordException e) {
             return null;
         }
     }
