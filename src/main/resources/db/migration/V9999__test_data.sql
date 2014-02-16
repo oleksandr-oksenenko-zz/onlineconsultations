@@ -1,12 +1,8 @@
-insert into role (id, role) values
-    (1, 'ROLE_ADMIN'),
-    (2, 'ROLE_CONSULTANT');
-
-insert into user (id, username, password, role_id) values
-    (1, 'admin', 'stalker', 1),
-    (2, 'cs_cons', 'stalker', 2),
-    (3, 'math_cons', 'stalker', 2),
-    (4, 'pr_cons', 'stalker', 2);
+insert into user (id, username, password, role) values
+    (1, 'admin', 'stalker', 'ROLE_ADMIN'),
+    (2, 'cs_cons', 'stalker', 'ROLE_CONSULTANT'),
+    (3, 'math_cons', 'stalker', 'ROLE_CONSULTANT'),
+    (4, 'pr_cons', 'stalker', 'ROLE_CONSULTANT');
 
 insert into subject (id, name) values
     (1, 'Computer Science'),

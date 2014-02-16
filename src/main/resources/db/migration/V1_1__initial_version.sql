@@ -1,8 +1,3 @@
-create table role (
-    id bigint primary key auto_increment,
-    role varchar(50) not null unique
-);
-
 create table user (
     id bigint primary key auto_increment,
     username varchar(20) unique not null,
@@ -11,8 +6,7 @@ create table user (
     middlename varchar(40),
     lastname varchar(40),
     qualification varchar(40),
-    role_id bigint not null,
-    foreign key (role_id) references role(id)
+    role varchar(20) not null
 );
 
 create table subject (
@@ -43,6 +37,7 @@ create table chat (
     is_consultant_in_chat tinyint not null,
     is_anonym_in_chat tinyint not null,
     user_id bigint not null,
+    session_id varchar(32) not null,
     foreign key (user_id) references user(id)
 );
 
