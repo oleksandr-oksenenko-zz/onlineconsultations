@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 @Repository
@@ -23,7 +25,9 @@ public abstract class HibernateBaseDAO<T> implements GenericDao<T> {
     @Override
     public List<T> getAll() {
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        return em.createQuery(cb.createQuery(entityClass)).getResultList();
+        CriteriaQuery<T> cq = cb.createQuery(entityClass);
+        Root<T> root = cq.from(entityClass);
+        return em.createQuery(cq).getResultList();
     }
 
     @Override
