@@ -14,8 +14,8 @@
     <context:component-scan base-package="net.onlineconsultations.service"/>
 
     <!-- Transactions support -->
-    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
-        <property name="sessionFactory" ref="sessionFactory"/>
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="emf"/>
     </bean>
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
