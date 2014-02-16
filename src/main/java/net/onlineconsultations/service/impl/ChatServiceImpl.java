@@ -7,6 +7,7 @@ import net.onlineconsultations.domain.ChatMessage;
 import net.onlineconsultations.domain.ChatStatus;
 import net.onlineconsultations.domain.User;
 import net.onlineconsultations.service.ChatService;
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,9 +24,13 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     @Transactional
-    public Chat startChat(User consultantInChat) {
-        Chat newChat = new Chat(consultantInChat);
-        newChat.setAnonymInChat(true);
+    public Chat startNewChat(User consultantInChat) {
+        String sessionId;
+        do {
+            sessionId = RandomStringUtils.randomAlphanumeric(32);
+        } while (chatDAO.findBySessionId(sessionId) != null);
+
+        Chat newChat = new Chat(sessionId, consultantInChat, true);
         chatDAO.save(newChat);
         return newChat;
     }
@@ -47,6 +52,11 @@ public class ChatServiceImpl implements ChatService {
             throw new RuntimeException("Chat has been already closed");
         }
         chatMessageDAO.save(chatMessage);
+    }
+
+    @Override
+    public void setConsultantInChat(Chat chat) {
+        chat.setConsultantInChat(true);
     }
 
     @Override
@@ -73,5 +83,10 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public ChatMessage getChatMessageById(Long id) {
         return chatMessageDAO.getById(id);
+    }
+
+    @Override
+    public Chat findBySessionId(String sessionId) {
+        return chatDAO.findBySessionId(sessionId);
     }
 }

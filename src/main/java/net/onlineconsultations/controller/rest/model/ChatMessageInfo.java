@@ -1,38 +1,24 @@
 package net.onlineconsultations.controller.rest.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import net.onlineconsultations.domain.ChatMessage;
-import org.joda.time.LocalDateTime;
 
 public class ChatMessageInfo {
     private final String body;
 
-    private final LocalDateTime timestamp;
-
-    private final UserInfo author;
-
-    public ChatMessageInfo(String body, LocalDateTime timestamp,
-                           UserInfo author) {
+    @JsonCreator
+    public ChatMessageInfo(@JsonProperty("body") String body) {
         this.body = body;
-        this.timestamp = timestamp;
-        this.author = author;
     }
 
     public static ChatMessageInfo of(ChatMessage chatMessage) {
         return new ChatMessageInfo(
-                chatMessage.getBody(),
-                chatMessage.getTimestamp(),
-                UserInfo.of(chatMessage.getAuthor()));
+                chatMessage.getBody()
+        );
     }
 
     public String getBody() {
         return body;
-    }
-
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public UserInfo getAuthor() {
-        return author;
     }
 }

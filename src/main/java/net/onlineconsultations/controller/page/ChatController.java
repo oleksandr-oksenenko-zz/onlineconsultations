@@ -1,152 +1,76 @@
 package net.onlineconsultations.controller.page;
 
-import net.onlineconsultations.controller.rest.model.ChatMessageInfo;
 import net.onlineconsultations.domain.Chat;
+import net.onlineconsultations.domain.ChatStatus;
 import net.onlineconsultations.domain.User;
 import net.onlineconsultations.service.ChatService;
 import net.onlineconsultations.service.UserService;
-import org.joda.time.DateTimeZone;
-import org.joda.time.LocalDateTime;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.annotation.security.RolesAllowed;
+import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
 
-/* DEPRECATED. Should be reworked fully.*/
-@Deprecated
 @Controller
-@Scope("session")
 @RequestMapping(value = "/chat")
 public class ChatController {
-    @Autowired
+    @Inject
     private ChatService chatService;
 
-    @Autowired
+    @Inject
     private UserService userService;
 
-    /* session scoped objects */
-    private Chat chat;
+    /**
+     * Handler for start chat action for anonymous users.
+     * */
+    @RolesAllowed("ROLE_ANONYMOUS")
+    @RequestMapping(value = "start", method = RequestMethod.GET, params = {"consultant"})
+    public String startChat(@RequestParam("consultant") Long consultantId,
+                          HttpSession session) {
+        User consultant = userService.getById(consultantId);
+        Chat newChat = chatService.startNewChat(consultant);
 
-    private User consultant;
-
-    @RequestMapping(method = RequestMethod.GET)
-    public String chatPage() {
-        if (chat == null) {
-            throw new RuntimeException("You should start a chat first");
-        }
-        return "chat";
-    }
-
-    @RequestMapping(method = RequestMethod.GET, params = { "action" })
-    public String chatPage(@RequestParam("action") String action,
-                           @RequestParam(value = "consultant", required = false) Long consultantId,
-                           Principal principal,
-                           RedirectAttributes redirectAttributes) {
-
-        if (!action.equals("startChat")) {
-            throw new RuntimeException("Unsupported action");
-        }
-        if (chat != null) {
-            throw new RuntimeException("Chat has been already started");
-        }
-
-        if (principal != null) {
-
-            consultant = userService.findByUsername(principal.getName());
-            chat = chatService.getActiveChatWithConsultant(consultant);
-            redirectAttributes.addFlashAttribute("consultant", principal);
-
-        } else {
-
-            chat = chatService.startChat(userService.getById(consultantId));
-            consultant = userService.getById(consultantId);
-
-        }
+        session.setAttribute("chatSessionId", newChat.getSessionId());
 
         return "redirect:/chat";
     }
 
-    @RequestMapping(method = RequestMethod.POST, params = { "pollForMessages", "lastMessage" })
-    @ResponseBody
-    public List<ChatMessageInfo> pollForMessages(@RequestParam("lastMessage") Long lastMessageId) {
+    @RolesAllowed("ROLE_CONSULTANT")
+    @RequestMapping(value = "start", method = RequestMethod.GET)
+    public String startChat(Principal principal) {
+        User consultant = userService.findByUsername(principal.getName());
 
-        List<net.onlineconsultations.domain.ChatMessage> lastMessages;
-        if (lastMessageId != -1) {
-
-            lastMessages = chatService.getLastMessagesByChat(chat, chatService.getChatMessageById(lastMessageId));
-
-        } else {
-
-            lastMessages = this.chatService.getLastMessagesByChat(chat, null);
-
+        if (consultant == null) {
+            // TODO: fix this with appropriate exception type
+            throw new RuntimeException("Consultant not found");
         }
 
-        List<ChatMessageInfo> response = new ArrayList<>(lastMessages.size());
-        for (net.onlineconsultations.domain.ChatMessage chatMessage : lastMessages) {
-            response.add(new ChatMessageInfo(chatMessage));
-        }
+        Chat chat = chatService.getActiveChatWithConsultant(consultant);
+        chat.setConsultantInChat(true);
 
-        return response;
+        return "redirect:/chat";
     }
 
-    @RequestMapping(method = RequestMethod.POST, params = { "pollForConsultant" })
-    @ResponseBody
-    public Boolean pollForConsultant() {
-        chat = chatService.getChatById(chat.getId());
-
-        return chat.isConsultantInChat();
-    }
-
-    @RequestMapping(method = RequestMethod.POST, params = { "postMessage", "message" })
-    public HttpStatus postMessage(@RequestParam("message") String message,
-                                  Principal principal) {
-
-        net.onlineconsultations.domain.ChatMessage chatMessage;
-        if (principal != null) {
-            chatMessage = new net.onlineconsultations.domain.ChatMessage(message,
-                    LocalDateTime.now(DateTimeZone.UTC),
-                    chat,
-                    userService.findByUsername(principal.getName()));
-        } else {
-            chatMessage = new net.onlineconsultations.domain.ChatMessage(message,
-                    LocalDateTime.now(DateTimeZone.UTC),
-                    chat,
-                    null);
-        }
-        chatService.postNewMessage(chatMessage);
-
-        return HttpStatus.OK;
-    }
-
-    @RequestMapping(method = RequestMethod.POST, params = { "endChat" })
-    public HttpStatus endChat(Principal principal) {
-        if (chat == null) {
-            throw new RuntimeException("Chat has not been started yet");
+    @RolesAllowed("ROLE_ANONYMOUS")
+    @RequestMapping(value = "end", method = RequestMethod.GET)
+    public String endChat(HttpSession session) {
+        String chatSessionId = (String) session.getAttribute("chatSessionId");
+        if (chatSessionId == null) {
+            // TODO: fix this with appropriate exception type
+            throw new RuntimeException("Chat not found");
         }
 
-        if (principal != null) {
-            chat.setConsultantInChat(false);
-        } else {
-            chat.setAnonymInChat(false);
+        Chat chat = chatService.findBySessionId(chatSessionId);
+        if (chat.getStatus() == ChatStatus.CLOSED) {
+            // TODO: fix this with appropriate exception type
+            throw new RuntimeException("Chat already closed");
         }
-        chatService.update(chat);
+        chatService.endChat(chat);
 
-        if (!chat.isAnonymInChat() && !chat.isConsultantInChat()) {
-            chatService.endChat(chat);
-        }
-
-        chat = null;
-        consultant = null;
-
-        return HttpStatus.OK;
+        return "redirect:/";
     }
 }

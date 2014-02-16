@@ -6,13 +6,18 @@ import net.onlineconsultations.domain.ChatMessage;
 import net.onlineconsultations.domain.User;
 import net.onlineconsultations.service.ChatService;
 import net.onlineconsultations.service.UserService;
+import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDateTime;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +39,7 @@ public class ChatResource {
 
         Chat activeChat = chatService.getActiveChatWithConsultant(consultant);
         if (activeChat != null) {
-            activeChat.setConsultantInChat(true);
-            chatService.update(activeChat);
+            chatService.setConsultantInChat(activeChat);
 
             return activeChat.getId();
         } else {
@@ -43,7 +47,7 @@ public class ChatResource {
         }
     }
 
-    @RolesAllowed("ROLE_CONSULTANT")
+    @RolesAllowed({"ROLE_CONSULTANT", "ROLE_ANONYMOUS"})
     @RequestMapping(value = "/poll_for_messages", method = RequestMethod.POST)
     @ResponseBody
     public List<ChatMessageInfo> getLastMessages(Principal principal) {
@@ -56,5 +60,37 @@ public class ChatResource {
         }
 
         return chatMessageInfos;
+    }
+
+    @RolesAllowed({"ROLE_CONSULTANT", "ROLE_ANONYMOUS"})
+    @RequestMapping(value = "/post_message", method = RequestMethod.POST, params = { "message" })
+    public HttpStatus postMessage(@RequestParam("message") ChatMessageInfo chatMessageInfo,
+                                  Principal principal,
+                                  HttpSession session) {
+        User consultant = null;
+        Chat activeChat = null;
+        if (principal == null) {
+            // anonymous
+            String chatSessionId = (String) session.getAttribute("chatSessionId");
+            activeChat = chatService.findBySessionId(chatSessionId);
+            if (activeChat == null) {
+                throw new RuntimeException("There is no active chat for this user");
+            }
+        } else {
+            // consultant
+            consultant = userService.findByUsername(principal.getName());
+            if (consultant == null) {
+                throw new RuntimeException("Consultant not found");
+            }
+            activeChat = chatService.getActiveChatWithConsultant(consultant);
+        }
+
+        ChatMessage chatMessage = new ChatMessage(chatMessageInfo.getBody(),
+                LocalDateTime.now(DateTimeZone.UTC),
+                activeChat,
+                consultant);
+        chatService.postNewMessage(chatMessage);
+
+        return HttpStatus.OK;
     }
 }

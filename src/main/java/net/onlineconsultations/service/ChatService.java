@@ -7,11 +7,13 @@ import net.onlineconsultations.domain.User;
 import java.util.List;
 
 public interface ChatService {
-    Chat startChat(User consultantInChat);
+    Chat startNewChat(User consultantInChat);
 
     void endChat(Chat chat);
 
     void postNewMessage(ChatMessage chatMessage);
+
+    void setConsultantInChat(Chat chat);
 
     List<ChatMessage> getLastMessagesByChat(Chat chat, ChatMessage lastMessage);
 
@@ -20,6 +22,8 @@ public interface ChatService {
     Chat getChatById(Long id);
 
     ChatMessage getChatMessageById(Long id);
+
+    Chat findBySessionId(String sessionId);
 
     void update(Chat chat);
 }

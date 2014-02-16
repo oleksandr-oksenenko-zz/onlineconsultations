@@ -22,6 +22,18 @@ public class HibernateChatDAOImpl extends HibernateBaseDAO<Chat> implements Chat
     }
 
     @Override
+    public Chat findBySessionId(String sessionId) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Chat> cq = cb.createQuery(Chat.class);
+        Root<Chat> root = cq.from(Chat.class);
+        cq.where(
+                cb.equal(root.get("sessionId"), sessionId)
+        );
+
+        return em.createQuery(cq).getSingleResult();
+    }
+
+    @Override
     public Chat getActiveChatWithConsultant(Long consultantId) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Chat> cq = cb.createQuery(Chat.class);
@@ -29,7 +41,7 @@ public class HibernateChatDAOImpl extends HibernateBaseDAO<Chat> implements Chat
         cq.where(cb.and(
                 cb.equal(root.get("status"), ChatStatus.ACTIVE),
                 cb.equal(root.get("consultantInChat.id"), consultantId)
-        )
+            )
         );
 
         Chat result = em.createQuery(cq).getSingleResult();

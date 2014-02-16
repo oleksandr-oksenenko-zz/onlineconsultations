@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "chat")
@@ -20,6 +21,10 @@ public class Chat {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
+
+    @Column(name = "session_id")
+    @Size(min = 32, max = 32)
+    private String sessionId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -41,6 +46,12 @@ public class Chat {
 
     public Chat(User consultantInChat) {
         this.consultantInChat = consultantInChat;
+    }
+
+    public Chat(String sessionId, User consultantInChat, boolean isAnonymInChat) {
+        this.sessionId = sessionId;
+        this.consultantInChat = consultantInChat;
+        this.isAnonymInChat = isAnonymInChat;
     }
 
     public Long getId() {
@@ -81,5 +92,13 @@ public class Chat {
 
     public void setAnonymInChat(boolean isAnonymInChat) {
         this.isAnonymInChat = isAnonymInChat;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 }
