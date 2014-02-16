@@ -30,7 +30,7 @@ public class SubjectController {
     private SessionRegistry sessionRegistry;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String subjects(Model model) throws Exception {
+    public String subjects(Model model) {
         model.addAttribute("subjects", subjectService.getAllSubjects());
         return "subjects";
     }
@@ -39,7 +39,7 @@ public class SubjectController {
     public String subject(@PathVariable("subject_id") Long subjectId,
                           Model model) {
 
-        Subject subject = this.subjectService.getSubjectById(subjectId);
+        Subject subject = subjectService.getSubjectById(subjectId);
 
         model.addAttribute("subject", subject);
         model.addAttribute("onlineConsultants", getOnlineConsultants());
