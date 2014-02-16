@@ -6,7 +6,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "user")
@@ -39,20 +39,21 @@ public class User {
     private String qualification;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "role")
     @NotNull
     private UserRole role;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_sub_subject",
             joinColumns = { @JoinColumn(name = "user_id", nullable = false) },
             inverseJoinColumns = { @JoinColumn(name = "sub_subject_id", nullable = false) })
-    private List<SubSubject> subSubjects;
+    private Set<SubSubject> subSubjects;
 
     public User() { }
 
     public User(Long id, String username, String password, UserRole role,
                 String firstName, String middleName, String lastName,
-                String qualification, List<SubSubject> userSubSubjects) {
+                String qualification, Set<SubSubject> userSubSubjects) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -120,11 +121,11 @@ public class User {
         this.qualification = qualification;
     }
 
-    public List<SubSubject> getUserSubSubjects() {
+    public Set<SubSubject> getUserSubSubjects() {
         return subSubjects;
     }
 
-    public void setUserSubSubjects(List<SubSubject> userSubSubjects) {
+    public void setUserSubSubjects(Set<SubSubject> userSubSubjects) {
         this.subSubjects = userSubSubjects;
     }
 

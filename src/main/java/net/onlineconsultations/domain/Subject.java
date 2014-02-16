@@ -1,7 +1,7 @@
 package net.onlineconsultations.domain;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "subject")
@@ -18,12 +18,12 @@ public class Subject {
     @Lob
     private String description;
 
-    @OneToMany(mappedBy = "parentSubject")
-    private List<SubSubject> subSubjects;
+    @OneToMany(mappedBy = "parentSubject", fetch = FetchType.EAGER)
+    private Set<SubSubject> subSubjects;
 
     public Subject() { }
 
-    public Subject(String name, String description, List<SubSubject> subSubjects) {
+    public Subject(String name, String description, Set<SubSubject> subSubjects) {
         this.name = name;
         this.description = description;
         this.subSubjects = subSubjects;
@@ -53,11 +53,11 @@ public class Subject {
         this.description = description;
     }
 
-    public List<SubSubject> getSubSubjects() {
+    public Set<SubSubject> getSubSubjects() {
         return subSubjects;
     }
 
-    public void setSubSubjects(List<SubSubject> subSubjects) {
+    public void setSubSubjects(Set<SubSubject> subSubjects) {
         this.subSubjects = subSubjects;
     }
 }

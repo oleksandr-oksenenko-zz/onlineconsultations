@@ -2,7 +2,7 @@ package net.onlineconsultations.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "sub_subject")
@@ -20,18 +20,18 @@ public class SubSubject {
     @Lob
     private String description;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_subject_id")
     @NotNull
     private Subject parentSubject;
 
-    @ManyToMany(mappedBy = "subSubjects")
-    private List<User> subSubjectUsers;
+    @ManyToMany(mappedBy = "subSubjects", fetch = FetchType.EAGER)
+    private Set<User> subSubjectUsers;
 
     public SubSubject() { }
 
     public SubSubject(String name, String description, Subject parentSubject,
-            List<User> subSubjectUsers) {
+            Set<User> subSubjectUsers) {
         this.name = name;
         this.description = description;
         this.parentSubject = parentSubject;
@@ -70,11 +70,11 @@ public class SubSubject {
         this.parentSubject = parentSubject;
     }
 
-    public List<User> getSubSubjectUsers() {
+    public Set<User> getSubSubjectUsers() {
         return subSubjectUsers;
     }
 
-    public void setSubSubjectUsers(List<User> subSubjectUsers) {
+    public void setSubSubjectUsers(Set<User> subSubjectUsers) {
         this.subSubjectUsers = subSubjectUsers;
     }
 
