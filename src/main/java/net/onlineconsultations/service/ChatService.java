@@ -16,8 +16,9 @@ public interface ChatService {
     void setConsultantInChat(Chat chat);
 
     List<ChatMessage> getLastMessagesByChat(Chat chat, ChatMessage lastMessage);
+    List<ChatMessage> getLastMessagesByChat(Chat chat);
 
-    Chat getActiveChatWithConsultant(User consultant);
+    Chat findActiveChatWithConsultant(User consultant);
 
     Chat getChatById(Long id);
 

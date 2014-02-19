@@ -65,13 +65,18 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
+    public List<ChatMessage> getLastMessagesByChat(Chat chat) {
+        return chatMessageDAO.getLastMessagesByChat(chat);
+    }
+
+    @Override
     public Chat getChatById(Long id) {
         return chatDAO.getById(id);
     }
 
     @Override
-    public Chat getActiveChatWithConsultant(User consultant) {
-        return chatDAO.getActiveChatWithConsultant(consultant.getId());
+    public Chat findActiveChatWithConsultant(User consultant) {
+        return chatDAO.findActiveChatWithConsultant(consultant.getId());
     }
 
     @Override

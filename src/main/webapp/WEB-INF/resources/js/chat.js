@@ -1,71 +1,65 @@
 function postMessage() {
 	var messageBody = $("#message").val();
-	$("#message").val("");
+	var message = { body : messageBody};
 	$.ajax({
-			url: baseUrl + "/chat",
-			type: "post",
-			data: {
-				postMessage: "",
-				message: messageBody
-			},
-			dataType: "json",
-			success: function (data) {
-			},
-			error: function (jqXHR, error, errorText) {
-				console.log("error: " + error + " " + errorText);
-				alert(errorText);
-			}
-		});
+		url: baseUrl + '/chat/post_message',
+		type: 'POST',
+		dataType: 'json',
+		data: JSON.stringify(message),
+		contentType: "application/json; charset=utf-8"
+	})
+	.done(function() {
+		console.log("success");
+	})
+	.fail(function(jqXHR, textStatus, errorThrown) {
+		console.log("error: " + textStatus + ", " + errorThrown);
+		alert("Error happened!");
+	});
 }
 
-var lastMessageId = -1;
-function pollForMessages() {
-	$.ajax({
-			url: baseUrl + "/chat",
-			type: "post",
-			data: {
-				pollForMessages: "",
-				lastMessage: lastMessageId
-			},
-			dataType: "json",
-			success: function (data) {
-				if (data != null && data.length != 0) {
-					for (var i = 0; i < data.length; i++) {
-						addMessageToPage(data[i]);
-					}
-					lastMessageId = data[data.length - 1].id;
-				}
-				setTimeout(pollForMessages, 1000);
-			},
-			error: function (error, error, errorText) {
-				alert(errorText);
-			}
-		});
-}
+(function pollForMessages() {
+    setTimeout(
+        function() {
+            var lastMessageId = -1;
+
+            $.ajax({
+                url: baseUrl + '/chat/poll_for_messages',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    // TODO: add lastMessageId as a param
+                },
+            })
+            .done(function(data) {
+                console.log("success");
+                if (data.length != 0) {
+                    displayMessages(data);
+                }
+
+                pollForMessages();
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                console.log("error: " + textStatus + ", " + errorThrown);
+                alert("Error happened!");
+            });
+        }, 1000
+    );
+})();
+
+(function () {
+    $("#btnPostMessage").attr("disabled", false);
+    $("#message").attr("disabled", false);
+})();
 
 function onEnterPress(event) {
-	console.log(event);
-	if (event.ctrlKey && (event.keyCode == 13 || event.keyCode == 10)) {
-		postMessage();
-	}
+    if (event.keycode == 13) {
+        postMessage();
+    }
 }
 
-function addMessageToPage(message) {
-	var text = "";
-	text += "<br>";
-	if (message.author != null) {
-		text += message.author.firstname + " " + message.author.lastname;
-	} else {
-		text += "anonym";
-	}
-	var date = new Date(message.timestamp);
-	text += " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-	text += ": " + message.body;
-	$("#messages").html($("#messages").html() + text);
-}
-
-function enableControls() {
-	$("#message").prop("disabled", false);
-	$("#btnPostMessage").prop("disabled", false);
-	$("#btnEndChat").prop("disabled", false);
+function displayMessages(messages) {
+    var textArea = $("#messages");
+    for (i = 0; i < messages.length; i++) {
+        textArea.html(textArea.html() + "<br>" + messages[i].body)
+    }
 }

@@ -1,7 +1,6 @@
 package net.onlineconsultations.dao.impl;
 
 import net.onlineconsultations.dao.ChatDAO;
-import net.onlineconsultations.dao.exception.NoSuchRecordException;
 import net.onlineconsultations.domain.Chat;
 import net.onlineconsultations.domain.ChatStatus;
 import org.springframework.stereotype.Repository;
@@ -39,7 +38,7 @@ public class HibernateChatDAOImpl extends HibernateBaseDAO<Chat> implements Chat
     }
 
     @Override
-    public Chat getActiveChatWithConsultant(Long consultantId) {
+    public Chat findActiveChatWithConsultant(Long consultantId) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Chat> cq = cb.createQuery(Chat.class);
         Root<Chat> root = cq.from(Chat.class);
@@ -52,7 +51,7 @@ public class HibernateChatDAOImpl extends HibernateBaseDAO<Chat> implements Chat
         try {
             return em.createQuery(cq).getSingleResult();
         } catch (NoResultException e) {
-            throw new NoSuchRecordException("Chat with id " + consultantId + " is not found");
+            return null;
         }
     }
 }

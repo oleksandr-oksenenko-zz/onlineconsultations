@@ -4,7 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import net.onlineconsultations.domain.ChatMessage;
 
+import javax.validation.constraints.NotNull;
+
 public class ChatMessageInfo {
+    @NotNull
     private final String body;
 
     @JsonCreator

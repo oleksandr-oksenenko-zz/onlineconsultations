@@ -19,7 +19,7 @@ public class ChatMessage {
     private String body;
 
     @Column(name = "timestamp")
-    @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
     private LocalDateTime timestamp;
 
     @ManyToOne
@@ -29,7 +29,6 @@ public class ChatMessage {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @NotNull
     private User author;
 
     public ChatMessage() { }

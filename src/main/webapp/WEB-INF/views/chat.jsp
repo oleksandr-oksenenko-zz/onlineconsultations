@@ -10,15 +10,7 @@
 
     <script type="text/javascript" src="<c:url value='/resources/jquery/1.9.0/jquery.min.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/js/chat.js'/>"></script>
-    <c:choose>
-        <c:when test="${ consultant ne null }">
-            <script type="text/javascript" src="<c:url value='/js/chat_consultant.js'/>"></script>
-        </c:when>
-        <c:otherwise>
-            <script type="text/javascript" src="<c:url value='/js/chat_anonym.js'/>"></script>
-        </c:otherwise>
-    </c:choose>
-    
+
 </head>
 
 <body>
@@ -33,13 +25,15 @@
         <form role="form">
             <div class="form-group">
                 <label for="message">New message (<small>you can send messages using ctrl+enter</small>)</label>
-                <textarea rows="3" class="form-control" id="message" disabled="disabled" onkeypress="javascript:onEnterPress(event);"></textarea>
+                <textarea rows="3"
+                    class="form-control"
+                    id="message"
+                    onkeypress="javascript:onEnterPress(event);"></textarea>
             </div>
             <button 
                 type="button"
                 class="btn btn-default" 
                 onclick="javascript:postMessage();" 
-                disabled="disabled"
                 id="btnPostMessage">
                 Post a message
             </button>
@@ -47,7 +41,6 @@
                 type="button" 
                 class="btn btn-default"
                 onclick="javascript:endChat();" 
-                disabled="disabled"
                 id="btnEndChat">
                 End the chat
             </button>
