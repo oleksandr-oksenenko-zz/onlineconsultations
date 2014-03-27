@@ -55,7 +55,8 @@ public class ChatResource {
     @RolesAllowed({"ROLE_CONSULTANT", "ROLE_ANONYMOUS"})
     @RequestMapping(value = "/poll_for_messages", method = RequestMethod.POST)
     @ResponseBody
-    public List<ChatMessageInfo> getLastMessages(Principal principal,
+    public List<ChatMessageInfo> getLastMessages(@RequestBody(required = false) Long lastMessageId,
+                                                 Principal principal,
                                                  HttpSession session) {
         Chat activeChat = null;
         if (principal != null) {
@@ -65,7 +66,16 @@ public class ChatResource {
             activeChat = chatService.findBySessionId(chatSessionId);
         }
 
-        return getLastMessages(activeChat, null);
+        if (activeChat == null) {
+            throw new RuntimeException("There is no active chat for this user");
+        }
+
+        ChatMessage lastMessage = null;
+        if (lastMessageId != -1) {
+            lastMessage = chatService.getChatMessageById(lastMessageId);
+        }
+
+        return getLastMessages(activeChat, lastMessage);
     }
 
     private List<ChatMessageInfo> getLastMessages(Chat chat, ChatMessage lastMessage) {

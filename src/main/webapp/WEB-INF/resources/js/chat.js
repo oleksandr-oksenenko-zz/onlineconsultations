@@ -1,6 +1,9 @@
-function postMessage() {
+function postMessage(baseUrl) {
 	var messageBody = $("#message").val();
-	var message = { body : messageBody};
+    var message = {
+        id: -1,
+        body: messageBody
+    };
 	$.ajax({
 		url: baseUrl + '/chat/post_message',
 		type: 'POST',
@@ -16,34 +19,26 @@ function postMessage() {
 	});
 }
 
-(function pollForMessages() {
-    setTimeout(
-        function() {
-            var lastMessageId = -1;
-
-            $.ajax({
-                url: baseUrl + '/chat/poll_for_messages',
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    // TODO: add lastMessageId as a param
-                }
-            })
-            .done(function(data) {
-                console.log("success");
-                if (data.length != 0) {
-                    displayMessages(data);
-                }
-
-                pollForMessages();
-            })
-            .fail(function(jqXHR, textStatus, errorThrown) {
-                console.log("error: " + textStatus + ", " + errorThrown);
-                alert("Error happened!");
-            });
-        }, 1000
-    );
-})();
+var lastMessageId = -1;
+function pollForMessages(baseUrl, handler) {
+    $.ajax({
+        url: baseUrl + '/chat/poll_for_messages',
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify(lastMessageId),
+        contentType: "application/json; charset=utf-8"
+    })
+        .done(function (data) {
+            console.log("success");
+            if (data.length != 0) {
+                handler(data);
+                lastMessageId = data[data.length - 1].id;
+            }
+        })
+        .fail(function (jqXHR, textStatus, errorThrown) {
+            console.log("error: " + textStatus + ", " + errorThrown);
+        });
+}
 
 (function () {
     $("#btnPostMessage").attr("disabled", false);

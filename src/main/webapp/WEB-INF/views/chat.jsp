@@ -11,6 +11,14 @@
 
     <script type="text/javascript" src="<c:url value='/resources/jquery/1.9.0/jquery.min.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/js/chat.js'/>"></script>
+
+    <script type="text/javascript">
+        var baseUrl = '<c:url value="/"/>';
+        setInterval(function () {
+            pollForMessages(baseUrl, displayMessages);
+        }, 1000);
+    </script>
+
     <sec:authorize access="hasRole('ROLE_CONSULTANT')">
         <script type="text/javascript" src="<c:url value="/js/consultant.js"/>"></script>
         <script type="text/javascript">
@@ -47,7 +55,7 @@
             <button 
                 type="button"
                 class="btn btn-default"
-                onclick="postMessage();"
+                onclick="postMessage('<c:url value="/"/>');"
                 id="btnPostMessage">
                 Post a message
             </button>
