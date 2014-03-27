@@ -87,33 +87,36 @@ public class ChatResource {
 
     @RolesAllowed({"ROLE_CONSULTANT", "ROLE_ANONYMOUS"})
     @RequestMapping(value = "/post_message", method = RequestMethod.POST)
-    public ResponseEntity<Void> postMessage(@RequestBody @Valid ChatMessageInfo chatMessageInfo,
+    public ResponseEntity<String> postMessage(@RequestBody @Valid ChatMessageInfo chatMessageInfo,
                                   Principal principal,
                                   HttpSession session) {
-        User consultant = null;
-        Chat activeChat = null;
-        if (principal == null) {
-            // anonymous
-            String chatSessionId = (String) session.getAttribute("chatSessionId");
-            activeChat = chatService.findBySessionId(chatSessionId);
-            if (activeChat == null) {
-                throw new RuntimeException("There is no active chat for this user");
+        try {
+            User consultant = null;
+            Chat activeChat = null;
+            if (principal == null) {
+                // anonymous
+                String chatSessionId = (String) session.getAttribute("chatSessionId");
+                activeChat = chatService.findBySessionId(chatSessionId);
+                if (activeChat == null) {
+                    throw new RuntimeException("There is no active chat for this user");
+                }
+            } else {
+                // consultant
+                consultant = userService.findByUsername(principal.getName());
+                if (consultant == null) {
+                    throw new RuntimeException("Consultant not found");
+                }
+                activeChat = chatService.findActiveChatWithConsultant(consultant);
             }
-        } else {
-            // consultant
-            consultant = userService.findByUsername(principal.getName());
-            if (consultant == null) {
-                throw new RuntimeException("Consultant not found");
-            }
-            activeChat = chatService.findActiveChatWithConsultant(consultant);
+
+            ChatMessage chatMessage = new ChatMessage(chatMessageInfo.getBody(),
+                    LocalDateTime.now(DateTimeZone.UTC),
+                    activeChat,
+                    consultant);
+            chatService.postNewMessage(chatMessage);
+            return new ResponseEntity<>("", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        ChatMessage chatMessage = new ChatMessage(chatMessageInfo.getBody(),
-                LocalDateTime.now(DateTimeZone.UTC),
-                activeChat,
-                consultant);
-        chatService.postNewMessage(chatMessage);
-
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

@@ -4,7 +4,6 @@ function postMessage() {
 	$.ajax({
 		url: baseUrl + '/chat/post_message',
 		type: 'POST',
-		dataType: 'json',
 		data: JSON.stringify(message),
 		contentType: "application/json; charset=utf-8"
 	})
@@ -28,7 +27,7 @@ function postMessage() {
                 dataType: 'json',
                 data: {
                     // TODO: add lastMessageId as a param
-                },
+                }
             })
             .done(function(data) {
                 console.log("success");
