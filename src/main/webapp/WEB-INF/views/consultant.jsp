@@ -5,10 +5,20 @@
 
 <head>
 
-    <link rel="stylesheet" type="text/css"
-        href="<c:url value='/resources/bootstrap/3.0.0/css/bootstrap.min.css'/>">
+    <link rel="stylesheet" type="text/css" href="<c:url value='/resources/bootstrap/3.0.0/css/bootstrap.min.css'/>">
     <script type="text/javascript" src="<c:url value='/resources/jquery/1.9.0/jquery.min.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/js/consultant.js'/>"></script>
+    <script type="text/javascript">
+        setInterval(function () {
+            var baseUrl = '<c:url value="/"/>';
+
+            pollForChat(baseUrl, function (chatId) {
+                if (chatId != -1) {
+                    window.location = '<c:url value="/chat"/>';
+                }
+            });
+        }, 1000);
+    </script>
 </head>
 
 <body>
