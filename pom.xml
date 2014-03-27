@@ -11,7 +11,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>3.2.4.RELEASE</spring.version>
-        <spring.security.version>3.2.0.RC2</spring.security.version>
+        <spring.security.version>3.2.2.RELEASE</spring.security.version>
         <hibernate.version>4.2.2.Final</hibernate.version>
     </properties>
 
@@ -89,7 +89,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
-            <version>${spring.security.version}</version>
+            <version>3.2.2.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
@@ -99,6 +99,11 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
+            <version>${spring.security.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-taglibs</artifactId>
             <version>${spring.security.version}</version>
         </dependency>
 
