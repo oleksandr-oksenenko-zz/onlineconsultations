@@ -1,6 +1,10 @@
 package net.onlineconsultations.domain;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -18,8 +22,8 @@ public class Subject {
     @Lob
     private String description;
 
-    @OneToMany(mappedBy = "parentSubject", fetch = FetchType.EAGER)
-    private Set<SubSubject> subSubjects;
+    @OneToMany(mappedBy = "parentSubject", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private Set<SubSubject> subSubjects = new HashSet<>();
 
     public Subject() { }
 
@@ -27,6 +31,30 @@ public class Subject {
         this.name = name;
         this.description = description;
         this.subSubjects = subSubjects;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!obj.getClass().equals(getClass())) {
+            return false;
+        }
+
+        Subject rhs = (Subject) obj;
+        return new EqualsBuilder()
+                .append(id, rhs.id)
+                .append(name, rhs.name)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(id)
+                .append(name)
+                .toHashCode();
     }
 
     public Long getId() {

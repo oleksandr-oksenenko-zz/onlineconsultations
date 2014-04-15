@@ -1,7 +1,11 @@
 package net.onlineconsultations.domain;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -25,8 +29,11 @@ public class SubSubject {
     @NotNull
     private Subject parentSubject;
 
-    @ManyToMany(mappedBy = "subSubjects", fetch = FetchType.EAGER)
-    private Set<User> subSubjectUsers;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_sub_subject",
+            joinColumns = { @JoinColumn(name = "sub_subject_id", nullable = false) },
+            inverseJoinColumns = { @JoinColumn(name = "user_id", nullable = false) })
+    private Set<User> subSubjectUsers = new HashSet<>();
 
     public SubSubject() { }
 
@@ -36,6 +43,30 @@ public class SubSubject {
         this.description = description;
         this.parentSubject = parentSubject;
         this.subSubjectUsers = subSubjectUsers;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!obj.getClass().equals(getClass())) {
+            return false;
+        }
+
+        SubSubject rhs = (SubSubject) obj;
+        return new EqualsBuilder()
+                .append(id, rhs.id)
+                .append(name, rhs.name)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(id)
+                .append(name)
+                .toHashCode();
     }
 
     public Long getId() {

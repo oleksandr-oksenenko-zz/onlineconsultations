@@ -5,8 +5,7 @@
 <html>
 
 <head>
-<link rel="stylesheet" type="text/css"
-    href="<c:url value='/resources/bootstrap/3.0.0/css/bootstrap.min.css'/>">
+    <link rel="stylesheet" type="text/css" href="<c:url value='/resources/bootstrap/3.0.0/css/bootstrap.min.css'/>">
 </head>
 
 <body>
