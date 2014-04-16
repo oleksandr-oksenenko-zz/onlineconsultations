@@ -9,4 +9,6 @@ public interface SubjectService {
     List<Subject> getAllSubjects();
 
     Subject getSubjectById(Long id);
+
+    void remove(Long id);
 }

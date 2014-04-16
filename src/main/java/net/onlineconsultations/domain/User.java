@@ -6,6 +6,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -43,11 +44,8 @@ public class User {
     @NotNull
     private UserRole role;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_sub_subject",
-            joinColumns = { @JoinColumn(name = "user_id", nullable = false) },
-            inverseJoinColumns = { @JoinColumn(name = "sub_subject_id", nullable = false) })
-    private Set<SubSubject> subSubjects;
+    @ManyToMany(mappedBy = "subSubjectUsers", fetch = FetchType.LAZY)
+    private Set<SubSubject> subSubjects = new HashSet<>();
 
     public User() { }
 

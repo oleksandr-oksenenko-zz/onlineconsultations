@@ -10,4 +10,6 @@ public interface GenericDao<T> {
     void save(T entity);
 
     void merge(T entity);
+
+    void remove(T entity);
 }

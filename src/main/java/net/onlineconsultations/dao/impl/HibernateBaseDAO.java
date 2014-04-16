@@ -48,4 +48,9 @@ public abstract class HibernateBaseDAO<T> implements GenericDao<T> {
     public void merge(T entity) {
         em.merge(entity);
     }
+
+    @Override
+    public void remove(T entity) {
+        em.remove(entity);
+    }
 }
