@@ -206,6 +206,9 @@
                     <url>jdbc:mysql://localhost:3306/onlineconsultations</url>
                     <user>root</user>
                     <password>stalker</password>
+                    <locations>
+                        <location>filesystem://${project.basedir}/db/migration</location>
+                    </locations>
                 </configuration>
 
                 <dependencies>

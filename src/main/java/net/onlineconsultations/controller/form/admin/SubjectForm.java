@@ -1,10 +1,30 @@
 package net.onlineconsultations.controller.form.admin;
 
+import net.onlineconsultations.domain.Subject;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class SubjectForm {
+    @NotNull
+    @Size(min = 2, max = 50, message = "Subject name length should be not less than 2 characters long.")
     private String name;
+
+    @NotNull
     private String description;
 
+    public static SubjectForm of(Subject subject) {
+        return new SubjectForm(
+                subject.getName(),
+                subject.getDescription());
+    }
+
     public SubjectForm() {
+    }
+
+    public SubjectForm(String name, String description) {
+        this.name = name;
+        this.description = description;
     }
 
     public String getName() {

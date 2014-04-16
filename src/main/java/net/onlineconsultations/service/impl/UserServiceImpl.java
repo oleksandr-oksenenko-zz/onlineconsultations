@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -19,6 +20,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> getAllUsers() {
+        return userDAO.getAll();
+    }
+
+    @Override
     public User findByUsername(String username) {
         return userDAO.findByUsername(username);
     }
@@ -27,6 +33,12 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void save(User user) {
         userDAO.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void merge(User user) {
+        userDAO.merge(user);
     }
 
 }

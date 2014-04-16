@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping({"/subjects", "/"})
+@RequestMapping("/subjects")
 public class SubjectController {
     @Inject
     private SubjectService subjectService;

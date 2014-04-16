@@ -37,6 +37,13 @@ public class SubSubject {
 
     public SubSubject() { }
 
+    public SubSubject(Long id, String name, String description, Subject parentSubject) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.parentSubject = parentSubject;
+    }
+
     public SubSubject(String name, String description, Subject parentSubject,
             Set<User> subSubjectUsers) {
         this.name = name;

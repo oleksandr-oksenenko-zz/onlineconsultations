@@ -21,9 +21,8 @@
         <intercept-url pattern="/consultant/**" access="hasRole('ROLE_CONSULTANT')"/>
         <intercept-url pattern="/logout/**" access="isAuthenticated()"/>
         <intercept-url pattern="/chat/**" access="hasAnyRole('ROLE_CONSULTANT','ROLE_ANONYMOUS')"/>
-        <intercept-url pattern="/**" access="hasRole('ROLE_ANONYMOUS')"/>
 
-        <form-login login-page="/login" default-target-url="/consultant"
+        <form-login login-page="/login"
                     authentication-failure-url="/login?error=true"
                     username-parameter="username"
                     password-parameter="password"

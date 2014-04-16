@@ -27,10 +27,22 @@ public class Subject {
 
     public Subject() { }
 
+    public Subject(Long id, String name, String description, Set<SubSubject> subSubjects) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.subSubjects = new HashSet<>(subSubjects);
+    }
+
     public Subject(String name, String description, Set<SubSubject> subSubjects) {
         this.name = name;
         this.description = description;
-        this.subSubjects = subSubjects;
+        this.subSubjects = new HashSet<>(subSubjects);
+    }
+
+    public Subject(String name, String description) {
+        this.name = name;
+        this.description = description;
     }
 
     @Override

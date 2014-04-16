@@ -29,13 +29,54 @@ public class SubjectServiceImpl implements SubjectService {
         return subjectDAO.getById(id);
     }
 
-    @Transactional
     @Override
-    public void remove(Long id) {
-        Subject subject = subjectDAO.getById(id);
+    public SubSubject getSubSubjectById(Long id) {
+        return subSubjectDAO.getById(id);
+    }
+
+    @Override
+    public List<SubSubject> getAllSubSubjects() {
+        return subSubjectDAO.getAll();
+    }
+
+    @Override
+    @Transactional
+    public void remove(Subject subject) {
         for (SubSubject subSubject : subject.getSubSubjects()) {
             subSubject.getSubSubjectUsers().clear();
         }
         subjectDAO.remove(subject);
+    }
+
+    @Override
+    @Transactional
+    public void remove(SubSubject subSubject) {
+        subSubject.getSubSubjectUsers().clear();
+        subSubjectDAO.remove(subSubject);
+    }
+
+    @Override
+    @Transactional
+    public void save(Subject subject) {
+        subjectDAO.save(subject);
+    }
+
+    @Override
+    @Transactional
+    public void save(SubSubject subSubject) {
+        subSubjectDAO.save(subSubject);
+    }
+
+
+    @Override
+    @Transactional
+    public void merge(Subject subject) {
+        subjectDAO.merge(subject);
+    }
+
+    @Override
+    @Transactional
+    public void merge(SubSubject subSubject) {
+        subSubjectDAO.merge(subSubject);
     }
 }
