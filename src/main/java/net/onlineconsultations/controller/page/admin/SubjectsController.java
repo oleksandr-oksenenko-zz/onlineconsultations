@@ -17,7 +17,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = { "/admin/subjects", "/admin" })
+@RequestMapping(value = { "/admin/subjects", "/admin"})
 public class SubjectsController {
     @Inject
     private SubjectService subjectService;

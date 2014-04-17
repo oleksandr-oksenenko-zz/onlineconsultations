@@ -49,6 +49,16 @@ public class User {
 
     public User() { }
 
+    public User(String username, String password, String firstName, String middleName, String lastName, String qualification, UserRole role) {
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.lastName = lastName;
+        this.qualification = qualification;
+        this.role = role;
+    }
+
     public User(Long id, String username, String password, UserRole role,
                 String firstName, String middleName, String lastName,
                 String qualification, Set<SubSubject> userSubSubjects) {

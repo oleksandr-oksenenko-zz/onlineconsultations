@@ -5,6 +5,7 @@
 
 <head>
     <link rel="stylesheet" type="text/css" href="<c:url value='/resources/bootstrap/3.0.0/css/bootstrap.min.css'/>">
+    <link rel="stylesheet" type="text/css" href="<c:url value="/css/style.css"/>">
     <script type="text/javascript" src="<c:url value='/resources/jquery/1.9.0/jquery.min.js'/>"></script>
 </head>
 
@@ -18,33 +19,36 @@
         </ul>
     </div>
 
-    <c:if test="${message != null}">
-        <div class="alert alert-success alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <p><c:out value="message"/></p>
-        </div>
-    </c:if>
-
-    <c:forEach var="user" items="${users}">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <c:out value="${user.firstName}"/> <c:out value="${user.lastName}"/>, <c:out value="${user.role}"/>
-                <span class="pull-right">
-                    <a href="<c:url value='users/${user.id}/edit'/>">
-                        <span class="glyphicon glyphicon-pencil"></span>
-                    </a>
-                    <a href="<c:url value='users/${user.id}/remove'/>">
-                        <span class="glyphicon glyphicon-remove"></span>
-                    </a>
-                </span>
-            </div>
-        </div>
-    </c:forEach>
-    <a href="<c:url value='/users/add'/>" class="pull-right">
-        <button class="btn btn-default">
-            <span class="glyphicon glyphicon-plus"></span>
-            Add new subject
-        </button>
+    <table class="table table-striped table-bordered table-condensed">
+        <thead>
+            <tr>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Role</th>
+                <th colspan="2">#</th>
+            </tr>
+        </thead>
+        <c:forEach var="user" items="${users}">
+            <tr>
+                <td>
+                    ${user.firstName}
+                </td>
+                <td>
+                    ${user.lastName}
+                </td>
+                <td>
+                    ${user.role}
+                </td>
+                <td class="min-width">
+                    <a href="<c:url value="/admin/users/${user.id}/edit"/>" class="btn btn-default">Edit</a>
+                    <a href="<c:url value="/admin/users/${user.id}/remove"/>" class="btn btn-danger">Remove</a>
+                </td>
+            </tr>
+        </c:forEach>
+    </table>
+    <a href="<c:url value='/admin/users/add'/>" class="btn btn-default pull-right">
+        <span class="glyphicon glyphicon-plus"></span>
+        Add new user
     </a>
 
 </div>

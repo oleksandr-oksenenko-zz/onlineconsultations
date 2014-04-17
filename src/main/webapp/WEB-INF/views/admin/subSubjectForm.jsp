@@ -41,6 +41,7 @@
                     <form:errors path="description" cssClass="text-danger"/>
                 </div>
                 <button type="submit" class="btn btn-default">Save</button>
+                <a href="<c:url value="/admin/sub_subjects/"/>" class="btn btn-default">Cancel</a>
             </form:form>
         </div>
     </div>

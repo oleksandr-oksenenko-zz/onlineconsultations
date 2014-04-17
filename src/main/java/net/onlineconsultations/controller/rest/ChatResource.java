@@ -7,9 +7,9 @@ import net.onlineconsultations.domain.ChatMessage;
 import net.onlineconsultations.domain.User;
 import net.onlineconsultations.service.ChatService;
 import net.onlineconsultations.service.UserService;
-import org.apache.log4j.Logger;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
+import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -29,7 +29,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/chat")
 public class ChatResource {
-    private static final Logger log = Logger.getLogger(ChatResource.class);
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(ChatResource.class);
 
     @Inject
     private ChatService chatService;

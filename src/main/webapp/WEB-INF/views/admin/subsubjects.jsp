@@ -5,6 +5,7 @@
 
 <head>
     <link rel="stylesheet" type="text/css" href="<c:url value='/resources/bootstrap/3.0.0/css/bootstrap.min.css'/>">
+    <link rel="stylesheet" type="text/css" href="<c:url value="/css/style.css"/>">
     <script type="text/javascript" src="<c:url value='/resources/jquery/1.9.0/jquery.min.js'/>"></script>
 </head>
 
@@ -19,40 +20,37 @@
         </ul>
     </div>
 
-    <c:if test="${message != null}">
-        <div class="alert alert-success alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <p><c:out value="message"/></p>
-        </div>
-    </c:if>
-
-    <c:forEach var="subSubject" items="${subSubjects}">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <c:out value="${subSubject.parentSubject.name}"/>
-                ::
-                <c:out value="${ subSubject.name }" />
-                <span class="pull-right">
-                    <a href="<c:url value='sub_subjects/${subSubject.id}/edit'/>">
-                        <span class="glyphicon glyphicon-pencil"></span>
-                    </a>
-                    <a href="<c:url value='sub_subjects/${subSubject.id}/remove'/>">
-                        <span class="glyphicon glyphicon-remove"></span>
-                    </a>
-                </span>
-            </div>
-            <div class="panel-body">
-                <c:out value="${ subSubject.description }"/>
-            </div>
-        </div>
-    </c:forEach>
-    <a href="<c:url value="/admin/sub_subjects/add"/>" class="pull-right">
-        <button class="btn btn-default">
-            <span class="glyphicon glyphicon-plus"></span>
-            Add new subsubject
-        </button>
+    <table class="table table-bordered table-striped table-condensed">
+        <thead>
+        <tr>
+            <th>Sub subject name</th>
+            <th>Parent subject</th>
+            <th>Description</th>
+            <th colspan="2">#</th>
+        </tr>
+        </thead>
+        <c:forEach var="subSubject" items="${subSubjects}">
+            <tr>
+                <td>
+                        ${subSubject.name}
+                </td>
+                <td>
+                    ${subSubject.parentSubject.name}
+                </td>
+                <td>
+                    ${subSubject.description}
+                </td>
+                <td class="min-width">
+                    <a href="<c:url value='/admin/sub_subjects/${subSubject.id}/edit'/>" class="btn btn-default">Edit</a>
+                    <a href="<c:url value='/admin/sub_subjects/${subSubject.id}/remove'/>" class="btn btn-danger">Remove</a>
+                </td>
+            </tr>
+        </c:forEach>
+    </table>
+    <a href="<c:url value='/admin/sub_subjects/add'/>" class="btn btn-default pull-right">
+        <span class="glyphicon glyphicon-plus"></span>
+        Add new sub subject
     </a>
-
 </div>
 </body>
 

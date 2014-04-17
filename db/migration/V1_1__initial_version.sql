@@ -1,23 +1,23 @@
 create table user (
     id bigint primary key auto_increment,
-    username varchar(20) unique not null,
-    password varchar(32) not null,
-    firstname varchar(40),
-    middlename varchar(40),
-    lastname varchar(40),
-    qualification varchar(40),
+    username varchar(50) unique not null,
+    password varchar(64) not null,
+    firstname varchar(50),
+    middlename varchar(50),
+    lastname varchar(50),
+    qualification TINYTEXT,
     role varchar(20) not null
 );
 
 create table subject (
     id bigint primary key auto_increment,
-    name varchar(40) not null unique,
+    name varchar(50) not null unique,
     description longtext
 );
 
 create table sub_subject (
     id bigint primary key auto_increment,
-    name varchar(40) not null unique,
+    name varchar(50) not null unique,
     description longtext,
     parent_subject_id bigint not null,
     foreign key (parent_subject_id) references subject(id)

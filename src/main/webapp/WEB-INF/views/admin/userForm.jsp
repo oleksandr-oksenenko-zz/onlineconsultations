@@ -23,6 +23,11 @@
         <div class="col-md-offset-3 col-md-6">
             <form:form method="POST" commandName="user">
                 <div class="form-group">
+                    <form:label path="lastName">Last Name</form:label>
+                    <form:input path="lastName" cssClass="form-control"/>
+                    <form:errors path="lastName" cssClass="text-danger"/>
+                </div>
+                <div class="form-group">
                     <form:label path="firstName">First Name</form:label>
                     <form:input path="firstName" cssClass="form-control"/>
                     <form:errors path="firstName" cssClass="text-danger"/>
@@ -33,24 +38,28 @@
                     <form:errors path="middleName" cssClass="text-danger"/>
                 </div>
                 <div class="form-group">
-                    <form:label path="lastName">Last Name</form:label>
-                    <form:input path="lastName" cssClass="form-control"/>
-                    <form:errors path="lastName" cssClass="text-danger"/>
-                </div>
-                <div class="form-group">
                     <form:label path="qualification">Qualification</form:label>
                     <form:input path="qualification" cssClass="form-control"/>
                     <form:errors path="qualification" cssClass="text-danger"/>
                 </div>
-                <div class="form-group">
-                    <form:label path="password">Password</form:label>
-                    <form:password path="password" cssClass="form-control"/>
-                    <form:errors path="password" cssClass="text-danger"/>
-                </div>
+                <c:if test="${mode eq 'add'}">
+                    <div class="form-group">
+                        <form:label path="username">Username</form:label>
+                        <form:input path="username" cssClass="form-control"/>
+                        <form:errors path="username" cssClass="text-danger"/>
+                    </div>
+                    <div class="form-group">
+                        <form:label path="password">Password</form:label>
+                        <form:password path="password" cssClass="form-control"/>
+                        <form:errors path="password" cssClass="text-danger"/>
+                    </div>
+                </c:if>
                 <div class="form-group">
                     <form:select path="userRole" items="${userRoles}"/>
                 </div>
+
                 <button type="submit" class="btn btn-default">Save</button>
+                <a href="<c:url value="/admin/users"/>" class="btn btn-default">Cancel</a>
             </form:form>
         </div>
     </div>

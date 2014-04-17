@@ -39,7 +39,7 @@
 
     <authentication-manager>
         <authentication-provider user-service-ref="hibernateUserDetailsServiceImpl">
-            <password-encoder hash="plaintext"/>
+            <password-encoder hash="sha-256"/>
         </authentication-provider>
     </authentication-manager>
 
