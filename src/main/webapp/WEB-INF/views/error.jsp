@@ -2,5 +2,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <p class="text-center" style="color: red;">
-    Error happened. Reason: <c:out value="${reason}"/>
+    Error happened. Reason: ${reason}
 </p>

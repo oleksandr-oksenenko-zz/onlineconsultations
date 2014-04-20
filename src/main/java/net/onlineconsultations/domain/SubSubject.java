@@ -29,10 +29,7 @@ public class SubSubject {
     @NotNull
     private Subject parentSubject;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_sub_subject",
-            joinColumns = { @JoinColumn(name = "sub_subject_id", nullable = false) },
-            inverseJoinColumns = { @JoinColumn(name = "user_id", nullable = false) })
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "subSubjects")
     private Set<User> subSubjectUsers = new HashSet<>();
 
     public SubSubject() { }

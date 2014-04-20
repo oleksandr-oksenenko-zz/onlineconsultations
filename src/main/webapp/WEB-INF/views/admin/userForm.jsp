@@ -55,7 +55,9 @@
                     </div>
                 </c:if>
                 <div class="form-group">
-                    <form:select path="userRole" items="${userRoles}"/>
+                    <form:label path="userRole">User role</form:label>
+                    <form:select path="userRole" items="${userRoles}" cssClass="form-control"/>
+                    <form:errors path="userRole" cssClass="text-danger"/>
                 </div>
 
                 <button type="submit" class="btn btn-default">Save</button>

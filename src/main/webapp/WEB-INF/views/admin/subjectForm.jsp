@@ -33,7 +33,10 @@
             <form:textarea path="description" cssClass="form-control"/>
             <form:errors path="description" cssClass="text-danger"/>
         </div>
-        <button type="submit" class="btn btn-default">Save</button>
+        <span class="pull-right">
+            <button type="submit" class="btn btn-default">Save</button>
+            <a href="<c:url value="/admin/subjects/"/>" class="btn btn-default">Cancel</a>
+        </span>
     </form:form>
 
 </div>

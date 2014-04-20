@@ -10,4 +10,11 @@
             </div>
         </div>
     </sec:authorize>
+    <sec:authorize access="isAuthenticated()">
+        <div class="row">
+            <div class="col-md-offset-11">
+                <a href="<c:url value='/logout'/>">Logout</a>
+            </div>
+        </div>
+    </sec:authorize>
 </div>

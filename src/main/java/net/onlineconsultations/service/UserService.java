@@ -1,5 +1,6 @@
 package net.onlineconsultations.service;
 
+import net.onlineconsultations.domain.SubSubject;
 import net.onlineconsultations.domain.User;
 
 import java.util.List;
@@ -10,6 +11,10 @@ public interface UserService {
     List<User> getAllUsers();
 
     User findByUsername(String username);
+
+    void addSubSubjectToUser(User user, SubSubject subSubject);
+
+    void removeSubSubjectFromUser(User user, SubSubject subSubject);
 
     void save(User user);
 

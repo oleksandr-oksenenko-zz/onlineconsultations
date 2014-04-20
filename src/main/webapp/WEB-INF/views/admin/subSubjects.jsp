@@ -11,51 +11,47 @@
 
 <body>
 <div class="container">
+
     <div class="page-header">
         <ul class="nav nav-pills">
             <li><a href="<c:url value='/admin/subjects'/>">Subjects</a></li>
-            <li><a href="<c:url value='/admin/sub_subjects'/>">Sub subjects</a></li>
-            <li class="active"><a href="<c:url value='/admin/users'/>">Users</a></li>
+            <li class="active"><a href="<c:url value='/admin/sub_subjects'/>">Sub subjects</a></li>
+            <li><a href="<c:url value='/admin/users'/>">Users</a></li>
         </ul>
     </div>
 
-    <table class="table table-striped table-bordered table-condensed">
+    <table class="table table-bordered table-striped table-condensed">
         <thead>
-            <tr>
-                <th>Username</th>
-                <th>First name</th>
-                <th>Last name</th>
-                <th>Role</th>
-                <th colspan="2">#</th>
-            </tr>
+        <tr>
+            <th>Sub subject name</th>
+            <th>Parent subject</th>
+            <th>Description</th>
+            <th colspan="2">#</th>
+        </tr>
         </thead>
-        <c:forEach var="user" items="${users}">
+        <c:forEach var="subSubject" items="${subSubjects}">
             <tr>
                 <td>
-                    ${user.username}
+                    ${subSubject.name}
                 </td>
                 <td>
-                    ${user.firstName}
+                    ${subSubject.parentSubject.name}
                 </td>
                 <td>
-                    ${user.lastName}
-                </td>
-                <td>
-                    ${user.role}
+                    ${subSubject.description}
                 </td>
                 <td class="min-width">
-                    <a href="<c:url value="/admin/users/${user.id}/edit"/>" class="btn btn-default">Edit</a>
-                    <a href="<c:url value="/admin/users/${user.id}/remove"/>" class="btn btn-danger">Remove</a>
+                    <a href="<c:url value='/admin/sub_subjects/${subSubject.id}/edit'/>" class="btn btn-default">Edit</a>
+                    <a href="<c:url value='/admin/sub_subjects/${subSubject.id}/remove'/>" class="btn btn-danger">Remove</a>
                 </td>
             </tr>
         </c:forEach>
     </table>
-    <a href="<c:url value='/admin/users/add'/>" class="btn btn-default pull-right">
+    <a href="<c:url value='/admin/sub_subjects/add'/>" class="btn btn-default pull-right">
         <span class="glyphicon glyphicon-plus"></span>
-        Add new user
+        Add new sub subject
     </a>
-
 </div>
 </body>
-</html>
 
+</html>

@@ -14,16 +14,16 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", unique = true)
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "username", unique = true)
     @NotNull
-    @Size(max = 20)
+    @Size(max = 50)
     private String username;
 
     @Column(name = "password")
-    @Size(max = 32)
+    @Size(max = 64)
     @NotNull
     private String password;
 
@@ -44,7 +44,10 @@ public class User {
     @NotNull
     private UserRole role;
 
-    @ManyToMany(mappedBy = "subSubjectUsers", fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "user_sub_subject",
+            joinColumns = { @JoinColumn(name = "user_id", nullable = false) },
+            inverseJoinColumns = { @JoinColumn(name = "sub_subject_id", nullable = false) })
     private Set<SubSubject> subSubjects = new HashSet<>();
 
     public User() { }

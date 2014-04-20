@@ -4,6 +4,7 @@ import net.onlineconsultations.dao.SubSubjectDAO;
 import net.onlineconsultations.dao.SubjectDAO;
 import net.onlineconsultations.domain.SubSubject;
 import net.onlineconsultations.domain.Subject;
+import net.onlineconsultations.domain.User;
 import net.onlineconsultations.service.SubjectService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,8 +41,19 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
+    public List<SubSubject> getSubSubjectsByUser(User user) {
+        return subSubjectDAO.getSubSubjectsByUser(user);
+    }
+
+    @Override
+    public List<SubSubject> getSubSubjectsBySubjectId(Long subjectId) {
+        return subSubjectDAO.getSubSubjectsBySubjectId(subjectId);
+    }
+
+    @Override
     @Transactional
-    public void remove(Subject subject) {
+    public void removeSubject(Long subjectId) {
+        Subject subject = subjectDAO.getById(subjectId);
         for (SubSubject subSubject : subject.getSubSubjects()) {
             subSubject.getSubSubjectUsers().clear();
         }
@@ -50,7 +62,8 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     @Transactional
-    public void remove(SubSubject subSubject) {
+    public void removeSubSubject(Long subSubjectId) {
+        SubSubject subSubject = subSubjectDAO.getById(subSubjectId);
         subSubject.getSubSubjectUsers().clear();
         subSubjectDAO.remove(subSubject);
     }

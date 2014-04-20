@@ -2,6 +2,7 @@ package net.onlineconsultations.service;
 
 import net.onlineconsultations.domain.SubSubject;
 import net.onlineconsultations.domain.Subject;
+import net.onlineconsultations.domain.User;
 
 import java.util.List;
 
@@ -15,9 +16,13 @@ public interface SubjectService {
 
     List<SubSubject> getAllSubSubjects();
 
-    void remove(Subject subject);
+    List<SubSubject> getSubSubjectsByUser(User user);
 
-    void remove(SubSubject subSubject);
+    List<SubSubject> getSubSubjectsBySubjectId(Long subjectId);
+
+    void removeSubject(Long subjectId);
+
+    void removeSubSubject(Long subSubjectId);
 
     void save(Subject subject);
 
