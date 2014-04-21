@@ -3,12 +3,12 @@ var MessagePoller = {
     lastMessageId: -1,
 
     startPollingForMessages: function(messageHandler) {
-        intervalId = setInterval(function() {
+        MessagePoller.intervalId = setInterval(function() {
             $.ajax({
                 url: baseUrl + "chat/poll_for_messages",
                 type: "POST",
                 dataType: "json",
-                data: JSON.stringify(lastMessageId),
+                data: JSON.stringify(MessagePoller.lastMessageId),
                 contentType: "application/json; charset=utf-8",
                 success: function(data) {
                     if (data.length > 0) {
@@ -29,7 +29,8 @@ var MessageSender = {
     sendMessage: function(messageBody) {
         var message = {
             id: -1,
-            body: messageBody
+            body: messageBody,
+            author: "anonym"
         };
         $.ajax({
             url: baseUrl + "chat/post_message",
@@ -48,20 +49,45 @@ var MessageSender = {
 };
 
 var MessageDisplayer = {
+    messagePattern: "<div class='panel panel-default condensed-panel'>" +
+        "<div class='panel-heading condensed-panel-element'>%author%</div>" +
+        "<div class='panel-body condensed-panel-element'>%messageBody%</div>" +
+        "</div>"
+    ,
+
     displayMessages: function(messages) {
         var textArea = $("#messages");
+        var tmp = "";
         for (var i = 0; i < messages.length; i++) {
-            textArea.html(textArea.html() + "<br/>" + messages[i].body);
+            var author = messages[i].author;
+            var messageBody = messages[i].body;
+            tmp += MessageDisplayer.messagePattern
+                .replace("%author%", author)
+                .replace("%messageBody%", messageBody);
         }
+        textArea.html(textArea.html() + tmp);
     }
 };
 
-$(window).on("load", function() {
-    $("#messages").click(function (e) {
-        if (e.ctrlKey && e.keyCode == 13) {
-            var messageBody = $("#messages").val();
-            MessageSender.sendMessage(messageBody);
+function readMessage() {
+    var message = $("#message");
+    var messageBody = message.val();
+    message.val("");
+    return messageBody;
+}
+
+function initEventHandlers() {
+    $("#message").keypress(function (e) {
+        if (e.ctrlKey && e.keyCode == 10) {
+            MessageSender.sendMessage(readMessage());
         }
     });
+    $("#btnPostMessage").click(function () {
+        MessageSender.sendMessage(readMessage());
+    });
+}
+$(window).on("load", function() {
+    initEventHandlers();
+
     MessagePoller.startPollingForMessages(MessageDisplayer.displayMessages);
 });

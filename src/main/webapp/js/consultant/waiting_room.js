@@ -18,6 +18,8 @@ var ConsultantStatus = {
 };
 
 var RequestSender = {
+    intervalId: -1,
+
     startWaitingForUsers: function() {
         $.ajax({
             url: baseUrl + "consultant/status",
@@ -26,17 +28,19 @@ var RequestSender = {
                 status: ConsultantStatus.WAITING_FOR_USERS
             },
             success: function() {
-                intervalId = setInterval(function () {
-                    pollForChat(function (chatId) {
-                        if (chatId != -1) {
-                            window.location = baseUrl + "/chat";
+                RequestSender.intervalId = setInterval(function() {
+                    ChatPoller.startPollingForChat(function(chatId) {
+                        if (chatId != null && chatId != -1) {
+                            console.log("Redirecting to chat page: " + baseUrl + "chat");
+                            console.log("Chat id: " + chatId);
+                            window.location = baseUrl + "chat";
                         }
-                    })
+                    });
                 }, 1000);
             },
-            error: function(a, b, c) {
+            error: function(jqXHR, textStatus, errorThrown) {
                 alert("Error while stopping waiting for users");
-                console.log(a + ", " + b + ", " + c);
+                console.log(jqXHR + ", " + textStatus + ", " + errorThrown);
             }
         });
     },
@@ -49,17 +53,18 @@ var RequestSender = {
                 status: ConsultantStatus.NOT_WAITING_FOR_USERS
             },
             success: function() {
-                clearInterval(intervalId);
+                clearInterval(RequestSender.intervalId);
             },
-            error: function(a, b, c) {
+            error: function(jqXHR, textStatus, errorThrown) {
                 alert("Error while stopping waiting for users");
-                console.log(a + ", " + b + ", " + c);
+                console.log(jqXHR + ", " + textStatus + ", " + errorThrown);
             }
         })
     }
 };
 
 var startPolling = function() {
+    console.log("Starting polling...");
     ButtonManipulator.disableBtn($("#startPollingBtn"));
     ButtonManipulator.enableBtn($("#stopPollingBtn"));
 
@@ -67,6 +72,7 @@ var startPolling = function() {
 };
 
 var stopPolling = function() {
+    console.log("Stopping polling...");
     ButtonManipulator.disableBtn($("#stopPollingBtn"));
     ButtonManipulator.enableBtn($("#startPollingBtn"));
 
