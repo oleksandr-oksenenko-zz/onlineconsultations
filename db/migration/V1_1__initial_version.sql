@@ -6,7 +6,8 @@ create table user (
     middlename varchar(50),
     lastname varchar(50),
     qualification TINYTEXT,
-    role varchar(20) not null
+    role varchar(20) not null,
+    is_waiting_for_chat tinyint not null default 0
 );
 
 create table subject (

@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 public class ChatMessageInfo {
     private Long id;
 
+    @NotNull
     private String body;
 
     public ChatMessageInfo() {
@@ -40,7 +41,6 @@ public class ChatMessageInfo {
     }
 
     @JsonProperty("body")
-    @NotNull
     public void setBody(String body) {
         this.body = body;
     }

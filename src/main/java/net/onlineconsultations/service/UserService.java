@@ -1,9 +1,11 @@
 package net.onlineconsultations.service;
 
 import net.onlineconsultations.domain.SubSubject;
+import net.onlineconsultations.domain.Subject;
 import net.onlineconsultations.domain.User;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserService {
     User getById(Long id);
@@ -21,4 +23,6 @@ public interface UserService {
     void merge(User user);
 
     void remove(Long id);
+
+    Map<SubSubject, List<User>> getWaitingConsultantsBySubject(Subject subject);
 }

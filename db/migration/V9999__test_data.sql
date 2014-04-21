@@ -1,8 +1,8 @@
-insert into user (id, username, password, role) values
-    (1, 'admin', 'e42ddd748c23785103b4e0f99a0e33954a36bf871a6710f6392a49b77992a00a', 'ROLE_ADMIN'),
-    (2, 'cs_cons', 'e42ddd748c23785103b4e0f99a0e33954a36bf871a6710f6392a49b77992a00a', 'ROLE_CONSULTANT'),
-    (3, 'math_cons', 'e42ddd748c23785103b4e0f99a0e33954a36bf871a6710f6392a49b77992a00a', 'ROLE_CONSULTANT'),
-    (4, 'pr_cons', 'e42ddd748c23785103b4e0f99a0e33954a36bf871a6710f6392a49b77992a00a', 'ROLE_CONSULTANT');
+insert into user (id, username, password, role, lastname, firstname) values
+    (1, 'admin', 'e42ddd748c23785103b4e0f99a0e33954a36bf871a6710f6392a49b77992a00a', 'ROLE_ADMIN', 'Oksenenko', 'Aleksandr'),
+    (2, 'cs_cons', 'e42ddd748c23785103b4e0f99a0e33954a36bf871a6710f6392a49b77992a00a', 'ROLE_CONSULTANT', 'Karpenko', 'Anna'),
+    (3, 'math_cons', 'e42ddd748c23785103b4e0f99a0e33954a36bf871a6710f6392a49b77992a00a', 'ROLE_CONSULTANT', 'Gavrilevskiy', 'Vladislav'),
+    (4, 'pr_cons', 'e42ddd748c23785103b4e0f99a0e33954a36bf871a6710f6392a49b77992a00a', 'ROLE_CONSULTANT', 'Yavtushenko', 'Vasiliy');
 
 insert into subject (id, name) values
     (1, 'Computer Science'),

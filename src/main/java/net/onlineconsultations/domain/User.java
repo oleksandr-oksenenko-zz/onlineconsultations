@@ -44,6 +44,9 @@ public class User {
     @NotNull
     private UserRole role;
 
+    @Column(name = "is_waiting_for_chat", columnDefinition = "tinyint")
+    private Boolean waitingForChat = false;
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "user_sub_subject",
             joinColumns = { @JoinColumn(name = "user_id", nullable = false) },
@@ -176,5 +179,13 @@ public class User {
                 .append(lastName)
                 .append(role)
                 .toHashCode();
+    }
+
+    public Boolean isWaitingForChat() {
+        return waitingForChat;
+    }
+
+    public void setWaitingForChat(Boolean waitingForChat) {
+        this.waitingForChat = waitingForChat;
     }
 }

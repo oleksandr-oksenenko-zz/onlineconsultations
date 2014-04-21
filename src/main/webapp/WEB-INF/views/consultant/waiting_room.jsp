@@ -4,52 +4,12 @@
 <html>
 
 <head>
+    <script type="text/javascript">
+        var baseUrl = "<c:url value="/"/>";
+    </script>
     <link rel="stylesheet" type="text/css" href="<c:url value='/resources/bootstrap/3.0.0/css/bootstrap.min.css'/>">
     <script type="text/javascript" src="<c:url value='/resources/jquery/1.9.0/jquery.min.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/js/consultant.js'/>"></script>
-    <script type="text/javascript">
-        var intervalId = -1;
-
-        var enableBtn = function(btn) {
-            btn.removeAttr("disabled", "disabled");
-            btn.toggleClass("btn-default", false);
-            btn.toggleClass("btn-primary", true);
-        }
-        var disableBtn = function(btn) {
-            btn.attr("disabled", "disabled");
-            btn.toggleClass("btn-primary", false);
-            btn.toggleClass("btn-default", true);
-        }
-
-        var startPolling = function() {
-            var startPollingBtn = $("#startPollingBtn");
-            var stopPollingBtn = $("#stopPollingBtn");
-
-            disableBtn(startPollingBtn);
-            enableBtn(stopPollingBtn);
-
-            intervalId = setInterval(function () {
-                var baseUrl = '<c:url value="/"/>';
-
-                pollForChat(baseUrl, function (chatId) {
-                    if (chatId != -1) {
-                        window.location = '<c:url value="/chat"/>';
-                    }
-                });
-            }, 1000)
-        };
-
-        var stopPolling = function() {
-            var startPollingBtn = $("#startPollingBtn");
-            var stopPollingBtn = $("#stopPollingBtn");
-
-            disableBtn(stopPollingBtn);
-            enableBtn(startPollingBtn);
-
-            clearInterval(intervalId);
-            intervalId = -1;
-        };
-    </script>
+    <script type="text/javascript" src="<c:url value='/js/consultant/chat.js'/>"></script>
 </head>
 
 <body>
@@ -63,19 +23,12 @@
 
         <div class="row">
             <div class="well col-md-3" style="float: none; margin: 0 auto">
-                <a href="javascript:startPolling();"
-                    id="startPollingBtn"
-                    class="btn btn-block btn-primary"
-                >
+                <button id="startPollingBtn" class="btn btn-block btn-primary">
                     Start waiting for users
-                </a>
-                <a href="javascript:stopPolling();"
-                    id="stopPollingBtn"
-                    class="btn btn-block btn-default"
-                    disabled="disabled"
-                >
+                </button>
+                <button id="stopPollingBtn" class="btn btn-block btn-default" disabled="disabled">
                     Stop waiting for users
-                </a>
+                </button>
             </div>
         </div>
 

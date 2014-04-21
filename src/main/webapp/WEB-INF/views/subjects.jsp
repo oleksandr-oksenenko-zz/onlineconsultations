@@ -18,7 +18,7 @@
                     <a href="<c:url value='/subjects/${subject.id}'/>">${subject.name}</a>
                 </div>
                 <div class="panel-body">
-                    <c:out value="${ subject.description }"></c:out>
+                    ${ subject.description }
                 </div>
             </div>
         </c:forEach>

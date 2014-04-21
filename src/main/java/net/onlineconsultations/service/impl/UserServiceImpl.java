@@ -1,8 +1,10 @@
 package net.onlineconsultations.service.impl;
 
 import net.onlineconsultations.dao.SubSubjectDAO;
+import net.onlineconsultations.dao.SubjectDAO;
 import net.onlineconsultations.dao.UserDAO;
 import net.onlineconsultations.domain.SubSubject;
+import net.onlineconsultations.domain.Subject;
 import net.onlineconsultations.domain.User;
 import net.onlineconsultations.service.UserService;
 import org.slf4j.Logger;
@@ -12,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -23,6 +27,9 @@ public class UserServiceImpl implements UserService {
 
     @Inject
     private SubSubjectDAO subSubjectDAO;
+
+    @Inject
+    private SubjectDAO subjectDAO;
 
     @Inject
     private MessageDigestPasswordEncoder passwordEncoder;
@@ -91,5 +98,17 @@ public class UserServiceImpl implements UserService {
             subSubject.getSubSubjectUsers().remove(user);
         }
         userDAO.remove(user);
+    }
+
+    @Override
+    @Transactional
+    public Map<SubSubject, List<User>> getWaitingConsultantsBySubject(Subject subject) {
+        subject = subjectDAO.getById(subject.getId());
+
+        Map<SubSubject, List<User>> users = new HashMap<>();
+        for (SubSubject subSubject : subject.getSubSubjects()) {
+            users.put(subSubject, userDAO.getOnlineConsultantsBySubSubject(subSubject));
+        }
+        return users;
     }
 }

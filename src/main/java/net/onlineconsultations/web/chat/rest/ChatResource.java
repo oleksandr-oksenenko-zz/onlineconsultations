@@ -10,6 +10,7 @@ import net.onlineconsultations.service.UserService;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -29,7 +30,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/chat")
 public class ChatResource {
-    private static final Logger log = org.slf4j.LoggerFactory.getLogger(ChatResource.class);
+    private static final Logger log = LoggerFactory.getLogger(ChatResource.class);
 
     @Inject
     private ChatService chatService;
@@ -46,10 +47,10 @@ public class ChatResource {
         Chat activeChat = chatService.findActiveChatWithConsultant(consultant);
         if (activeChat == null) {
             return new ChatInfo(-1L);
+        } else {
+            chatService.setConsultantInChat(activeChat);
+            return new ChatInfo(activeChat.getId());
         }
-        chatService.setConsultantInChat(activeChat);
-
-        return new ChatInfo(activeChat.getId());
     }
 
     @RolesAllowed({"ROLE_CONSULTANT", "ROLE_ANONYMOUS"})

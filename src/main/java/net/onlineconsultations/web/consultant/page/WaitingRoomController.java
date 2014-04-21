@@ -15,12 +15,6 @@ import javax.inject.Inject;
 public class WaitingRoomController {
     private static final Logger log = LoggerFactory.getLogger(WaitingRoomController.class);
 
-    @Inject
-    private UserService userService;
-
-    @Inject
-    private SubjectService subjectService;
-
     @RequestMapping(value = { "/waiting_room", ""}, method = RequestMethod.GET)
     public String waitingRoomPage() {
         return "consultant/waiting_room";

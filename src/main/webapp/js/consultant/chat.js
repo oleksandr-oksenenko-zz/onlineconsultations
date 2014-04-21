@@ -1,6 +1,6 @@
-function pollForChat(baseUrl, handler) {
+function pollForChat(handler) {
     $.ajax({
-        url: baseUrl + '/chat/poll_for_chat',
+        url: baseUrl + 'chat/poll_for_chat',
         type: 'POST',
         dataType: 'json',
         data: {}
@@ -14,3 +14,7 @@ function pollForChat(baseUrl, handler) {
             handler(-1);
         });
 }
+
+var intervalId = -1;
+
+

@@ -26,9 +26,6 @@ public class SubjectController {
     @Inject
     private UserService userService;
 
-    @Inject
-    private SessionRegistry sessionRegistry;
-
     @RequestMapping(method = RequestMethod.GET)
     public String subjects(Model model) {
         model.addAttribute("subjects", subjectService.getAllSubjects());
@@ -42,28 +39,7 @@ public class SubjectController {
         Subject subject = subjectService.getSubjectById(subjectId);
 
         model.addAttribute("subject", subject);
-        model.addAttribute("onlineConsultants", getOnlineConsultants());
+        model.addAttribute("users", userService.getWaitingConsultantsBySubject(subject));
         return "subject";
-    }
-
-    private List<User> getOnlineConsultants() {
-        List<Object> allPrincipals = sessionRegistry.getAllPrincipals();
-        List<User> onlineConsultants = new ArrayList<>();
-
-        for (Object principal : allPrincipals) {
-            if (principal instanceof UserDetails) {
-                UserDetails userDetails = (UserDetails) principal;
-
-                User user = userService
-                        .findByUsername(userDetails.getUsername());
-
-                if (user.getRole().equals(UserRole.ROLE_CONSULTANT)) {
-                    onlineConsultants.add(user);
-                }
-            } else {
-                throw new RuntimeException("Wrong principal type");
-            }
-        }
-        return onlineConsultants;
     }
 }

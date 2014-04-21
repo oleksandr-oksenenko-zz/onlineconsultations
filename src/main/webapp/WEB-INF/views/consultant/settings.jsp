@@ -6,7 +6,6 @@
 <head>
     <link rel="stylesheet" type="text/css" href="<c:url value='/resources/bootstrap/3.0.0/css/bootstrap.min.css'/>">
     <script type="text/javascript" src="<c:url value='/resources/jquery/1.9.0/jquery.min.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/js/consultant.js'/>"></script>
 </head>
 
 <body>

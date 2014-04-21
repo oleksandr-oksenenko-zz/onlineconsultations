@@ -8,24 +8,20 @@
 
 <head>
     <link rel="stylesheet" type="text/css" href="<c:url value='/resources/bootstrap/3.0.0/css/bootstrap.min.css'/>">
-
     <script type="text/javascript" src="<c:url value='/resources/jquery/1.9.0/jquery.min.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/js/chat.js'/>"></script>
-
     <script type="text/javascript">
         var baseUrl = '<c:url value="/"/>';
-        setInterval(function () {
-            pollForMessages(baseUrl, displayMessages);
-        }, 1000);
     </script>
 
+    <sec:authorize access="isAnonymous()">
+        <script type="text/javascript" src="<c:url value='/js/anonym/chat.js'/>"></script>
+    </sec:authorize>
+
     <sec:authorize access="hasRole('ROLE_CONSULTANT')">
-        <script type="text/javascript" src="<c:url value="/js/consultant.js"/>"></script>
+        <script type="text/javascript" src="<c:url value="/js/consultant/chat.js"/>"></script>
         <script type="text/javascript">
             setInterval(function () {
-                var baseUrl = '<c:url value="/"/>';
-
-                pollForChat(baseUrl, function (chatId) {
+                pollForChat(function (chatId) {
                     if (chatId == -1) {
                         window.location = '<c:url value="/consultant"/>';
                     }
@@ -33,6 +29,13 @@
             }, 1000);
         </script>
     </sec:authorize>
+
+    <script type="text/javascript">
+        setInterval(function () {
+            pollForMessages(displayMessages);
+        }, 1000);
+    </script>
+
 
 </head>
 
