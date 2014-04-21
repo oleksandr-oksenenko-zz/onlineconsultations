@@ -8,34 +8,18 @@
 
 <head>
     <link rel="stylesheet" type="text/css" href="<c:url value='/resources/bootstrap/3.0.0/css/bootstrap.min.css'/>">
+    <link rel="stylesheet" type="text/css" href="<c:url value='/css/style.css'/>">
     <script type="text/javascript" src="<c:url value='/resources/jquery/1.9.0/jquery.min.js'/>"></script>
     <script type="text/javascript">
         var baseUrl = '<c:url value="/"/>';
     </script>
 
-    <sec:authorize access="isAnonymous()">
-        <script type="text/javascript" src="<c:url value='/js/anonym/chat.js'/>"></script>
-    </sec:authorize>
+    <script type="text/javascript" src="<c:url value="/js/common/chat.js"/>"></script>
 
     <sec:authorize access="hasRole('ROLE_CONSULTANT')">
+        <script type="text/javascript" src="<c:url value="/js/consultant/common/chat_poller.js"/>"></script>
         <script type="text/javascript" src="<c:url value="/js/consultant/chat.js"/>"></script>
-        <script type="text/javascript">
-            setInterval(function () {
-                pollForChat(function (chatId) {
-                    if (chatId == -1) {
-                        window.location = '<c:url value="/consultant"/>';
-                    }
-                });
-            }, 1000);
-        </script>
     </sec:authorize>
-
-    <script type="text/javascript">
-        setInterval(function () {
-            pollForMessages(displayMessages);
-        }, 1000);
-    </script>
-
 
 </head>
 
@@ -52,25 +36,17 @@
                 <label for="message">New message (<small>you can send messages using ctrl+enter</small>)</label>
                 <textarea rows="3"
                     class="form-control"
-                    id="message"
-                    onkeypress="onEnterPress(event);"></textarea>
+                    id="message"> </textarea>
             </div>
-            <button 
-                type="button"
-                class="btn btn-default"
-                onclick="postMessage('<c:url value="/"/>');"
-                id="btnPostMessage">
+            <button type="button"
+                    class="btn btn-default"
+                    id="btnPostMessage">
                 Post a message
             </button>
 
             <sec:authorize access="hasRole('ROLE_ANONYMOUS')">
-                <a href="<c:url value="/chat/end"/>">
-                    <button
-                            type="button"
-                            class="btn btn-default"
-                            id="btnEndChat">
-                        End the chat
-                    </button>
+                <a href="<c:url value="/chat/end"/>" id="btnEndChat" class="btn btn-default">
+                    End the chat
                 </a>
             </sec:authorize>
         </form>

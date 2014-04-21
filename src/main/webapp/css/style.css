@@ -2,3 +2,11 @@
     width: 1px;
     white-space: nowrap;
 }
+
+.condensed-panel-element {
+    padding: 5px 10px;
+}
+
+.condensed-panel {
+    margin-bottom: 5px;
+}
