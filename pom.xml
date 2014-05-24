@@ -9,6 +9,10 @@
     <name>onlineconsultations</name>
 
     <properties>
+        <flyway.url>jdbc:mysql://localhost:3307/onlineconsultations</flyway.url>
+        <flyway.username>root</flyway.username>
+        <flyway.password>stalker</flyway.password>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>3.2.8.RELEASE</spring.version>
         <spring.security.version>3.2.2.RELEASE</spring.security.version>
@@ -166,6 +170,13 @@
             <version>1.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -225,9 +236,9 @@
                 </executions>
                 <configuration>
                     <driver>com.mysql.jdbc.Driver</driver>
-                    <url>jdbc:mysql://localhost:3306/onlineconsultations</url>
-                    <user>root</user>
-                    <password>stalker</password>
+                    <url>${flyway.url}</url>
+                    <user>${flyway.username}</user>
+                    <password>${flyway.password}</password>
                     <locations>
                         <location>filesystem://${project.basedir}/db/migration</location>
                     </locations>

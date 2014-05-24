@@ -17,7 +17,6 @@ var MessagePoller = {
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
-                    alert("Error while retrieving messages.");
                     console.log("Text status: " + textStatus + ", error thrown: " + errorThrown);
                 }
             });

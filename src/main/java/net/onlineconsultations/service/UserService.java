@@ -24,5 +24,7 @@ public interface UserService {
 
     void remove(Long id);
 
+    void changeConsultantStatus(User user, boolean isWaitingForUsers);
+
     Map<SubSubject, List<User>> getWaitingConsultantsBySubject(Subject subject);
 }

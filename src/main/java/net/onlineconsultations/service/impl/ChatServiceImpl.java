@@ -70,19 +70,8 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public Chat getChatById(Long id) {
-        return chatDAO.getById(id);
-    }
-
-    @Override
     public Chat findActiveChatWithConsultant(User consultant) {
         return chatDAO.findActiveChatWithConsultant(consultant.getId());
-    }
-
-    @Override
-    @Transactional
-    public void update(Chat chat) {
-        chatDAO.merge(chat);
     }
 
     @Override

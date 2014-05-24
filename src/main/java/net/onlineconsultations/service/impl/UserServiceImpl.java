@@ -102,6 +102,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    public void changeConsultantStatus(User user, boolean isWaitingForUsers) {
+        user.setWaitingForChat(isWaitingForUsers);
+        userDAO.merge(user);
+    }
+
+    @Override
+    @Transactional
     public Map<SubSubject, List<User>> getWaitingConsultantsBySubject(Subject subject) {
         subject = subjectDAO.getById(subject.getId());
 

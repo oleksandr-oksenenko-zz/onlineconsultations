@@ -20,11 +20,7 @@ public interface ChatService {
 
     Chat findActiveChatWithConsultant(User consultant);
 
-    Chat getChatById(Long id);
-
     ChatMessage getChatMessageById(Long id);
 
     Chat findBySessionId(String sessionId);
-
-    void update(Chat chat);
 }

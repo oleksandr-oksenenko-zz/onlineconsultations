@@ -41,7 +41,7 @@ public class ChatResource {
     @RolesAllowed("ROLE_CONSULTANT")
     @RequestMapping(value = "/poll_for_chat", method = RequestMethod.POST)
     @ResponseBody
-    public ChatInfo consultantPollForChat(Principal principal) {
+    public ChatInfo pollForChat(Principal principal) {
         User consultant = userService.findByUsername(principal.getName());
 
         Chat activeChat = chatService.findActiveChatWithConsultant(consultant);

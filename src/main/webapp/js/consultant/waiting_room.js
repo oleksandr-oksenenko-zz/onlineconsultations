@@ -17,7 +17,7 @@ var ConsultantStatus = {
     NOT_WAITING_FOR_USERS: "NOT_WAITING_FOR_USERS"
 };
 
-var RequestSender = {
+var StatusChanger = {
     intervalId: -1,
     currentStatus: ConsultantStatus.NOT_WAITING_FOR_USERS,
 
@@ -29,8 +29,8 @@ var RequestSender = {
                 status: ConsultantStatus.WAITING_FOR_USERS
             },
             success: function() {
-                RequestSender.currentStatus = ConsultantStatus.WAITING_FOR_USERS;
-                RequestSender.intervalId = setInterval(function() {
+                StatusChanger.currentStatus = ConsultantStatus.WAITING_FOR_USERS;
+                StatusChanger.intervalId = setInterval(function() {
                     ChatPoller.startPollingForChat(function(chatId) {
                         if (chatId != null && chatId != -1) {
                             console.log("Redirecting to chat page: " + baseUrl + "chat");
@@ -56,8 +56,8 @@ var RequestSender = {
             },
             async: false,
             success: function() {
-                RequestSender.currentStatus = ConsultantStatus.NOT_WAITING_FOR_USERS;
-                clearInterval(RequestSender.intervalId);
+                StatusChanger.currentStatus = ConsultantStatus.NOT_WAITING_FOR_USERS;
+                clearInterval(ChatPoller.intervalId);
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 alert("Error while stopping waiting for users");
@@ -72,8 +72,8 @@ var startPolling = function() {
     ButtonManipulator.disableBtn($("#startPollingBtn"));
     ButtonManipulator.enableBtn($("#stopPollingBtn"));
 
-    if (RequestSender.currentStatus != ConsultantStatus.WAITING_FOR_USERS) {
-        RequestSender.startWaitingForUsers();
+    if (StatusChanger.currentStatus != ConsultantStatus.WAITING_FOR_USERS) {
+        StatusChanger.startWaitingForUsers();
     }
 };
 
@@ -82,8 +82,8 @@ var stopPolling = function() {
     ButtonManipulator.disableBtn($("#stopPollingBtn"));
     ButtonManipulator.enableBtn($("#startPollingBtn"));
 
-    if (RequestSender.currentStatus != ConsultantStatus.NOT_WAITING_FOR_USERS) {
-        RequestSender.stopWaitingForUsers();
+    if (StatusChanger.currentStatus != ConsultantStatus.NOT_WAITING_FOR_USERS) {
+        StatusChanger.stopWaitingForUsers();
     }
 };
 

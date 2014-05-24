@@ -44,14 +44,12 @@ public class ConsultantResource {
 
         switch (status) {
             case WAITING_FOR_USERS:
-                user.setWaitingForChat(true);
+                userService.changeConsultantStatus(user, true);
                 break;
             case NOT_WAITING_FOR_USERS:
-                user.setWaitingForChat(false);
+                userService.changeConsultantStatus(user, false);
                 break;
         }
-
-        userService.merge(user);
 
         return new HttpEntity<>("OK");
     }
