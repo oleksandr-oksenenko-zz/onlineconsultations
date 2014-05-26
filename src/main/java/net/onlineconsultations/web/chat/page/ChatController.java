@@ -94,6 +94,7 @@ public class ChatController {
         }
         chatService.endChat(chat);
 
-        return "redirect:/";
+        Long consultantId = chat.getConsultantInChat().getId();
+        return "redirect:/rate/" + consultantId;
     }
 }

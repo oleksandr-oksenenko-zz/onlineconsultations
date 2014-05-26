@@ -28,7 +28,9 @@
                         <c:forEach var="user" items="${subSubjectUsers}">
                             <p>
                                 <a href="<c:url value='/chat/start/${user.id}'/>">
-                                    Start a consultation with ${ user.firstName } ${ user.lastName }
+                                    Start a consultation with
+                                    ${ user.firstName } ${ user.lastName }
+                                    (${ user.rating} <span class="glyphicon glyphicon-star"></span>)
                                 </a>
                             </p>
                         </c:forEach>

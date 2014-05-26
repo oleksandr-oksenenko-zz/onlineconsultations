@@ -47,6 +47,12 @@ public class User {
     @Column(name = "is_waiting_for_chat", columnDefinition = "tinyint")
     private Boolean waitingForChat = false;
 
+    @Column(name = "rating")
+    private Double rating = 0d;
+
+    @Column(name = "votes")
+    private Long votes = 0L;
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "user_sub_subject",
             joinColumns = { @JoinColumn(name = "user_id", nullable = false) },
@@ -77,6 +83,36 @@ public class User {
         this.lastName = lastName;
         this.qualification = qualification;
         this.subSubjects = userSubSubjects;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof User)) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        User rhs = (User) obj;
+        return new EqualsBuilder().append(id, rhs.getId())
+                .append(username, rhs.getUsername())
+                .append(password, rhs.getPassword())
+                .append(firstName, rhs.getFirstName())
+                .append(middleName, rhs.getMiddleName())
+                .append(lastName, rhs.getLastName())
+                .append(role, rhs.getRole()).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(username)
+                .append(password)
+                .append(firstName)
+                .append(middleName)
+                .append(lastName)
+                .append(role)
+                .toHashCode();
     }
 
     public Long getId() {
@@ -151,41 +187,27 @@ public class User {
         this.role = userRole;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null || !(obj instanceof User)) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        User rhs = (User) obj;
-        return new EqualsBuilder().append(id, rhs.getId())
-                .append(username, rhs.getUsername())
-                .append(password, rhs.getPassword())
-                .append(firstName, rhs.getFirstName())
-                .append(middleName, rhs.getMiddleName())
-                .append(lastName, rhs.getLastName())
-                .append(role, rhs.getRole()).isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder()
-                .append(username)
-                .append(password)
-                .append(firstName)
-                .append(middleName)
-                .append(lastName)
-                .append(role)
-                .toHashCode();
-    }
-
     public Boolean isWaitingForChat() {
         return waitingForChat;
     }
 
     public void setWaitingForChat(Boolean waitingForChat) {
         this.waitingForChat = waitingForChat;
+    }
+
+    public Double getRating() {
+        if (votes == 0) {
+            return 0d;
+        }
+        return rating / votes;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
+    }
+
+    public void addToRaiting(Double rating) {
+        this.votes++;
+        this.rating += rating;
     }
 }

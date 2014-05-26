@@ -14,9 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -114,8 +112,29 @@ public class UserServiceImpl implements UserService {
 
         Map<SubSubject, List<User>> users = new HashMap<>();
         for (SubSubject subSubject : subject.getSubSubjects()) {
-            users.put(subSubject, userDAO.getOnlineConsultantsBySubSubject(subSubject));
+            List<User> onlineConsultants = userDAO.getOnlineConsultantsBySubSubject(subSubject);
+            Collections.sort(onlineConsultants, new Comparator<User>() {
+                public int compare(User user, User user2) {
+                    return user.getRating().compareTo(user2.getRating());
+                }
+            });
+
+            users.put(subSubject, onlineConsultants);
         }
         return users;
+    }
+
+    @Override
+    @Transactional
+    public void incrementUserRating(User user, double rating) {
+        this.incrementUserRating(user.getId(), rating);
+    }
+
+    @Override
+    @Transactional
+    public void incrementUserRating(Long userId, double rating) {
+        User user = userDAO.getById(userId);
+        user.addToRaiting(rating);
+        userDAO.merge(user);
     }
 }

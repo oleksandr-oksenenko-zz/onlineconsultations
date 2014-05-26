@@ -27,4 +27,8 @@ public interface UserService {
     void changeConsultantStatus(User user, boolean isWaitingForUsers);
 
     Map<SubSubject, List<User>> getWaitingConsultantsBySubject(Subject subject);
+
+    void incrementUserRating(User user, double rating);
+
+    void incrementUserRating(Long userId, double rating);
 }
