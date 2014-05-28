@@ -1,10 +1,8 @@
 package net.onlineconsultations.service.impl;
 
-import net.onlineconsultations.dao.SubSubjectDAO;
-import net.onlineconsultations.dao.SubjectDAO;
+import net.onlineconsultations.dao.SubSubjectDao;
+import net.onlineconsultations.dao.SubjectDao;
 import net.onlineconsultations.dao.UserDAO;
-import net.onlineconsultations.domain.SubSubject;
-import net.onlineconsultations.domain.Subject;
 import net.onlineconsultations.domain.User;
 import net.onlineconsultations.service.UserService;
 import org.slf4j.Logger;
@@ -14,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -24,48 +22,30 @@ public class UserServiceImpl implements UserService {
     private UserDAO userDAO;
 
     @Inject
-    private SubSubjectDAO subSubjectDAO;
+    private SubSubjectDao subSubjectDao;
 
     @Inject
-    private SubjectDAO subjectDAO;
+    private SubjectDao subjectDAO;
 
     @Inject
     private MessageDigestPasswordEncoder passwordEncoder;
 
     @Override
+    @Transactional(readOnly = true)
     public User getById(Long id) {
         return userDAO.getById(id);
     }
 
     @Override
-    public List<User> getAllUsers() {
+    @Transactional(readOnly = true)
+    public List<User> getAll() {
         return userDAO.getAll();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User findByUsername(String username) {
         return userDAO.findByUsername(username);
-    }
-
-    @Override
-    @Transactional
-    public void addSubSubjectToUser(User user, SubSubject subSubject) {
-        user = userDAO.getById(user.getId());
-        subSubject = subSubjectDAO.getById(subSubject.getId());
-
-        user.getUserSubSubjects().add(subSubject);
-
-        userDAO.merge(user);
-    }
-
-    @Override
-    @Transactional
-    public void removeSubSubjectFromUser(User user, SubSubject subSubject) {
-        user = userDAO.getById(user.getId());
-        subSubject = subSubjectDAO.getById(subSubject.getId());
-
-        user.getUserSubSubjects().remove(subSubject);
-        userDAO.merge(user);
     }
 
     @Override
@@ -81,9 +61,14 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void merge(User user) {
-        String encodedPassword = passwordEncoder.encodePassword(user.getPassword(), null);
+        User oldUser = userDAO.getById(user.getId());
+        if (!user.getPassword().isEmpty()) {
+            String encodedPassword = passwordEncoder.encodePassword(user.getPassword(), null);
 
-        user.setPassword(encodedPassword);
+            user.setPassword(encodedPassword);
+        } else {
+            user.setPassword(oldUser.getPassword());
+        }
 
         userDAO.merge(user);
     }
@@ -92,49 +77,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void remove(Long id) {
         User user = userDAO.getById(id);
-        for (SubSubject subSubject : user.getUserSubSubjects()) {
-            subSubject.getSubSubjectUsers().remove(user);
-        }
         userDAO.remove(user);
-    }
-
-    @Override
-    @Transactional
-    public void changeConsultantStatus(User user, boolean isWaitingForUsers) {
-        user.setWaitingForChat(isWaitingForUsers);
-        userDAO.merge(user);
-    }
-
-    @Override
-    @Transactional
-    public Map<SubSubject, List<User>> getWaitingConsultantsBySubject(Subject subject) {
-        subject = subjectDAO.getById(subject.getId());
-
-        Map<SubSubject, List<User>> users = new HashMap<>();
-        for (SubSubject subSubject : subject.getSubSubjects()) {
-            List<User> onlineConsultants = userDAO.getOnlineConsultantsBySubSubject(subSubject);
-            Collections.sort(onlineConsultants, new Comparator<User>() {
-                public int compare(User user, User user2) {
-                    return user.getRating().compareTo(user2.getRating());
-                }
-            });
-
-            users.put(subSubject, onlineConsultants);
-        }
-        return users;
-    }
-
-    @Override
-    @Transactional
-    public void incrementUserRating(User user, double rating) {
-        this.incrementUserRating(user.getId(), rating);
-    }
-
-    @Override
-    @Transactional
-    public void incrementUserRating(Long userId, double rating) {
-        User user = userDAO.getById(userId);
-        user.addToRaiting(rating);
-        userDAO.merge(user);
     }
 }

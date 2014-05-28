@@ -29,12 +29,12 @@ public class ChatMessage {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User author;
+    private Consultant author;
 
     public ChatMessage() { }
 
     public ChatMessage(String body, LocalDateTime sendTimestamp,
-                       Chat chat, User author) {
+                       Chat chat, Consultant author) {
         this.body = body;
         this.timestamp = sendTimestamp;
         this.chat = chat;
@@ -73,11 +73,11 @@ public class ChatMessage {
         this.chat = chat;
     }
 
-    public User getAuthor() {
+    public Consultant getAuthor() {
         return author;
     }
 
-    public void setAuthor(User author) {
+    public void setAuthor(Consultant author) {
         this.author = author;
     }
 }

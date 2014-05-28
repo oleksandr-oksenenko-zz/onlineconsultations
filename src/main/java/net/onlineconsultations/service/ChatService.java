@@ -2,6 +2,7 @@ package net.onlineconsultations.service;
 
 import net.onlineconsultations.domain.Chat;
 import net.onlineconsultations.domain.ChatMessage;
+import net.onlineconsultations.domain.Consultant;
 import net.onlineconsultations.domain.User;
 
 import java.util.List;
@@ -9,18 +10,19 @@ import java.util.List;
 public interface ChatService {
     Chat startNewChat(User consultantInChat);
 
-    void endChat(Chat chat);
+    void endChatForAnonym(Chat chat);
+
+    void endChatForConsultant(Chat chat, Consultant consultant);
 
     void postNewMessage(ChatMessage chatMessage);
 
     void setConsultantInChat(Chat chat);
 
-    List<ChatMessage> getLastMessagesByChat(Chat chat, ChatMessage lastMessage);
-    List<ChatMessage> getLastMessagesByChat(Chat chat);
+    List<ChatMessage> getLastMessagesInChat(Chat chat, ChatMessage lastMessage);
+    List<ChatMessage> getLastMessagesInChat(Chat chat, Long lastMessageId);
+    List<ChatMessage> getMessagesInChat(Chat chat);
 
-    Chat findActiveChatWithConsultant(User consultant);
-
-    ChatMessage getChatMessageById(Long id);
+    Chat findActiveChatWithConsultant(Consultant consultant);
 
     Chat findBySessionId(String sessionId);
 }

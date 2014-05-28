@@ -6,12 +6,19 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
+@Inheritance
+@DiscriminatorColumn(name = "role")
 @Table(name = "user")
-public class User {
+public abstract class User {
+    /**
+     * Contains discriminator value
+     * */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", insertable = false, updatable = false)
+    private UserRole userRole;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -27,62 +34,11 @@ public class User {
     @NotNull
     private String password;
 
-    @Column(name = "firstname")
-    private String firstName;
-
-    @Column(name = "middlename")
-    private String middleName;
-
-    @Column(name = "lastname")
-    private String lastName;
-
-    @Column(name = "qualification")
-    private String qualification;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role")
-    @NotNull
-    private UserRole role;
-
-    @Column(name = "is_waiting_for_chat", columnDefinition = "tinyint")
-    private Boolean waitingForChat = false;
-
-    @Column(name = "rating")
-    private Double rating = 0d;
-
-    @Column(name = "votes")
-    private Long votes = 0L;
-
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinTable(name = "user_sub_subject",
-            joinColumns = { @JoinColumn(name = "user_id", nullable = false) },
-            inverseJoinColumns = { @JoinColumn(name = "sub_subject_id", nullable = false) })
-    private Set<SubSubject> subSubjects = new HashSet<>();
-
     public User() { }
 
-    public User(String username, String password, String firstName, String middleName, String lastName, String qualification, UserRole role) {
+    public User(String username, String password) {
         this.username = username;
         this.password = password;
-        this.firstName = firstName;
-        this.middleName = middleName;
-        this.lastName = lastName;
-        this.qualification = qualification;
-        this.role = role;
-    }
-
-    public User(Long id, String username, String password, UserRole role,
-                String firstName, String middleName, String lastName,
-                String qualification, Set<SubSubject> userSubSubjects) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.role = role;
-        this.firstName = firstName;
-        this.middleName = middleName;
-        this.lastName = lastName;
-        this.qualification = qualification;
-        this.subSubjects = userSubSubjects;
     }
 
     @Override
@@ -94,25 +50,24 @@ public class User {
             return true;
         }
         User rhs = (User) obj;
-        return new EqualsBuilder().append(id, rhs.getId())
+        return new EqualsBuilder()
+                .append(id, rhs.getId())
                 .append(username, rhs.getUsername())
                 .append(password, rhs.getPassword())
-                .append(firstName, rhs.getFirstName())
-                .append(middleName, rhs.getMiddleName())
-                .append(lastName, rhs.getLastName())
-                .append(role, rhs.getRole()).isEquals();
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
+                .append(id)
                 .append(username)
                 .append(password)
-                .append(firstName)
-                .append(middleName)
-                .append(lastName)
-                .append(role)
                 .toHashCode();
+    }
+
+    public UserRole getUserRole() {
+        return userRole;
     }
 
     public Long getId() {
@@ -137,77 +92,5 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getQualification() {
-        return qualification;
-    }
-
-    public void setQualification(String qualification) {
-        this.qualification = qualification;
-    }
-
-    public Set<SubSubject> getUserSubSubjects() {
-        return subSubjects;
-    }
-
-    public void setUserSubSubjects(Set<SubSubject> userSubSubjects) {
-        this.subSubjects = userSubSubjects;
-    }
-
-    public UserRole getRole() {
-        return role;
-    }
-
-    public void setRole(UserRole userRole) {
-        this.role = userRole;
-    }
-
-    public Boolean isWaitingForChat() {
-        return waitingForChat;
-    }
-
-    public void setWaitingForChat(Boolean waitingForChat) {
-        this.waitingForChat = waitingForChat;
-    }
-
-    public Double getRating() {
-        if (votes == 0) {
-            return 0d;
-        }
-        return rating / votes;
-    }
-
-    public void setRating(Double rating) {
-        this.rating = rating;
-    }
-
-    public void addToRaiting(Double rating) {
-        this.votes++;
-        this.rating += rating;
     }
 }

@@ -1,10 +1,8 @@
 package net.onlineconsultations.service.impl;
 
-import net.onlineconsultations.dao.SubSubjectDAO;
-import net.onlineconsultations.dao.SubjectDAO;
+import net.onlineconsultations.dao.SubjectDao;
 import net.onlineconsultations.domain.SubSubject;
 import net.onlineconsultations.domain.Subject;
-import net.onlineconsultations.domain.User;
 import net.onlineconsultations.service.SubjectService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,81 +13,39 @@ import java.util.List;
 @Service
 public class SubjectServiceImpl implements SubjectService {
     @Inject
-    private SubjectDAO subjectDAO;
-
-    @Inject
-    private SubSubjectDAO subSubjectDAO;
+    private SubjectDao subjectDao;
 
     @Override
-    public List<Subject> getAllSubjects() {
-        return subjectDAO.getAll();
+    @Transactional(readOnly = true)
+    public List<Subject> getAll() {
+        return subjectDao.getAll();
     }
 
     @Override
-    public Subject getSubjectById(Long id) {
-        return subjectDAO.getById(id);
-    }
-
-    @Override
-    public SubSubject getSubSubjectById(Long id) {
-        return subSubjectDAO.getById(id);
-    }
-
-    @Override
-    public List<SubSubject> getAllSubSubjects() {
-        return subSubjectDAO.getAll();
-    }
-
-    @Override
-    public List<SubSubject> getSubSubjectsByUser(User user) {
-        return subSubjectDAO.getSubSubjectsByUser(user);
-    }
-
-    @Override
-    public List<SubSubject> getSubSubjectsBySubjectId(Long subjectId) {
-        return subSubjectDAO.getSubSubjectsBySubjectId(subjectId);
+    @Transactional(readOnly = true)
+    public Subject getById(Long id) {
+        return subjectDao.getById(id);
     }
 
     @Override
     @Transactional
-    public void removeSubject(Long subjectId) {
-        Subject subject = subjectDAO.getById(subjectId);
+    public void remove(Long subjectId) {
+        Subject subject = subjectDao.getById(subjectId);
         for (SubSubject subSubject : subject.getSubSubjects()) {
-            subSubject.getSubSubjectUsers().clear();
+            subSubject.getSubSubjectConsultants().clear();
         }
-        subjectDAO.remove(subject);
-    }
-
-    @Override
-    @Transactional
-    public void removeSubSubject(Long subSubjectId) {
-        SubSubject subSubject = subSubjectDAO.getById(subSubjectId);
-        subSubject.getSubSubjectUsers().clear();
-        subSubjectDAO.remove(subSubject);
+        subjectDao.remove(subject);
     }
 
     @Override
     @Transactional
     public void save(Subject subject) {
-        subjectDAO.save(subject);
+        subjectDao.save(subject);
     }
-
-    @Override
-    @Transactional
-    public void save(SubSubject subSubject) {
-        subSubjectDAO.save(subSubject);
-    }
-
 
     @Override
     @Transactional
     public void merge(Subject subject) {
-        subjectDAO.merge(subject);
-    }
-
-    @Override
-    @Transactional
-    public void merge(SubSubject subSubject) {
-        subSubjectDAO.merge(subSubject);
+        subjectDao.merge(subject);
     }
 }

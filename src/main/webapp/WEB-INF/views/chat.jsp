@@ -14,10 +14,14 @@
         var baseUrl = '<c:url value="/"/>';
     </script>
 
+    <script type="text/javascript" src="<c:url value='/js/common/chat_poller.js'/>"></script>
     <script type="text/javascript" src="<c:url value="/js/common/chat.js"/>"></script>
 
+    <sec:authorize access="hasRole('ROLE_ANONYMOUS')">
+        <script type="text/javascript" src="<c:url value='/js/anonym/chat.js'/>"></script>
+    </sec:authorize>
+
     <sec:authorize access="hasRole('ROLE_CONSULTANT')">
-        <script type="text/javascript" src="<c:url value="/js/consultant/common/chat_poller.js"/>"></script>
         <script type="text/javascript" src="<c:url value="/js/consultant/chat.js"/>"></script>
     </sec:authorize>
 
@@ -44,11 +48,9 @@
                 Post a message
             </button>
 
-            <sec:authorize access="hasRole('ROLE_ANONYMOUS')">
-                <a href="<c:url value="/chat/end"/>" id="btnEndChat" class="btn btn-default">
-                    End the chat
-                </a>
-            </sec:authorize>
+            <a href="<c:url value="/chat/end"/>" id="btnEndChat" class="btn btn-default">
+                End the chat
+            </a>
         </form>
 
         <c:import url="common/footer.jsp" />

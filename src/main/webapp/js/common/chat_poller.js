@@ -4,12 +4,12 @@ var ChatPoller = {
     startPollingForChat: function(callback) {
         ChatPoller.intervalId = setInterval(function() {
             $.ajax({
-                url: baseUrl + "chat/poll_for_chat",
-                type: "POST",
+                url: baseUrl + "api/chat/",
+                type: "GET",
                 dataType: "json",
                 data: {},
                 success: function (chatInfo) {
-                    callback(chatInfo.chatId);
+                    callback(chatInfo);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     alert("Error occurred while polling for chat");

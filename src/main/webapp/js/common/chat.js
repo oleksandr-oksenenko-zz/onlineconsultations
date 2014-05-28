@@ -5,10 +5,12 @@ var MessagePoller = {
     startPollingForMessages: function(messageHandler) {
         MessagePoller.intervalId = setInterval(function() {
             $.ajax({
-                url: baseUrl + "chat/poll_for_messages",
-                type: "POST",
+                url: baseUrl + "api/chat/messages",
+                type: "GET",
                 dataType: "json",
-                data: JSON.stringify(MessagePoller.lastMessageId),
+                data: {
+                    lastMessageId: MessagePoller.lastMessageId
+                },
                 contentType: "application/json; charset=utf-8",
                 success: function(data) {
                     if (data.length > 0) {
@@ -21,6 +23,10 @@ var MessagePoller = {
                 }
             });
         }, 1000);
+    },
+
+    stopPollingForMessages: function() {
+        clearInterval(MessagePoller.intervalId);
     }
 };
 
@@ -32,7 +38,7 @@ var MessageSender = {
             author: "anonym"
         };
         $.ajax({
-            url: baseUrl + "chat/post_message",
+            url: baseUrl + "api/chat/messages",
             type: "POST",
             data: JSON.stringify(message),
             contentType: "application/json; charset=utf-8",
@@ -85,6 +91,12 @@ function initEventHandlers() {
         MessageSender.sendMessage(readMessage());
     });
 }
+
+function stopAllPolling() {
+    MessagePoller.stopPollingForMessages();
+    ChatPoller.stopPollingForChat();
+}
+
 $(window).on("load", function() {
     initEventHandlers();
 

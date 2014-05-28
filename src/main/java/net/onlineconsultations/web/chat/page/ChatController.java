@@ -1,10 +1,9 @@
 package net.onlineconsultations.web.chat.page;
 
 import net.onlineconsultations.domain.Chat;
-import net.onlineconsultations.domain.ChatStatus;
-import net.onlineconsultations.domain.User;
+import net.onlineconsultations.domain.Consultant;
 import net.onlineconsultations.service.ChatService;
-import net.onlineconsultations.service.UserService;
+import net.onlineconsultations.service.ConsultantService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,25 +21,37 @@ public class ChatController {
     private ChatService chatService;
 
     @Inject
-    private UserService userService;
+    private ConsultantService consultantService;
 
     @RolesAllowed({"ROLE_ANONYMOUS", "ROLE_CONSULTANT"})
     @RequestMapping(method = RequestMethod.GET)
     public String chatPage(Principal principal,
                            HttpSession session) {
+        Chat activeChat;
         if (principal != null) {
-            User consultant = userService.findByUsername(principal.getName());
-            Chat activeChat = chatService.findActiveChatWithConsultant(consultant);
-            if (activeChat == null) {
-                return "redirect:/consultant";
+
+            Consultant consultant = consultantService.getByUsername(principal.getName());
+            activeChat = chatService.findActiveChatWithConsultant(consultant);
+
+            if (!activeChat.isConsultantInChat()) {
+                activeChat.setConsultantInChat(true);
             }
+
         } else {
+
             String chatSessionId = (String) session.getAttribute("chatSessionId");
-            Chat activeChat = chatService.findBySessionId(chatSessionId);
-            if (activeChat == null) {
-                return "redirect:/";
+            activeChat = chatService.findBySessionId(chatSessionId);
+
+            if (!activeChat.isAnonymInChat()) {
+                activeChat.setAnonymInChat(true);
             }
+
         }
+
+        if (activeChat == null) {
+            return "redirect:/";
+        }
+
         return "chat";
     }
 
@@ -50,8 +61,8 @@ public class ChatController {
     @RolesAllowed("ROLE_ANONYMOUS")
     @RequestMapping(value = "/start/{consultant}", method = RequestMethod.GET)
     public String startChat(@PathVariable("consultant") Long consultantId,
-                          HttpSession session) {
-        User consultant = userService.getById(consultantId);
+                            HttpSession session) {
+        Consultant consultant = consultantService.getById(consultantId);
         Chat newChat = chatService.startNewChat(consultant);
 
         session.setAttribute("chatSessionId", newChat.getSessionId());
@@ -59,42 +70,37 @@ public class ChatController {
         return "redirect:/chat";
     }
 
-    @RolesAllowed("ROLE_CONSULTANT")
-    @RequestMapping(value = "/start", method = RequestMethod.GET)
-    public String startChat(Principal principal) {
-        User consultant = userService.findByUsername(principal.getName());
-
-        if (consultant == null) {
-            // TODO: fix this with appropriate exception type
-            throw new RuntimeException("Consultant not found");
-        }
-
-        Chat chat = chatService.findActiveChatWithConsultant(consultant);
-        if (chat == null) {
-            throw new RuntimeException("No active chat found with " + consultant + " consultant");
-        }
-        chat.setConsultantInChat(true);
-
-        return "redirect:/chat";
-    }
-
-    @RolesAllowed("ROLE_ANONYMOUS")
+    @RolesAllowed({ "ROLE_ANONYMOUS", "ROLE_CONSULTANT"})
     @RequestMapping(value = "/end", method = RequestMethod.GET)
-    public String endChat(HttpSession session) {
-        String chatSessionId = (String) session.getAttribute("chatSessionId");
-        if (chatSessionId == null) {
-            // TODO: fix this with appropriate exception type
-            throw new RuntimeException("Chat not found");
-        }
+    public String endChat(Principal principal,
+                          HttpSession session) {
+        if (principal != null) {
+            Consultant consultant = consultantService.getByUsername(principal.getName());
+            Chat activeChat = chatService.findActiveChatWithConsultant(consultant);
 
-        Chat chat = chatService.findBySessionId(chatSessionId);
-        if (chat.getStatus() == ChatStatus.CLOSED) {
-            // TODO: fix this with appropriate exception type
-            throw new RuntimeException("Chat already closed");
-        }
-        chatService.endChat(chat);
+            if (activeChat == null) {
+                throw new RuntimeException("No active chat for this consultant");
+            }
 
-        Long consultantId = chat.getConsultantInChat().getId();
-        return "redirect:/rate/" + consultantId;
+            chatService.endChatForConsultant(activeChat, consultant);
+
+            return "redirect:/";
+        } else {
+            String chatSessionId = (String) session.getAttribute("chatSessionId");
+            if (chatSessionId == null) {
+                throw new RuntimeException("Chat not found");
+            }
+
+            Chat chat = chatService.findBySessionId(chatSessionId);
+
+            if (chat == null) {
+                throw new RuntimeException("Chat with such a session id is not found");
+            }
+
+            chatService.endChatForAnonym(chat);
+
+            Long consultantId = chat.getConsultantInChat().getId();
+            return "redirect:/rate/" + consultantId;
+        }
     }
 }

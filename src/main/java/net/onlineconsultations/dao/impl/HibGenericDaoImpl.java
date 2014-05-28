@@ -12,13 +12,13 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 
 @Repository
-public abstract class HibernateBaseDAO<T> implements GenericDao<T> {
+public abstract class HibGenericDaoImpl<T> implements GenericDao<T> {
     @PersistenceContext
-    private EntityManager em;
+    protected EntityManager em;
 
     private final Class<T> entityClass;
 
-    protected HibernateBaseDAO(Class<T> entityClass) {
+    protected HibGenericDaoImpl(Class<T> entityClass) {
         this.entityClass = entityClass;
     }
 

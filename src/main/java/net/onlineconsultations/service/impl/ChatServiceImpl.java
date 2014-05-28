@@ -1,11 +1,8 @@
 package net.onlineconsultations.service.impl;
 
-import net.onlineconsultations.dao.ChatDAO;
-import net.onlineconsultations.dao.ChatMessageDAO;
-import net.onlineconsultations.domain.Chat;
-import net.onlineconsultations.domain.ChatMessage;
-import net.onlineconsultations.domain.ChatStatus;
-import net.onlineconsultations.domain.User;
+import net.onlineconsultations.dao.ChatDao;
+import net.onlineconsultations.dao.ChatMessageDao;
+import net.onlineconsultations.domain.*;
 import net.onlineconsultations.service.ChatService;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.stereotype.Service;
@@ -17,10 +14,10 @@ import java.util.List;
 @Service
 public class ChatServiceImpl implements ChatService {
     @Inject
-    private ChatDAO chatDAO;
+    private ChatDao chatDao;
 
     @Inject
-    private ChatMessageDAO chatMessageDAO;
+    private ChatMessageDao chatMessageDao;
 
     @Override
     @Transactional
@@ -28,18 +25,31 @@ public class ChatServiceImpl implements ChatService {
         String sessionId;
         do {
             sessionId = RandomStringUtils.randomAlphanumeric(32);
-        } while (chatDAO.findBySessionId(sessionId) != null);
+        } while (chatDao.findBySessionId(sessionId) != null);
 
         Chat newChat = new Chat(sessionId, consultantInChat, true);
-        chatDAO.save(newChat);
+        chatDao.save(newChat);
         return newChat;
     }
 
     @Override
     @Transactional
-    public void endChat(Chat chat) {
-        chat.setStatus(ChatStatus.CLOSED);
-        chatDAO.merge(chat);
+    public void endChatForAnonym(Chat chat) {
+        chat.setAnonymInChat(false);
+        if (!chat.isConsultantInChat()) {
+            chat.setStatus(ChatStatus.CLOSED);
+        }
+        chatDao.merge(chat);
+    }
+
+    @Override
+    @Transactional
+    public void endChatForConsultant(Chat chat, Consultant consultant) {
+        chat.setConsultantInChat(false);
+        if (!chat.isAnonymInChat()) {
+            chat.setStatus(ChatStatus.CLOSED);
+        }
+        chatDao.merge(chat);
     }
 
     @Override
@@ -51,36 +61,42 @@ public class ChatServiceImpl implements ChatService {
         if (chatMessage.getChat().getStatus().equals(ChatStatus.CLOSED)) {
             throw new RuntimeException("Chat has been already closed");
         }
-        chatMessageDAO.save(chatMessage);
+        chatMessageDao.save(chatMessage);
     }
 
     @Override
+    @Transactional
     public void setConsultantInChat(Chat chat) {
         chat.setConsultantInChat(true);
+        chatDao.merge(chat);
     }
 
     @Override
-    public List<ChatMessage> getLastMessagesByChat(Chat chat, ChatMessage lastMessage) {
-        return chatMessageDAO.getLastMessagesByChat(chat, lastMessage);
+    @Transactional(readOnly = true)
+    public List<ChatMessage> getLastMessagesInChat(Chat chat, ChatMessage lastMessage) {
+        return chatMessageDao.getLastMessagesInChat(chat, lastMessage);
     }
 
     @Override
-    public List<ChatMessage> getLastMessagesByChat(Chat chat) {
-        return chatMessageDAO.getLastMessagesByChat(chat);
+    @Transactional(readOnly = true)
+    public List<ChatMessage> getLastMessagesInChat(Chat chat, Long lastMessageId) {
+        return chatMessageDao.getLastMessagesInChat(chat, lastMessageId);
     }
 
     @Override
-    public Chat findActiveChatWithConsultant(User consultant) {
-        return chatDAO.findActiveChatWithConsultant(consultant.getId());
+    @Transactional(readOnly = true)
+    public List<ChatMessage> getMessagesInChat(Chat chat) {
+        return chatMessageDao.getMessagesInChat(chat);
     }
 
     @Override
-    public ChatMessage getChatMessageById(Long id) {
-        return chatMessageDAO.getById(id);
+    @Transactional(readOnly = true)
+    public Chat findActiveChatWithConsultant(Consultant consultant) {
+        return chatDao.findActiveChatWithConsultant(consultant);
     }
 
     @Override
     public Chat findBySessionId(String sessionId) {
-        return chatDAO.findBySessionId(sessionId);
+        return chatDao.findBySessionId(sessionId);
     }
 }

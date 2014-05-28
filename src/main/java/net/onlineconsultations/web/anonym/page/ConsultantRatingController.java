@@ -1,6 +1,7 @@
 package net.onlineconsultations.web.anonym.page;
 
-import net.onlineconsultations.service.UserService;
+import net.onlineconsultations.domain.Consultant;
+import net.onlineconsultations.service.ConsultantService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,7 +15,7 @@ import javax.inject.Inject;
 @RequestMapping("/rate")
 public class ConsultantRatingController {
     @Inject
-    private UserService userService;
+    private ConsultantService consultantService;
 
     @RequestMapping(value = "/{user_id}", method = RequestMethod.GET)
     public String ratePage(Model model,
@@ -26,7 +27,8 @@ public class ConsultantRatingController {
     @RequestMapping(value = "/{user_id}", method = RequestMethod.POST)
     public String rateSubmit(@RequestParam("user_rating") Double userRating,
                              @PathVariable("user_id") Long userId) {
-        userService.incrementUserRating(userId, userRating);
+        Consultant consultant = consultantService.getById(userId);
+        consultantService.recalculateConsultantRating(consultant, userRating);
         return "redirect:/";
     }
 }

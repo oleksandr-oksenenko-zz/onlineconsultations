@@ -24,6 +24,7 @@
                    name="user_rating"
                    data-min="1"
                    data-max="5"/>
+            <br/>
             <span class="pull-right">
                 <button type="submit" class="btn btn-default">Save</button>
                 <a href="<c:url value='/'/>" class="btn btn-default">Cancel</a>

@@ -25,7 +25,7 @@ public class SubjectsController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String adminSubjects(Model model) {
-        List<Subject> subjects = subjectService.getAllSubjects();
+        List<Subject> subjects = subjectService.getAll();
         model.addAttribute("subjects", subjects);
 
         return "admin/subjects";
@@ -63,7 +63,7 @@ public class SubjectsController {
     @RequestMapping(value = "/{id}/remove", method = RequestMethod.GET)
     public String subjectsRemove(@PathVariable("id") Long subjectId,
                                  RedirectAttributes redirectAttributes) {
-        subjectService.removeSubject(subjectId);
+        subjectService.remove(subjectId);
 
         return "redirect:/admin/subjects";
     }
@@ -71,7 +71,7 @@ public class SubjectsController {
     @RequestMapping(value = "/{id}/edit", method = RequestMethod.GET)
     public String subjectsEdit(@PathVariable("id") Long subjectId,
                                Model model) {
-        model.addAttribute("subject", SubjectForm.of(subjectService.getSubjectById(subjectId)));
+        model.addAttribute("subject", SubjectForm.of(subjectService.getById(subjectId)));
 
         return "admin/subjectForm";
     }
@@ -84,7 +84,7 @@ public class SubjectsController {
             return "admin/subjectForm";
         }
 
-        Subject subject = subjectService.getSubjectById(subjectId);
+        Subject subject = subjectService.getById(subjectId);
         subject.setName(subjectForm.getName());
         subject.setDescription(subjectForm.getDescription());
 

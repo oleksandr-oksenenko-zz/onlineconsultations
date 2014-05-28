@@ -1,34 +1,19 @@
 package net.onlineconsultations.service;
 
-import net.onlineconsultations.domain.SubSubject;
-import net.onlineconsultations.domain.Subject;
 import net.onlineconsultations.domain.User;
 
 import java.util.List;
-import java.util.Map;
 
 public interface UserService {
     User getById(Long id);
 
-    List<User> getAllUsers();
+    List<User> getAll();
 
     User findByUsername(String username);
-
-    void addSubSubjectToUser(User user, SubSubject subSubject);
-
-    void removeSubSubjectFromUser(User user, SubSubject subSubject);
 
     void save(User user);
 
     void merge(User user);
 
     void remove(Long id);
-
-    void changeConsultantStatus(User user, boolean isWaitingForUsers);
-
-    Map<SubSubject, List<User>> getWaitingConsultantsBySubject(Subject subject);
-
-    void incrementUserRating(User user, double rating);
-
-    void incrementUserRating(Long userId, double rating);
 }

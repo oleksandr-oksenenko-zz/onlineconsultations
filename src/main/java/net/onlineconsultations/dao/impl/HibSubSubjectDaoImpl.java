@@ -1,36 +1,31 @@
 package net.onlineconsultations.dao.impl;
 
-import net.onlineconsultations.dao.SubSubjectDAO;
+import net.onlineconsultations.dao.SubSubjectDao;
+import net.onlineconsultations.domain.Consultant;
 import net.onlineconsultations.domain.SubSubject;
-import net.onlineconsultations.domain.User;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
-public class HibernateSubSubjectDAOImpl extends HibernateBaseDAO<SubSubject> implements SubSubjectDAO {
-    @PersistenceContext
-    private EntityManager em;
-
-    public HibernateSubSubjectDAOImpl() {
+public class HibSubSubjectDaoImpl extends HibGenericDaoImpl<SubSubject> implements SubSubjectDao {
+    public HibSubSubjectDaoImpl() {
         super(SubSubject.class);
     }
 
     @Override
-    public List<SubSubject> getSubSubjectsByUser(User user) {
+    public List<SubSubject> getByConsultant(Consultant consultant) {
         return em.createQuery("select ss " +
                 " from SubSubject ss " +
-                " inner join ss.subSubjectUsers users" +
+                " inner join ss.subSubjectConsultants users" +
                 " where users.id = :userId",
                 SubSubject.class)
-                .setParameter("userId", user.getId())
+                .setParameter("userId", consultant.getId())
                 .getResultList();
     }
 
     @Override
-    public List<SubSubject> getSubSubjectsBySubjectId(Long subjectId) {
+    public List<SubSubject> getBySubjectId(Long subjectId) {
         return em.createQuery("select ss " +
                 " from SubSubject ss " +
                 " where ss.parentSubject.id = :subjectId",

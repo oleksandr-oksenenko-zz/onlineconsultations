@@ -21,7 +21,7 @@
 
     <div class="row">
         <div class="col-md-offset-3 col-md-6">
-            <form:form method="POST" commandName="user">
+            <form:form method="POST" commandName="consultant">
                 <div class="form-group">
                     <form:label path="lastName">Last Name</form:label>
                     <form:input path="lastName" cssClass="form-control"/>
@@ -54,11 +54,6 @@
                         <form:errors path="password" cssClass="text-danger"/>
                     </div>
                 </c:if>
-                <div class="form-group">
-                    <form:label path="userRole">User role</form:label>
-                    <form:select path="userRole" items="${userRoles}" cssClass="form-control"/>
-                    <form:errors path="userRole" cssClass="text-danger"/>
-                </div>
 
                 <button type="submit" class="btn btn-default">Save</button>
                 <a href="<c:url value="/admin/users"/>" class="btn btn-default">Cancel</a>
@@ -70,4 +65,3 @@
 </body>
 
 </html>
-

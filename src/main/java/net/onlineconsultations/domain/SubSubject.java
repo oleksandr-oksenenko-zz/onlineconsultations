@@ -30,23 +30,15 @@ public class SubSubject {
     private Subject parentSubject;
 
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "subSubjects")
-    private Set<User> subSubjectUsers = new HashSet<>();
+    private Set<Consultant> subSubjectConsultants = new HashSet<>();
 
     public SubSubject() { }
 
-    public SubSubject(Long id, String name, String description, Subject parentSubject) {
+    public SubSubject(String name, String description, Subject parentSubject) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.parentSubject = parentSubject;
-    }
-
-    public SubSubject(String name, String description, Subject parentSubject,
-            Set<User> subSubjectUsers) {
-        this.name = name;
-        this.description = description;
-        this.parentSubject = parentSubject;
-        this.subSubjectUsers = subSubjectUsers;
     }
 
     @Override
@@ -105,12 +97,12 @@ public class SubSubject {
         this.parentSubject = parentSubject;
     }
 
-    public Set<User> getSubSubjectUsers() {
-        return subSubjectUsers;
+    public Set<Consultant> getSubSubjectConsultants() {
+        return subSubjectConsultants;
     }
 
-    public void setSubSubjectUsers(Set<User> subSubjectUsers) {
-        this.subSubjectUsers = subSubjectUsers;
+    public void setSubSubjectConsultants(Set<Consultant> subSubjectUsers) {
+        this.subSubjectConsultants = subSubjectUsers;
     }
 
 }

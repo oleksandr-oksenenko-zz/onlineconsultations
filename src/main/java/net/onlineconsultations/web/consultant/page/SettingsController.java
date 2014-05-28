@@ -1,10 +1,11 @@
 package net.onlineconsultations.web.consultant.page;
 
+import net.onlineconsultations.domain.Consultant;
 import net.onlineconsultations.domain.SubSubject;
 import net.onlineconsultations.domain.Subject;
-import net.onlineconsultations.domain.User;
+import net.onlineconsultations.service.ConsultantService;
+import net.onlineconsultations.service.SubSubjectService;
 import net.onlineconsultations.service.SubjectService;
-import net.onlineconsultations.service.UserService;
 import net.onlineconsultations.web.consultant.form.SubSubjectForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,25 +33,28 @@ public class SettingsController {
     private SubjectService subjectService;
 
     @Inject
-    private UserService userService;
+    private SubSubjectService subSubjectService;
+
+    @Inject
+    private ConsultantService consultantService;
 
     @RequestMapping(value = "/settings", method = RequestMethod.GET)
     public String settingsPage(Principal principal,
                                Model model) {
-        User user = userService.findByUsername(principal.getName());
+        Consultant consultant = consultantService.getByUsername(principal.getName());
 
-        model.addAttribute("subSubjects", subjectService.getSubSubjectsByUser(user));
+        model.addAttribute("subSubjects", subSubjectService.getByConsultant(consultant));
 
         return "consultant/settings";
     }
 
     @RequestMapping(value = "/settings/sub_subjects/add", method = RequestMethod.GET)
     public String settingsAddSubSubject(Model model) {
-        List<Subject> subjects = subjectService.getAllSubjects();
+        List<Subject> subjects = subjectService.getAll();
 
         model.addAttribute("subSubject", new SubSubjectForm());
-        model.addAttribute("subjects", subjectService.getAllSubjects());
-        model.addAttribute("subSubjects", subjectService.getSubSubjectsBySubjectId(subjects.get(0).getId()));
+        model.addAttribute("subjects", subjectService.getAll());
+        model.addAttribute("subSubjects", subSubjectService.getBySubjectId(subjects.get(0).getId()));
 
         return "consultant/subSubjectForm";
     }
@@ -61,25 +65,26 @@ public class SettingsController {
                                         BindingResult bindingResult,
                                         Model model) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("subSubjects", subjectService.getSubSubjectsBySubjectId(subSubjectForm.getSubjectId()));
-            model.addAttribute("subjects", subjectService.getAllSubjects());
+            model.addAttribute("subSubjects", subSubjectService.getBySubjectId(subSubjectForm.getSubjectId()));
+            model.addAttribute("subjects", subjectService.getAll());
 
             return "consultant/subSubjectForm";
         }
 
         try {
-            User user = userService.findByUsername(principal.getName());
-            SubSubject subSubject = subjectService.getSubSubjectById(subSubjectForm.getSubSubjectId());
+            Consultant consultant = consultantService.getByUsername(principal.getName());
+            SubSubject subSubject = subSubjectService.getById(subSubjectForm.getSubSubjectId());
 
-            userService.addSubSubjectToUser(user, subSubject);
+            consultantService.linkSubSubjectToConsultant(consultant, subSubject);
         } catch (DataIntegrityViolationException e) {
-            bindingResult.rejectValue("subSubjectId",
+            bindingResult.rejectValue(
+                    "subSubjectId",
                     "error.user.subSubjectId.nonunique",
-                    "Sub subject is already added to this user.");
+                    "Sub subject is already added to this user."
+            );
 
-
-            model.addAttribute("subSubjects", subjectService.getSubSubjectsBySubjectId(subSubjectForm.getSubjectId()));
-            model.addAttribute("subjects", subjectService.getAllSubjects());
+            model.addAttribute("subSubjects", subSubjectService.getBySubjectId(subSubjectForm.getSubjectId()));
+            model.addAttribute("subjects", subjectService.getAll());
 
             log.error("Exception while adding subsubject to user", e);
 
@@ -93,11 +98,11 @@ public class SettingsController {
     public String settingsRemoveSubSubject(Principal principal,
                                            @PathVariable("id") Long subSubjectId,
                                            Model model) {
-        User user = userService.findByUsername(principal.getName());
-        SubSubject subSubject = subjectService.getSubSubjectById(subSubjectId);
+        Consultant consultant = consultantService.getByUsername(principal.getName());
+        SubSubject subSubject = subSubjectService.getById(subSubjectId);
 
         try {
-            userService.removeSubSubjectFromUser(user, subSubject);
+            consultantService.unlinkSubSubjectFromConsultant(consultant, subSubject);
         } catch (DataAccessException e) {
             model.addAttribute("reason", e.getMessage());
             return "error";

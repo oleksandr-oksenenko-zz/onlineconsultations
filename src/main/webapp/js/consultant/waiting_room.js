@@ -23,22 +23,22 @@ var StatusChanger = {
 
     startWaitingForUsers: function() {
         $.ajax({
-            url: baseUrl + "consultant/status",
-            type: "POST",
+            url: baseUrl + "api/consultant/status",
+            type: "GET",
             data: {
                 status: ConsultantStatus.WAITING_FOR_USERS
             },
             success: function() {
                 StatusChanger.currentStatus = ConsultantStatus.WAITING_FOR_USERS;
-                StatusChanger.intervalId = setInterval(function() {
-                    ChatPoller.startPollingForChat(function(chatId) {
-                        if (chatId != null && chatId != -1) {
-                            console.log("Redirecting to chat page: " + baseUrl + "chat");
-                            console.log("Chat id: " + chatId);
-                            window.location = baseUrl + "chat";
-                        }
-                    });
-                }, 1000);
+                ChatPoller.startPollingForChat(function(chatInfo) {
+                    var chatId = chatInfo.chatId;
+                    if (chatId != null && chatId != -1) {
+                        console.log("Redirecting to chat page: " + baseUrl + "chat");
+                        console.log("Chat id: " + chatId);
+                        window.location = baseUrl + "chat";
+                    }
+                });
+                StatusChanger.intervalId = ChatPoller.intervalId;
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 alert("Error while stopping waiting for users");
@@ -49,8 +49,8 @@ var StatusChanger = {
 
     stopWaitingForUsers: function() {
         $.ajax({
-            url: baseUrl + "consultant/status",
-            type: "POST",
+            url: baseUrl + "api/consultant/status",
+            type: "GET",
             data: {
                 status: ConsultantStatus.NOT_WAITING_FOR_USERS
             },
