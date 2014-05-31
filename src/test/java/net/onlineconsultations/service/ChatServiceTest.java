@@ -1,51 +1,45 @@
 package net.onlineconsultations.service;
 
+import net.onlineconsultations.dao.ChatDao;
+import net.onlineconsultations.dao.ChatMessageDao;
+import net.onlineconsultations.domain.Chat;
+import net.onlineconsultations.domain.Consultant;
+import net.onlineconsultations.service.impl.ChatServiceImpl;
+import net.onlineconsultations.test.BaseUnitTest;
+import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
-public class ChatServiceTest {
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
-    @Test
-    public void testStartNewChat() throws Exception {
+public class ChatServiceTest extends BaseUnitTest {
+    @Mock
+    private ChatDao chatDao;
 
-    }
+    @Mock
+    private ChatMessageDao chatMessageDao;
 
-    @Test
-    public void testEndChat() throws Exception {
-
-    }
-
-    @Test
-    public void testPostNewMessage() throws Exception {
-
-    }
-
-    @Test
-    public void testSetConsultantInChat() throws Exception {
-
-    }
+    @InjectMocks
+    private ChatService chatService = new ChatServiceImpl();
 
     @Test
-    public void testGetLastMessagesByChat() throws Exception {
+    public void testStartNewChat_hp() {
+        Consultant consultant = new Consultant();
 
+        Chat newChat = chatService.startNewChat(consultant);
+
+        when(chatDao.findBySessionId(any(String.class))).thenReturn(null);
+
+        verify(chatDao).save(newChat);
+        verifyNoMoreInteractions(chatDao);
+
+        Assert.assertEquals(newChat.getConsultantInChat(), consultant);
+        Assert.assertTrue(newChat.isAnonymInChat());
+        Assert.assertFalse(newChat.isConsultantInChat());
     }
 
-    @Test
-    public void testGetLastMessagesByChat1() throws Exception {
-
-    }
-
-    @Test
-    public void testFindActiveChatWithConsultant() throws Exception {
-
-    }
-
-    @Test
-    public void testGetChatMessageById() throws Exception {
-
-    }
-
-    @Test
-    public void testFindBySessionId() throws Exception {
-
-    }
 }

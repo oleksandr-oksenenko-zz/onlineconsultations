@@ -3,12 +3,11 @@ package net.onlineconsultations.service;
 import net.onlineconsultations.domain.Chat;
 import net.onlineconsultations.domain.ChatMessage;
 import net.onlineconsultations.domain.Consultant;
-import net.onlineconsultations.domain.User;
 
 import java.util.List;
 
 public interface ChatService {
-    Chat startNewChat(User consultantInChat);
+    Chat startNewChat(Consultant consultantInChat);
 
     void endChatForAnonym(Chat chat);
 

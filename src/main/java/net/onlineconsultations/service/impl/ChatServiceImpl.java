@@ -21,7 +21,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     @Transactional
-    public Chat startNewChat(User consultantInChat) {
+    public Chat startNewChat(Consultant consultantInChat) {
         String sessionId;
         do {
             sessionId = RandomStringUtils.randomAlphanumeric(32);
