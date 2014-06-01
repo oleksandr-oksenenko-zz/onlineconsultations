@@ -2,7 +2,7 @@ package net.onlineconsultations.web.chat.rest.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import net.onlineconsultations.domain.ChatMessage;
-import net.onlineconsultations.domain.User;
+import net.onlineconsultations.domain.Consultant;
 
 import javax.validation.constraints.NotNull;
 
@@ -25,11 +25,14 @@ public class ChatMessageInfo {
     }
 
     public static ChatMessageInfo of(ChatMessage chatMessage) {
-        User author = chatMessage.getAuthor();
+        boolean isWrittenByAnonym = chatMessage.isWrittenByAnonym();
         String authorStr = null;
-        if (author != null) {
-            authorStr = chatMessage.getAuthor().getFirstName() + " " +
-                    chatMessage.getAuthor().getLastName();
+
+        if (isWrittenByAnonym) {
+            Consultant consultant = chatMessage.getChat().getConsultantInChat();
+            authorStr = String.format("%s %s",
+                    consultant.getFirstName(),
+                    consultant.getLastName());
         } else {
             authorStr = "anonym";
         }

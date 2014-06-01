@@ -49,7 +49,6 @@ create table chat_message (
     body longtext not null,
     timestamp datetime not null,
     chat_id bigint not null,
-    user_id bigint,
-    foreign key (chat_id) references chat(id),
-    foreign key (user_id) references user(id)
+    written_by_anonym tinyint not null,
+    foreign key (chat_id) references chat(id)
 );

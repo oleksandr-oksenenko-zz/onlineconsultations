@@ -58,7 +58,7 @@ public class ChatServiceImpl implements ChatService {
         if (chatMessage.getChat() == null) {
             throw new RuntimeException("No chat object specified");
         }
-        if (chatMessage.getChat().getStatus().equals(ChatStatus.CLOSED)) {
+        if (chatMessage.getChat().getStatus() == ChatStatus.CLOSED) {
             throw new RuntimeException("Chat has been already closed");
         }
         chatMessageDao.save(chatMessage);
@@ -96,6 +96,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Chat findBySessionId(String sessionId) {
         return chatDao.findBySessionId(sessionId);
     }

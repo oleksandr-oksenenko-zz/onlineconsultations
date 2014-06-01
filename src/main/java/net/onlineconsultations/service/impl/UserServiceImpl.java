@@ -1,8 +1,6 @@
 package net.onlineconsultations.service.impl;
 
-import net.onlineconsultations.dao.SubSubjectDao;
-import net.onlineconsultations.dao.SubjectDao;
-import net.onlineconsultations.dao.UserDAO;
+import net.onlineconsultations.dao.UserDao;
 import net.onlineconsultations.domain.User;
 import net.onlineconsultations.service.UserService;
 import org.slf4j.Logger;
@@ -19,13 +17,7 @@ public class UserServiceImpl implements UserService {
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Inject
-    private UserDAO userDAO;
-
-    @Inject
-    private SubSubjectDao subSubjectDao;
-
-    @Inject
-    private SubjectDao subjectDAO;
+    private UserDao userDao;
 
     @Inject
     private MessageDigestPasswordEncoder passwordEncoder;
@@ -33,19 +25,19 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public User getById(Long id) {
-        return userDAO.getById(id);
+        return userDao.getById(id);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<User> getAll() {
-        return userDAO.getAll();
+        return userDao.getAll();
     }
 
     @Override
     @Transactional(readOnly = true)
     public User findByUsername(String username) {
-        return userDAO.findByUsername(username);
+        return userDao.findByUsername(username);
     }
 
     @Override
@@ -55,13 +47,13 @@ public class UserServiceImpl implements UserService {
 
         user.setPassword(encodedPassword);
 
-        userDAO.save(user);
+        userDao.save(user);
     }
 
     @Override
     @Transactional
     public void merge(User user) {
-        User oldUser = userDAO.getById(user.getId());
+        User oldUser = userDao.getById(user.getId());
         if (!user.getPassword().isEmpty()) {
             String encodedPassword = passwordEncoder.encodePassword(user.getPassword(), null);
 
@@ -70,13 +62,13 @@ public class UserServiceImpl implements UserService {
             user.setPassword(oldUser.getPassword());
         }
 
-        userDAO.merge(user);
+        userDao.merge(user);
     }
 
     @Override
     @Transactional
     public void remove(Long id) {
-        User user = userDAO.getById(id);
-        userDAO.remove(user);
+        User user = userDao.getById(id);
+        userDao.remove(user);
     }
 }

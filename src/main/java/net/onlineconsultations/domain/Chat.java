@@ -29,7 +29,7 @@ public class Chat {
     @ManyToOne
     @JoinColumn(name = "user_id")
     @NotNull
-    private User consultantInChat;
+    private Consultant consultantInChat;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "chat_status")
@@ -44,11 +44,11 @@ public class Chat {
 
     public Chat() { }
 
-    public Chat(User consultantInChat) {
+    public Chat(Consultant consultantInChat) {
         this.consultantInChat = consultantInChat;
     }
 
-    public Chat(String sessionId, User consultantInChat, boolean isAnonymInChat) {
+    public Chat(String sessionId, Consultant consultantInChat, boolean isAnonymInChat) {
         this.sessionId = sessionId;
         this.consultantInChat = consultantInChat;
         this.isAnonymInChat = isAnonymInChat;
@@ -62,11 +62,11 @@ public class Chat {
         this.id = id;
     }
 
-    public User getConsultantInChat() {
+    public Consultant getConsultantInChat() {
         return consultantInChat;
     }
 
-    public void setConsultantInChat(User consultantInChat) {
+    public void setConsultantInChat(Consultant consultantInChat) {
         this.consultantInChat = consultantInChat;
     }
 

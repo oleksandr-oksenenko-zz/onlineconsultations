@@ -1,11 +1,11 @@
 package net.onlineconsultations.dao.impl;
 
-import net.onlineconsultations.dao.UserDAO;
+import net.onlineconsultations.dao.UserDao;
 import net.onlineconsultations.domain.User;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class HibUserDaoImpl extends HibGenericDaoImpl<User> implements UserDAO {
+public class HibUserDaoImpl extends HibGenericDaoImpl<User> implements UserDao {
     public HibUserDaoImpl() {
         super(User.class);
     }

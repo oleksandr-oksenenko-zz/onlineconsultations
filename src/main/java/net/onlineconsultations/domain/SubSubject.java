@@ -34,8 +34,14 @@ public class SubSubject {
 
     public SubSubject() { }
 
-    public SubSubject(String name, String description, Subject parentSubject) {
+    public SubSubject(Long id, String name, String description, Subject parentSubject) {
         this.id = id;
+        this.name = name;
+        this.description = description;
+        this.parentSubject = parentSubject;
+    }
+
+    public SubSubject(String name, String description, Subject parentSubject) {
         this.name = name;
         this.description = description;
         this.parentSubject = parentSubject;
@@ -103,6 +109,10 @@ public class SubSubject {
 
     public void setSubSubjectConsultants(Set<Consultant> subSubjectUsers) {
         this.subSubjectConsultants = subSubjectUsers;
+    }
+
+    public void addSubSubjectConsultant(Consultant consultant) {
+        this.subSubjectConsultants.add(consultant);
     }
 
 }

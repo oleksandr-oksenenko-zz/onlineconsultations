@@ -1,5 +1,7 @@
 package net.onlineconsultations.domain;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDateTime;
 
@@ -22,23 +24,51 @@ public class ChatMessage {
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
     private LocalDateTime timestamp;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "chat_id")
     @NotNull
     private Chat chat;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private Consultant author;
+    @Column(name = "written_by_anonym")
+    private boolean writtenByAnonym = false;
 
     public ChatMessage() { }
 
     public ChatMessage(String body, LocalDateTime sendTimestamp,
-                       Chat chat, Consultant author) {
+                       Chat chat, boolean writtenByAnonym) {
         this.body = body;
         this.timestamp = sendTimestamp;
         this.chat = chat;
-        this.author = author;
+        this.writtenByAnonym = writtenByAnonym;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof ChatMessage)) {
+            return false;
+        }
+        ChatMessage rhs = (ChatMessage) obj;
+        return new EqualsBuilder()
+                .append(id, rhs.id)
+                .append(body, rhs.body)
+                .append(timestamp, rhs.timestamp)
+                .append(chat.getId(), rhs.getChat().getId())
+                .append(writtenByAnonym, rhs.writtenByAnonym)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(id)
+                .append(body)
+                .append(timestamp)
+                .append(chat.getId())
+                .append(writtenByAnonym)
+                .toHashCode();
     }
 
     public Long getId() {
@@ -73,11 +103,11 @@ public class ChatMessage {
         this.chat = chat;
     }
 
-    public Consultant getAuthor() {
-        return author;
+    public boolean isWrittenByAnonym() {
+        return writtenByAnonym;
     }
 
-    public void setAuthor(Consultant author) {
-        this.author = author;
+    public void setWrittenByAnonym(boolean writtenByAnonym) {
+        this.writtenByAnonym = writtenByAnonym;
     }
 }

@@ -24,16 +24,15 @@ public class Subject {
     @Lob
     private String description;
 
-    @OneToMany(mappedBy = "parentSubject", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "parentSubject", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<SubSubject> subSubjects = new HashSet<>();
 
     public Subject() { }
 
-    public Subject(Long id, String name, String description, Set<SubSubject> subSubjects) {
+    public Subject(Long id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.subSubjects = new HashSet<>(subSubjects);
     }
 
     public Subject(String name, String description, Set<SubSubject> subSubjects) {
@@ -101,5 +100,9 @@ public class Subject {
 
     public void setSubSubjects(Set<SubSubject> subSubjects) {
         this.subSubjects = subSubjects;
+    }
+
+    public void addSubSubject(SubSubject subSubject) {
+        this.subSubjects.add(subSubject);
     }
 }

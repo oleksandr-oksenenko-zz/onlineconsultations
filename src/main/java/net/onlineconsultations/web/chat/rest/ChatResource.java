@@ -124,7 +124,7 @@ public class ChatResource {
                     chatMessageInfo.getBody(),
                     LocalDateTime.now(DateTimeZone.UTC),
                     activeChat,
-                    consultant
+                    false
             );
             chatService.postNewMessage(chatMessage);
             return new ResponseEntity<>("", HttpStatus.OK);
