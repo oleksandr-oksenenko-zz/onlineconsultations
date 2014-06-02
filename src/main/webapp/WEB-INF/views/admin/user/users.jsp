@@ -23,8 +23,6 @@
         <thead>
             <tr>
                 <th>Username</th>
-                <th>First name</th>
-                <th>Last name</th>
                 <th>Role</th>
                 <th colspan="2">#</th>
             </tr>
@@ -35,7 +33,7 @@
                     ${user.username}
                 </td>
                 <td>
-                    ${user.role}
+                    ${user.userRole}
                 </td>
                 <td class="min-width">
                     <a href="<c:url value="/admin/users/${user.id}/edit"/>" class="btn btn-default">Edit</a>
@@ -44,14 +42,18 @@
             </tr>
         </c:forEach>
     </table>
-    <a href="<c:url value='/admin/users/add_consultant'/>" class="btn btn-default pull-right">
-        <span class="glyphicon glyphicon-plus"></span>
-        Add new consultant
-    </a>
-    <a href="<c:url value='/admin/users/add_admin'/>" class="btn btn-default pull-right">
-        <span class="glyphicon glyphicon-plus"></span>
-        Add new administrator
-    </a>
+    <div class="row">
+        <a href="<c:url value='/admin/users/add_consultant'/>" class="btn btn-default pull-right">
+            <span class="glyphicon glyphicon-plus"></span>
+            Add new consultant
+        </a>
+    </div><br>
+    <div class="row">
+        <a href="<c:url value='/admin/users/add_admin'/>" class="btn btn-default pull-right">
+            <span class="glyphicon glyphicon-plus"></span>
+            Add new administrator
+        </a>
+    </div>
 
 </div>
 </body>

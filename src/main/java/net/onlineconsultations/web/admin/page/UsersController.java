@@ -25,8 +25,8 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/admin/users")
 public class UsersController {
-    private static final String ADMIN_FORM = "admin/users/administratorForm";
-    private static final String CONSULTANT_FORM = "admin/users/consultantForm";
+    private static final String ADMIN_FORM = "admin/user/administratorForm";
+    private static final String CONSULTANT_FORM = "admin/user/consultantForm";
 
     @Inject
     private UserService userService;

@@ -1,7 +1,9 @@
 package net.onlineconsultations.web.anonym.page;
 
+import net.onlineconsultations.domain.SubSubject;
 import net.onlineconsultations.domain.Subject;
 import net.onlineconsultations.service.ConsultantService;
+import net.onlineconsultations.service.SubSubjectService;
 import net.onlineconsultations.service.SubjectService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,12 +12,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.inject.Inject;
+import java.util.List;
 
 @Controller
 @RequestMapping("/subjects")
 public class SubjectController {
     @Inject
     private SubjectService subjectService;
+
+    @Inject
+    private SubSubjectService subSubjectService;
 
     @Inject
     private ConsultantService consultantService;
@@ -29,10 +35,10 @@ public class SubjectController {
     @RequestMapping(value = "/{subject_id}", method = RequestMethod.GET)
     public String subject(@PathVariable("subject_id") Long subjectId,
                           Model model) {
-
         Subject subject = subjectService.getById(subjectId);
+        List<SubSubject> subSubjects = subSubjectService.getBySubjectId(subjectId);
 
-        model.addAttribute("subject", subject);
+        model.addAttribute("subSubjects", subSubjects);
         model.addAttribute("users", consultantService.getAvailableConsultants(subject));
         return "subject";
     }

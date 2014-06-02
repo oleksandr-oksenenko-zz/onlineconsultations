@@ -12,13 +12,13 @@
 <div class="container">
     <c:import url="common/header.jsp" />
 
-    <c:forEach var="subSubject" items="${ subject.subSubjects }">
+    <c:forEach var="subSubject" items="${ subSubjects }">
     <div class="panel panel-default">
         <div class="panel-heading">
             <c:out value="${ subSubject.name }" />
         </div>
         <div class="panel-body">
-            <p>${ subject.description }</p>
+            <p>${ subSubject.description }</p>
         </div>
 
         <div class="panel-footer">

@@ -1,6 +1,7 @@
 package net.onlineconsultations.service.impl;
 
 import net.onlineconsultations.dao.ConsultantDao;
+import net.onlineconsultations.dao.SubjectDao;
 import net.onlineconsultations.domain.Consultant;
 import net.onlineconsultations.domain.SubSubject;
 import net.onlineconsultations.domain.Subject;
@@ -17,6 +18,9 @@ import java.util.Map;
 public class ConsultantServiceImpl implements ConsultantService {
     @Inject
     private ConsultantDao consultantDao;
+
+    @Inject
+    private SubjectDao subjectDao;
 
     @Override
     @Transactional
@@ -50,6 +54,7 @@ public class ConsultantServiceImpl implements ConsultantService {
     @Transactional(readOnly = true)
     public Map<SubSubject, List<Consultant>> getAvailableConsultants(Subject subject) {
         Map<SubSubject, List<Consultant>> consultants = new HashMap<>();
+        subject = subjectDao.getById(subject.getId());
         for (SubSubject subSubject : subject.getSubSubjects()) {
             List<Consultant> availableConsultants = consultantDao.getAvailableConsultants(subSubject);
             consultants.put(subSubject, availableConsultants);

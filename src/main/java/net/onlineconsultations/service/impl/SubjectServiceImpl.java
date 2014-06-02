@@ -1,6 +1,8 @@
 package net.onlineconsultations.service.impl;
 
+import net.onlineconsultations.dao.SubSubjectDao;
 import net.onlineconsultations.dao.SubjectDao;
+import net.onlineconsultations.domain.Consultant;
 import net.onlineconsultations.domain.SubSubject;
 import net.onlineconsultations.domain.Subject;
 import net.onlineconsultations.service.SubjectService;
@@ -14,6 +16,9 @@ import java.util.List;
 public class SubjectServiceImpl implements SubjectService {
     @Inject
     private SubjectDao subjectDao;
+
+    @Inject
+    private SubSubjectDao subSubjectDao;
 
     @Override
     @Transactional(readOnly = true)
@@ -32,7 +37,9 @@ public class SubjectServiceImpl implements SubjectService {
     public void remove(Long subjectId) {
         Subject subject = subjectDao.getById(subjectId);
         for (SubSubject subSubject : subject.getSubSubjects()) {
-            subSubject.getSubSubjectConsultants().clear();
+            for (Consultant consultant : subSubject.getSubSubjectConsultants()) {
+                consultant.getSubSubjects().remove(subSubject);
+            }
         }
         subjectDao.remove(subject);
     }
