@@ -29,7 +29,7 @@ public class ChatMessage {
     @NotNull
     private Chat chat;
 
-    @Column(name = "written_by_anonym")
+    @Column(name = "written_by_anonym", columnDefinition = "tinyint")
     private boolean writtenByAnonym = false;
 
     public ChatMessage() { }
