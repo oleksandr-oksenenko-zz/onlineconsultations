@@ -4,13 +4,13 @@
 <html>
 
 <head>
-    <link rel="stylesheet" type="text/css"
-        href="<c:url value='/resources/bootstrap/3.0.0/css/bootstrap.min.css'/>">
+    <c:import url="../common/js-include.jsp"/>
+    <c:import url="../common/css-include.jsp"/>
 </head>
 
 <body>
     <div class="container">
-        <c:import url="common/header.jsp" />
+        <c:import url="../common/header.jsp" />
 
         <c:forEach var="subject" items="${subjects}">
             <div class="panel panel-default">
@@ -23,7 +23,7 @@
             </div>
         </c:forEach>
 
-        <c:import url="common/footer.jsp" />
+        <c:import url="../common/footer.jsp" />
     </div>
 </body>
 

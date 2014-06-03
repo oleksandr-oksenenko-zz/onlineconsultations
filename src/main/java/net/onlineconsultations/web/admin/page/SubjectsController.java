@@ -20,6 +20,9 @@ import java.util.List;
 @Controller
 @RequestMapping(value = { "/admin/subjects", "/admin"})
 public class SubjectsController {
+    private static final String SUBJECTS_VIEW = "admin/subject/subjects";
+    private static final String SUBJECT_FORM_VIEW = "admin/subject/subjectForm";
+
     @Inject
     private SubjectService subjectService;
 
@@ -28,21 +31,21 @@ public class SubjectsController {
         List<Subject> subjects = subjectService.getAll();
         model.addAttribute("subjects", subjects);
 
-        return "admin/subjects";
+        return SUBJECTS_VIEW;
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String subjectsAdd(Model model) {
         model.addAttribute("subject", new SubjectForm());
 
-        return "admin/subjectForm";
+        return SUBJECT_FORM_VIEW;
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String subjectsAddSubmit(@ModelAttribute("subject") @Valid SubjectForm subjectForm,
                                     BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "admin/subjectForm";
+            return SUBJECT_FORM_VIEW;
         }
 
         try {
@@ -54,7 +57,7 @@ public class SubjectsController {
             bindingResult.rejectValue("name",
                     "error.subject.name.nonunique",
                     "There is a subject with the same name.");
-            return "admin/subjectForm";
+            return SUBJECT_FORM_VIEW;
         }
 
         return "redirect:/admin/subjects";
@@ -73,7 +76,7 @@ public class SubjectsController {
                                Model model) {
         model.addAttribute("subject", SubjectForm.of(subjectService.getById(subjectId)));
 
-        return "admin/subjectForm";
+        return SUBJECT_FORM_VIEW;
     }
 
     @RequestMapping(value = "/{id}/edit", method = RequestMethod.POST)
@@ -81,7 +84,7 @@ public class SubjectsController {
                                      @ModelAttribute("subject") @Valid SubjectForm subjectForm,
                                      BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "admin/subjectForm";
+            return SUBJECT_FORM_VIEW;
         }
 
         Subject subject = subjectService.getById(subjectId);
@@ -94,7 +97,7 @@ public class SubjectsController {
             bindingResult.rejectValue("name",
                     "error.subject.name.nonunique",
                     "There is a subject with the same name.");
-            return "admin/subjectForm";
+            return SUBJECT_FORM_VIEW;
         }
 
         return "redirect:/admin/subjects";

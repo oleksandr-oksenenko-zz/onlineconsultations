@@ -3,13 +3,11 @@ package net.onlineconsultations.web.admin.page;
 import net.onlineconsultations.domain.Administrator;
 import net.onlineconsultations.domain.Consultant;
 import net.onlineconsultations.domain.User;
-import net.onlineconsultations.domain.UserRole;
 import net.onlineconsultations.service.AdministratorService;
 import net.onlineconsultations.service.ConsultantService;
 import net.onlineconsultations.service.UserService;
 import net.onlineconsultations.web.admin.form.AdministratorForm;
 import net.onlineconsultations.web.admin.form.ConsultantForm;
-import net.onlineconsultations.web.admin.form.UserForm;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,8 +23,9 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/admin/users")
 public class UsersController {
-    private static final String ADMIN_FORM = "admin/user/administratorForm";
-    private static final String CONSULTANT_FORM = "admin/user/consultantForm";
+    private static final String ADMINISTRATOR_FORM_VIEW = "admin/user/administratorForm";
+    private static final String CONSULTANT_FORM_VIEW = "admin/user/consultantForm";
+    private static final String USERS_VIEW = "admin/user/users";
 
     @Inject
     private UserService userService;
@@ -41,7 +40,7 @@ public class UsersController {
     public String users(Model model) {
         model.addAttribute("users", userService.getAll());
 
-        return "admin/user/users";
+        return USERS_VIEW;
     }
 
     @RequestMapping(value = "/add_admin", method = RequestMethod.GET)
@@ -49,7 +48,7 @@ public class UsersController {
         model.addAttribute("administrator", new AdministratorForm());
         model.addAttribute("mode", "add");
 
-        return ADMIN_FORM;
+        return ADMINISTRATOR_FORM_VIEW;
     }
 
     @RequestMapping(value = "/add_admin", method = RequestMethod.POST)
@@ -58,7 +57,7 @@ public class UsersController {
                                  Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("mode", "add");
-            return ADMIN_FORM;
+            return ADMINISTRATOR_FORM_VIEW;
         }
 
         try {
@@ -71,7 +70,7 @@ public class UsersController {
                     "error.user.username.nonunique",
                     "There is a user with the same username.");
             model.addAttribute("mode", "add");
-            return ADMIN_FORM;
+            return ADMINISTRATOR_FORM_VIEW;
         }
 
         return "redirect:/admin/users";
@@ -82,7 +81,7 @@ public class UsersController {
         model.addAttribute("consultant", new ConsultantForm());
         model.addAttribute("mode", "add");
 
-        return CONSULTANT_FORM;
+        return CONSULTANT_FORM_VIEW;
     }
 
     @RequestMapping(value = "/add_consultant", method = RequestMethod.POST)
@@ -91,7 +90,7 @@ public class UsersController {
                                            Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("mode", "add");
-            return CONSULTANT_FORM;
+            return CONSULTANT_FORM_VIEW;
         }
 
         try {
@@ -108,7 +107,7 @@ public class UsersController {
                     "error.user.username.nonunique",
                     "There is a user with the same username.");
             model.addAttribute("mode", "add");
-            return CONSULTANT_FORM;
+            return CONSULTANT_FORM_VIEW;
         }
 
         return "redirect:/admin/users";
@@ -125,12 +124,12 @@ public class UsersController {
             case ROLE_CONSULTANT:
                 Consultant consultant = consultantService.getById(userId);
                 model.addAttribute("consultant", ConsultantForm.of(consultant));
-                return CONSULTANT_FORM;
+                return CONSULTANT_FORM_VIEW;
 
             case ROLE_ADMIN:
                 Administrator administrator = administratorService.getById(userId);
                 model.addAttribute("administrator", AdministratorForm.of(administrator));
-                return ADMIN_FORM;
+                return ADMINISTRATOR_FORM_VIEW;
 
             default:
                 throw new RuntimeException("Unexpected user role");
@@ -146,7 +145,7 @@ public class UsersController {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("mode", "edit");
-            return CONSULTANT_FORM;
+            return CONSULTANT_FORM_VIEW;
         }
         User modifiedUser = new Consultant(
                 consultant.getUsername(),
@@ -165,7 +164,7 @@ public class UsersController {
                     "error.user.username.nonunique",
                     "There is a user with the same username.");
             model.addAttribute("mode", "edit");
-            return CONSULTANT_FORM;
+            return CONSULTANT_FORM_VIEW;
         }
 
         return "redirect:/admin/users";
@@ -180,7 +179,7 @@ public class UsersController {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("mode", "edit");
-            return ADMIN_FORM;
+            return ADMINISTRATOR_FORM_VIEW;
         }
 
         User modifiedUser = new Administrator(
@@ -196,7 +195,7 @@ public class UsersController {
                     "error.user.username.nonunique",
                     "There is a user with the same username.");
             model.addAttribute("mode", "edit");
-            return ADMIN_FORM;
+            return ADMINISTRATOR_FORM_VIEW;
         }
 
         return "redirect:/admin/users";

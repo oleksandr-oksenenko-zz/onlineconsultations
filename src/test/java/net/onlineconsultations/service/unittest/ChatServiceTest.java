@@ -314,16 +314,72 @@ public class ChatServiceTest extends BaseUnitTest {
 
     @Test
     public void testSetConsultantInChat_hp() {
-        final Chat chat = new Chat(
+        Chat chat = new Chat(
                 RandomStringUtils.randomAlphanumeric(32),
                 dummyConsultant,
-                true
+                false
         );
 
-        chatService.setConsultantInChat(chat);
+        chatService.setConsultantInChat(chat, true);
 
         verify(chatDao).merge(chat);
-
+        verifyNoMoreInteractions(chatDao);
+        reset(chatDao);
         assertTrue(chat.isConsultantInChat());
+
+        chatService.setConsultantInChat(chat, false);
+
+        verify(chatDao).merge(chat);
+        verifyNoMoreInteractions(chatDao);
+        assertFalse(chat.isConsultantInChat());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSetConsultantInChat_nullChat() {
+        try {
+            chatService.setConsultantInChat(null, true);
+        } catch (Throwable e) {
+            verifyZeroInteractions(chatDao);
+            throw e;
+        }
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testSetConsultantInChat_closedChat() {
+        Chat chat = new Chat(
+                RandomStringUtils.randomAlphanumeric(32),
+                dummyConsultant,
+                false
+        );
+        chat.setStatus(ChatStatus.CLOSED);
+
+        try {
+            chatService.setConsultantInChat(chat, true);
+        } catch (Throwable e) {
+            verifyZeroInteractions(chatDao);
+            throw e;
+        }
+    }
+
+    @Test
+    public void testSetAnonymInChat_hp() {
+        Chat chat = new Chat(
+                RandomStringUtils.randomAlphanumeric(32),
+                dummyConsultant,
+                false
+        );
+
+        chatService.setAnonymInChat(chat, true);
+
+        verify(chatDao).merge(chat);
+        verifyNoMoreInteractions(chatDao);
+        reset(chatDao);
+        assertTrue(chat.isAnonymInChat());
+
+        chatService.setAnonymInChat(chat, false);
+
+        verify(chatDao).merge(chat);
+        verifyNoMoreInteractions(chatDao);
+        assertFalse(chat.isAnonymInChat());
     }
 }

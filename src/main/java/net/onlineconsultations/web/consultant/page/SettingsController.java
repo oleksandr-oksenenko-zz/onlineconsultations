@@ -29,6 +29,9 @@ import java.util.List;
 public class SettingsController {
     private static final Logger log = LoggerFactory.getLogger(SettingsController.class);
 
+    private static final String SETTINGS_VIEW = "consultant/settings";
+    private static final String SUB_SUBJECTS_FORM_VIEW = "consultant/subSubjectForm";
+
     @Inject
     private SubjectService subjectService;
 
@@ -45,7 +48,7 @@ public class SettingsController {
 
         model.addAttribute("subSubjects", subSubjectService.getByConsultant(consultant));
 
-        return "consultant/settings";
+        return SETTINGS_VIEW;
     }
 
     @RequestMapping(value = "/settings/sub_subjects/add", method = RequestMethod.GET)
@@ -56,7 +59,7 @@ public class SettingsController {
         model.addAttribute("subjects", subjectService.getAll());
         model.addAttribute("subSubjects", subSubjectService.getBySubjectId(subjects.get(0).getId()));
 
-        return "consultant/subSubjectForm";
+        return SUB_SUBJECTS_FORM_VIEW;
     }
 
     @RequestMapping(value = "/settings/sub_subjects/add", method = RequestMethod.POST)
@@ -68,7 +71,7 @@ public class SettingsController {
             model.addAttribute("subSubjects", subSubjectService.getBySubjectId(subSubjectForm.getSubjectId()));
             model.addAttribute("subjects", subjectService.getAll());
 
-            return "consultant/subSubjectForm";
+            return SUB_SUBJECTS_FORM_VIEW;
         }
 
         try {
@@ -88,7 +91,7 @@ public class SettingsController {
 
             log.error("Exception while adding subsubject to user", e);
 
-            return "consultant/subSubjectForm";
+            return SUB_SUBJECTS_FORM_VIEW;
         }
 
         return "redirect:/consultant/settings";
@@ -101,12 +104,7 @@ public class SettingsController {
         Consultant consultant = consultantService.getByUsername(principal.getName());
         SubSubject subSubject = subSubjectService.getById(subSubjectId);
 
-        try {
-            consultantService.unlinkSubSubjectFromConsultant(consultant, subSubject);
-        } catch (DataAccessException e) {
-            model.addAttribute("reason", e.getMessage());
-            return "error";
-        }
+        consultantService.unlinkSubSubjectFromConsultant(consultant, subSubject);
 
         return "redirect:/consultant/settings";
     }

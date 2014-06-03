@@ -66,8 +66,15 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     @Transactional
-    public void setConsultantInChat(Chat chat) {
-        chat.setConsultantInChat(true);
+    public void setConsultantInChat(Chat chat, boolean isConsultantInChat) {
+        chat.setConsultantInChat(isConsultantInChat);
+        chatDao.merge(chat);
+    }
+
+    @Override
+    @Transactional
+    public void setAnonymInChat(Chat chat, boolean isAnonymInChat) {
+        chat.setAnonymInChat(isAnonymInChat);
         chatDao.merge(chat);
     }
 

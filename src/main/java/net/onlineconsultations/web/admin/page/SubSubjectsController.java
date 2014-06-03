@@ -18,6 +18,9 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping(value = "/admin/sub_subjects")
 public class SubSubjectsController {
+    private static final String SUB_SUBJECTS_VIEW = "admin/subSubject/subSubjects";
+    private static final String SUB_SUBJECT_FORM_VIEW = "admin/subSubject/subSubjectForm";
+
     @Inject
     private SubjectService subjectService;
 
@@ -28,7 +31,7 @@ public class SubSubjectsController {
     public String subSubjectsHome(Model model) {
         model.addAttribute("subSubjects", subSubjectService.getAll());
 
-        return "admin/subSubjects";
+        return SUB_SUBJECTS_VIEW;
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
@@ -36,7 +39,7 @@ public class SubSubjectsController {
         model.addAttribute("subSubject", new SubSubjectForm());
         model.addAttribute("subjects", subjectService.getAll());
 
-        return "admin/subSubjectForm";
+        return SUB_SUBJECT_FORM_VIEW;
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
@@ -45,7 +48,7 @@ public class SubSubjectsController {
                                        Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("subjects", subjectService.getAll());
-            return "admin/subSubjectForm";
+            return SUB_SUBJECT_FORM_VIEW;
         }
 
         subSubjectService.save(new SubSubject(
@@ -69,7 +72,7 @@ public class SubSubjectsController {
         );
         model.addAttribute("subjects", subjectService.getAll());
 
-        return "admin/subSubjectForm";
+        return SUB_SUBJECT_FORM_VIEW;
     }
 
     @RequestMapping(value = "/{id}/edit", method = RequestMethod.POST)
@@ -79,7 +82,7 @@ public class SubSubjectsController {
                                         Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("subjects", subjectService.getAll());
-            return "admin/subSubjectForm";
+            return SUB_SUBJECT_FORM_VIEW;
         }
 
         SubSubject subSubject = subSubjectService.getById(subSubjectId);

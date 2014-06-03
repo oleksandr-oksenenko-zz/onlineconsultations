@@ -17,8 +17,6 @@
     <mvc:annotation-driven/>
     <context:component-scan base-package="net.onlineconsultations.web"/>
 
-    <mvc:resources location="classpath:/META-INF/resources/webjars/" mapping="/resources/**"/>
-    
     <mvc:resources location="/css/" mapping="/css/**"/>
     <mvc:resources location="/js/" mapping="/js/**"/>
     <mvc:resources location="/img/" mapping="/img/**"/>

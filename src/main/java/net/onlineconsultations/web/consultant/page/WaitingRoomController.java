@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class WaitingRoomController {
     private static final Logger log = LoggerFactory.getLogger(WaitingRoomController.class);
 
+    private static final String WAITING_ROOM = "consultant/waitingRoom";
+
     @RequestMapping(value = { "/waiting_room", ""}, method = RequestMethod.GET)
     public String waitingRoomPage() {
-        return "consultant/waiting_room";
+        return WAITING_ROOM;
     }
 
 }

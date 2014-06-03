@@ -17,6 +17,9 @@ import java.util.List;
 @Controller
 @RequestMapping("/subjects")
 public class SubjectController {
+    private static final String SUBJECTS_VIEW = "anonym/subjects";
+    private static final String SUB_SUBJECT_VIEW = "anonym/subSubjects";
+
     @Inject
     private SubjectService subjectService;
 
@@ -29,7 +32,7 @@ public class SubjectController {
     @RequestMapping(method = RequestMethod.GET)
     public String subjects(Model model) {
         model.addAttribute("subjects", subjectService.getAll());
-        return "subjects";
+        return SUBJECTS_VIEW;
     }
 
     @RequestMapping(value = "/{subject_id}", method = RequestMethod.GET)
@@ -40,6 +43,6 @@ public class SubjectController {
 
         model.addAttribute("subSubjects", subSubjects);
         model.addAttribute("users", consultantService.getAvailableConsultants(subject));
-        return "subject";
+        return SUB_SUBJECT_VIEW;
     }
 }

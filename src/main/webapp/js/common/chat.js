@@ -74,6 +74,76 @@ var MessageDisplayer = {
     }
 };
 
+var UIDisabler = {
+    sendMessageButton: $("#btnPostMessage"),
+    endMessageButton: $("#btnEndChat"),
+    messageTextArea: $("#message"),
+
+    enableUI: function () {
+        UIDisabler.sendMessageButton.removeAttr("disabled", "disabled");
+        UIDisabler.endMessageButton.removeAttr("disabled", "disabled");
+        UIDisabler.messageTextArea.removeAttr("disabled", "disabled");
+    },
+
+    disableUI: function () {
+        UIDisabler.sendMessageButton.attr("disabled", "disabled");
+        UIDisabler.endMessageButton.attr("disabled", "disabled");
+        UIDisabler.messageTextArea.attr("disabled", "disabled");
+    }
+};
+
+var EventHandlersManager = {
+    messageTextArea: $("#message"),
+    postMessageBtn: $("#btnPostMessage"),
+    closeChatEndModalWindowBtn: $("#btnCloseChatEndModalWindow"),
+
+    messageKeyPressListener: function (e) {
+        if (e.ctrlKey && e.keyCode == 10) {
+            MessageSender.sendMessage(readMessage());
+        }
+    },
+    postMessageBtnClickListener: function (e) {
+        MessageSender.sendMessage(readMessage());
+    },
+    closeChatEndModalWindowBtnClickListener: function () {
+        EventHandlersManager.closeChatEndModalWindowBtn.hide();
+    },
+
+    addListeners: function() {
+        EventHandlersManager.messageTextArea.bind(
+            "keypress",
+            EventHandlersManager.messageKeyPressListener
+        );
+
+        EventHandlersManager.postMessageBtn.bind(
+            "click",
+            EventHandlersManager.postMessageBtnClickListener
+        );
+
+        EventHandlersManager.closeChatEndModalWindowBtn.bind(
+            "click",
+            EventHandlersManager.closeChatEndModalWindowBtnClickListener
+        );
+    },
+
+    removeListeners: function() {
+        EventHandlersManager.messageTextArea.unbind(
+            "keypress",
+            EventHandlersManager.messageKeyPressListener
+        );
+
+        EventHandlersManager.postMessageBtn.unbind(
+            "click",
+            EventHandlersManager.postMessageBtnClickListener
+        );
+
+        EventHandlersManager.closeChatEndModalWindowBtn.unbind(
+            "click",
+            EventHandlersManager.closeChatEndModalWindowBtnClickListener
+        );
+    }
+};
+
 function readMessage() {
     var message = $("#message");
     var messageBody = message.val();
@@ -81,24 +151,3 @@ function readMessage() {
     return messageBody;
 }
 
-function initEventHandlers() {
-    $("#message").keypress(function (e) {
-        if (e.ctrlKey && e.keyCode == 10) {
-            MessageSender.sendMessage(readMessage());
-        }
-    });
-    $("#btnPostMessage").click(function () {
-        MessageSender.sendMessage(readMessage());
-    });
-}
-
-function stopAllPolling() {
-    MessagePoller.stopPollingForMessages();
-    ChatPoller.stopPollingForChat();
-}
-
-$(window).on("load", function() {
-    initEventHandlers();
-
-    MessagePoller.startPollingForMessages(MessageDisplayer.displayMessages);
-});

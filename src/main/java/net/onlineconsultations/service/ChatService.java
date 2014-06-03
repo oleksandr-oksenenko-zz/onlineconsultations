@@ -15,7 +15,9 @@ public interface ChatService {
 
     void postNewMessage(ChatMessage chatMessage);
 
-    void setConsultantInChat(Chat chat);
+    void setConsultantInChat(Chat chat, boolean isConsultantInChat);
+
+    void setAnonymInChat(Chat chat, boolean isAnonymInChat);
 
     List<ChatMessage> getLastMessagesInChat(Chat chat, ChatMessage lastMessage);
     List<ChatMessage> getLastMessagesInChat(Chat chat, Long lastMessageId);

@@ -14,6 +14,8 @@ import javax.inject.Inject;
 @Controller
 @RequestMapping("/rate")
 public class ConsultantRatingController {
+    private static final String RATE_VIEW = "anonym/rate";
+
     @Inject
     private ConsultantService consultantService;
 
@@ -21,7 +23,7 @@ public class ConsultantRatingController {
     public String ratePage(Model model,
                            @PathVariable("user_id") Long userId) {
         model.addAttribute("userId", userId);
-        return "rate";
+        return RATE_VIEW;
     }
 
     @RequestMapping(value = "/{user_id}", method = RequestMethod.POST)

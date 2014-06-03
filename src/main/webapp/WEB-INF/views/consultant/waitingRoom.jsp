@@ -4,11 +4,9 @@
 <html>
 
 <head>
-    <script type="text/javascript">
-        var baseUrl = "<c:url value="/"/>";
-    </script>
-    <link rel="stylesheet" type="text/css" href="<c:url value='/resources/bootstrap/3.0.0/css/bootstrap.min.css'/>">
-    <script type="text/javascript" src="<c:url value='/resources/jquery/1.9.0/jquery.min.js'/>"></script>
+    <c:import url="../common/js-include.jsp"/>
+    <c:import url="../common/css-include.jsp"/>
+
     <script type="text/javascript" src="<c:url value='/js/common/chat_poller.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/js/consultant/waiting_room.js'/>"></script>
 </head>
@@ -17,8 +15,12 @@
     <div class="container" style="margin: 0 auto">
         <div class="page-header">
             <ul class="nav nav-pills">
-                <li class="active"><a href="<c:url value='/consultant/waiting_room'/>">Waiting room</a></li>
-                <li><a href="<c:url value='/consultant/settings'/>">Settings</a></li>
+                <li class="active">
+                    <a href="<c:url value='/consultant/waiting_room'/>">Waiting room</a>
+                </li>
+                <li>
+                    <a href="<c:url value='/consultant/settings'/>">Settings</a>
+                </li>
             </ul>
         </div>
 
