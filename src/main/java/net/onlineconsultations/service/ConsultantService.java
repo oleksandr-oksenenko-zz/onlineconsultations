@@ -23,4 +23,6 @@ public interface ConsultantService {
     Consultant getById(Long id);
 
     void remove(Long consultantId);
+
+    void merge(Consultant consultant);
 }

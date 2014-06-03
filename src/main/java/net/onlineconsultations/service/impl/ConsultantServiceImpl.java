@@ -6,6 +6,7 @@ import net.onlineconsultations.domain.Consultant;
 import net.onlineconsultations.domain.SubSubject;
 import net.onlineconsultations.domain.Subject;
 import net.onlineconsultations.service.ConsultantService;
+import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,9 @@ public class ConsultantServiceImpl implements ConsultantService {
 
     @Inject
     private SubjectDao subjectDao;
+
+    @Inject
+    private MessageDigestPasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -81,6 +85,22 @@ public class ConsultantServiceImpl implements ConsultantService {
         for (SubSubject subSubject : consultant.getSubSubjects()) {
             subSubject.getSubSubjectConsultants().remove(consultant);
         }
+        consultantDao.merge(consultant);
+    }
+
+    @Override
+    @Transactional
+    public void merge(Consultant consultant) {
+        Consultant oldConsultant = consultantDao.getById(consultant.getId());
+
+        if (!consultant.getPassword().isEmpty()) {
+            String encodedPassword = passwordEncoder.encodePassword(consultant.getPassword(), null);
+
+            consultant.setPassword(encodedPassword);
+        } else {
+            consultant.setPassword(oldConsultant.getPassword());
+        }
+
         consultantDao.merge(consultant);
     }
 }

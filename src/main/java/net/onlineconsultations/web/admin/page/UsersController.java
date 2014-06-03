@@ -87,8 +87,8 @@ public class UsersController {
 
     @RequestMapping(value = "/add_consultant", method = RequestMethod.POST)
     public String usersAddConsultantSubmit(@Valid @ModelAttribute("consultant") ConsultantForm consultantForm,
-                                 BindingResult bindingResult,
-                                 Model model) {
+                                           BindingResult bindingResult,
+                                           Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("mode", "add");
             return CONSULTANT_FORM;
@@ -137,68 +137,69 @@ public class UsersController {
         }
     }
 
-    @RequestMapping(value = "/{id}/edit", method = RequestMethod.POST)
-    public String usersEditSubmit(@PathVariable("id") Long userId,
-                                  @Valid @ModelAttribute("user") UserForm userForm,
-                                  BindingResult bindingResult,
-                                  Model model) {
-        User user = userService.getById(userId);
-        UserRole userRole = user.getUserRole();
+    @RequestMapping(value = "/{id}/edit", method = RequestMethod.POST, params = { "consultant" })
+    public String editConsultantSubmit(@PathVariable("id") Long userId,
+                                       @Valid @ModelAttribute("consultant") ConsultantForm consultantForm,
+                                       BindingResult bindingResult,
+                                       Model model) {
+        Consultant consultant = consultantService.getById(userId);
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("mode", "edit");
-            switch (userRole) {
-                case ROLE_ADMIN:
-                    return ADMIN_FORM;
-
-                case ROLE_CONSULTANT:
-                    return CONSULTANT_FORM;
-            }
+            return CONSULTANT_FORM;
         }
+        User modifiedUser = new Consultant(
+                consultant.getUsername(),
+                (consultantForm.getPassword() == null ? "" : consultantForm.getPassword()),
+                consultantForm.getFirstName(),
+                consultantForm.getMiddleName(),
+                consultantForm.getLastName(),
+                consultantForm.getQualification()
+        );
+        modifiedUser.setId(userId);
 
         try {
-            User modifiedUser = null;
-            switch (userRole) {
-                case ROLE_ADMIN:
-                    modifiedUser = new Administrator(
-                            user.getUsername(),
-                            userForm.getPassword()
-                    );
-                    break;
-
-                case ROLE_CONSULTANT:
-                    ConsultantForm consultantForm = (ConsultantForm) userForm;
-                    modifiedUser = new Consultant(
-                            user.getUsername(),
-                            userForm.getPassword(),
-                            consultantForm.getFirstName(),
-                            consultantForm.getMiddleName(),
-                            consultantForm.getLastName(),
-                            consultantForm.getQualification()
-                    );
-                    break;
-            }
-            modifiedUser.setId(userId);
-
             userService.merge(modifiedUser);
-
-            return "redirect:/admin/users";
         } catch (DataIntegrityViolationException e) {
             bindingResult.rejectValue("username",
                     "error.user.username.nonunique",
                     "There is a user with the same username.");
             model.addAttribute("mode", "edit");
-            switch (userRole) {
-                case ROLE_ADMIN:
-                    return ADMIN_FORM;
-
-                case ROLE_CONSULTANT:
-                    return CONSULTANT_FORM;
-
-                default:
-                    throw new RuntimeException("Unexpected user role");
-            }
+            return CONSULTANT_FORM;
         }
+
+        return "redirect:/admin/users";
+    }
+
+    @RequestMapping(value = "/{id}/edit", method = RequestMethod.POST, params = { "administrator" })
+    public String editAdminSubmit(@PathVariable("id") Long userId,
+                                  @Valid @ModelAttribute("administrator") AdministratorForm administratorForm,
+                                  BindingResult bindingResult,
+                                  Model model) {
+        Administrator administrator = administratorService.getById(userId);
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("mode", "edit");
+            return ADMIN_FORM;
+        }
+
+        User modifiedUser = new Administrator(
+                administrator.getUsername(),
+                (administratorForm.getPassword() == null ? "" : administratorForm.getPassword())
+        );
+        modifiedUser.setId(userId);
+
+        try {
+            userService.merge(modifiedUser);
+        } catch (DataIntegrityViolationException e) {
+            bindingResult.rejectValue("username",
+                    "error.user.username.nonunique",
+                    "There is a user with the same username.");
+            model.addAttribute("mode", "edit");
+            return ADMIN_FORM;
+        }
+
+        return "redirect:/admin/users";
     }
 
     @RequestMapping(value = "/{id}/remove", method = RequestMethod.GET)

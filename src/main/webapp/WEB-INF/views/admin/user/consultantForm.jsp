@@ -22,6 +22,7 @@
     <div class="row">
         <div class="col-md-offset-3 col-md-6">
             <form:form method="POST" commandName="consultant">
+                <input type="hidden" name="consultant"/>
                 <div class="form-group">
                     <form:label path="lastName">Last Name</form:label>
                     <form:input path="lastName" cssClass="form-control"/>

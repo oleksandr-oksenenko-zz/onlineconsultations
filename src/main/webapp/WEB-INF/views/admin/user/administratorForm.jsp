@@ -22,6 +22,7 @@
     <div class="row">
         <div class="col-md-offset-3 col-md-6">
             <form:form method="POST" commandName="administrator">
+                <input type="hidden" name="administrator">
                 <c:if test="${mode eq 'add'}">
                     <div class="form-group">
                         <form:label path="username">Username</form:label>

@@ -43,7 +43,9 @@ public class SubSubjectServiceImpl implements SubSubjectService {
     @Transactional
     public void remove(Long subSubjectId) {
         SubSubject subSubject = subSubjectDao.getById(subSubjectId);
-        subSubject.getSubSubjectConsultants().clear();
+        for (Consultant consultant : subSubject.getSubSubjectConsultants()) {
+            consultant.getSubSubjects().remove(subSubject);
+        }
         subSubjectDao.remove(subSubject);
     }
 

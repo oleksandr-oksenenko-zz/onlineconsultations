@@ -7,7 +7,6 @@ public abstract class UserForm {
     @Size(min = 5, max = 50, message = "Username length should be between 5 and 50 characters.")
     protected String username;
 
-    @NotNull(message = "Password cannot be empty.")
     @Size(min = 5, message = "Password length should be greater than or equal to 5 characters.")
     protected String password;
 
